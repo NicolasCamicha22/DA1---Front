@@ -66,6 +66,7 @@ export default function SignUpForm({ username, setUsername, name, setName, surna
                     placeholder="Password"
                     value={password}
                     onChangeText={setPassword}
+                    autoCapitalize="none"
                     secureTextEntry
                 />
             </View>

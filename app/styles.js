@@ -1,33 +1,41 @@
 import { StyleSheet } from "react-native";
+import { Dimensions } from 'react-native';
+
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
         paddingHorizontal: 0,
-        padding: 20, // Agregar algo de espacio alrededor
-        backgroundColor: "#fff",
-    },
-    scrollContainer: {
-        paddingHorizontal: 20,
-        paddingTop: 30, // Ajusta el espacio superior
-        paddingBottom: 20, // Ajusta el espacio inferior para el botón Register
-    },
-    scrollContainerLogIn: {
-        paddingHorizontal: 10,
-        paddingBottom: 55, // Ajusta el espacio inferior para el botón Register
-    },
+        padding: 20,
+        backgroundColor: '#fff',
 
-    containerLogin: {
+    },
+    
+    fixedContainerLogin: {
         flex: 1,
+        justifyContent: 'space-evenly', // Distribuye el contenido uniformemente en la pantalla
+        alignItems: 'center', // Centra los elementos horizontalmente
         backgroundColor: '#fff',
     },
+
+    scrollContainer: {
+        paddingHorizontal: 20,
+        paddingTop: 30,
+        paddingBottom: 20, 
+    },
+    contentContainer: {
+        width: '90%',
+        alignItems: 'center',
+    },
     logo: {
-        width: 200,
+        flex: 1,                  
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        width: 300,               
         height: 200,
-        alignSelf: "center",
-        marginBottom: 1,
-        resizeMode: "contain", // Esto evitará que el logo se corte,
+        resizeMode: 'contain',
     },
     title: {
         fontSize: 26,
@@ -43,21 +51,118 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         borderRadius: 5,
         overflow: 'hidden',
-        fontSize: 12,
+        fontSize: 14,
     },
-    signupContainer: {
-        flexDirection: "row",
-        justifyContent: "center",
-        marginTop: 15,
+    containerLogin: {
+        flex: 1,
+        justifyContent: 'flex-start', // Centra el contenido verticalmente
+        alignItems: 'center', // Centra el contenido horizontalmente
+        backgroundColor: '#fff',
     },
-    signupText: {
-        fontSize: 12,
-        color: "#a1a1a1",
+
+    titleLogin: {
+        fontSize: height * 0.03, // 3% de la altura de la pantalla
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: height * 0.04, // Margen inferior de 4% de la altura
     },
-    signupLink: {
-        fontSize: 12,
-        color: "#6c44f4",
-        fontWeight: "bold",
+    inputWrapperLogin: {
+        marginBottom: height * 0.03, // Espacio entre los inputs
+        width: '100%',
+    },
+    inputWrapperPassword: {
+        marginBottom: 5,
+        width: '100%',
+    },
+    passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 8,
+    },
+    inputPassword: {
+        flex: 1,
+        height: height * 0.06,
+        paddingHorizontal: width * 0.05,
+        fontSize: height * 0.02,
+    },
+    eyeIcon: {
+        paddingHorizontal: width * 0.05,// Espaciado para el ícono
+    },
+    inputLogin: {
+        height: height * 0.06, // El input ocupa el 6% de la altura
+        borderColor: '#ccc',
+        borderWidth: 1,
+        borderRadius: 8,
+        paddingHorizontal: '40%', // Espaciado interno horizontal del 5% del ancho
+        fontSize: height * 0.02, // Tamaño de fuente relativo a la altura
+    },
+    inputLabelLogin: {
+        position: 'absolute',
+        top: -10,
+        left: 10,
+        fontSize: height * 0.018,
+        color: '#888', 
+        backgroundColor: '#fff', 
+        paddingHorizontal: 5, 
+        zIndex: 1,
+    },
+   
+    buttonLogin: {
+        backgroundColor: '#6c44f4',
+        paddingVertical: height * 0.015, // El botón tiene 1.5% de la altura de la pantalla
+        borderRadius: 30,
+        alignItems: 'center',
+        marginTop: height * 0.04, // Espaciado superior de 4% de la altura
+        width: '100%',
+    },
+    buttonTextLogin: {
+        color: '#fff',
+        fontSize: height * 0.02, // Tamaño de texto proporcional a la altura
+        fontWeight: 'bold',
+    },
+
+    signupContainerLogin: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: height * 0.02, // Espaciado superior
+    },
+    signupTextLogin: {
+        fontSize: height * 0.015, // Ajuste de tamaño para la fuente
+        color: '#a1a1a1',
+    },
+    signupLinkLogin: {
+        fontSize: height * 0.015,
+        color: '#6c44f4',
+        marginLeft: width * 0.02, // Espaciado entre el texto y el link
+    },
+    forgotPasswordLogin: {
+        textAlign: 'center',
+        color: '#6c44f4',
+        marginTop: height * 0.02, // Espaciado superior
+        fontSize: height * 0.015,
+    },
+    dividerContainerLogin: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: height * 0.03,
+    },
+    lineLogin: {
+        flex: 1,
+        height: 1,
+        backgroundColor: '#ccc',
+    },
+    orTextLogin: {
+        marginHorizontal: width * 0.02, // Espaciado horizontal
+        fontSize: height * 0.015, // Ajuste proporcional al tamaño de la pantalla
+        color: '#888',
+    },
+    googleButtonLogin: {
+        width: width * 0.2, // El botón de Google será el 20% del ancho
+        height: width * 0.2, // El mismo valor para altura
+        alignSelf: 'center',
+        marginTop: height * 0.03, // Espaciado superior
     },
     button: {
         backgroundColor: "#6c44f4",
@@ -73,15 +178,14 @@ const styles = StyleSheet.create({
         flexWrap: "wrap",
         textAlign: "center",
         paddingHorizontal: 16
-
-
     },
-    forgotPassword: {
-        textAlign: "center",
-        color: "#6c44f4",
-        marginTop: 10,
-        fontSize: 12,
+    titleLogin: {
+        fontSize: height * 0.03,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: height * 0.04,
     },
+  
     dividerContainer: {
         flexDirection: "row",
         alignItems: "center",
@@ -92,52 +196,27 @@ const styles = StyleSheet.create({
         height: 1,
         backgroundColor: "#ccc",
     },
-    orText: {
-        marginHorizontal: 10,
-        fontSize: 14,
-        color: "#a1a1a1",
-    },
-
-    dividerContainerLogin: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 20,
-    },
-    lineLogin: {
-        flex: 1,
-        height: 1,
-        backgroundColor: '#ccc',
-    },
-    orTextLogin: {
-        marginHorizontal: 10,
-        fontSize: 14,
-        color: '#888',
-    },
-
-    googleButtonLogin: {
-        width: 70,
-        height: 70,
-        alignSelf: "center",
-        marginTop: 15,
-    },
 
     //Forgot Password
     containerForgotPassword: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'center',
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingVertical: height * 0.05,
         backgroundColor: '#fff',
     },
  
     titleForgotPassword: {
-        fontSize: 28,
+        fontSize: height * 0.03,   
         fontWeight: 'bold',
-        marginBottom: 30,
+        marginBottom: height * 0.05,
+     
     },
     inputContainerForgotPassword: {
         width: '100%',
-        marginBottom: 20,
+        marginBottom: height * 0.03,
+        position: 'relative', 
     },
     labelForgotPassword: {
         fontSize: 16,
@@ -148,43 +227,19 @@ const styles = StyleSheet.create({
     buttonForgotPassword: {
         width: '100%',
         backgroundColor: '#6c44f4',
-        paddingVertical: 15,
+        paddingVertical: height * 0.02,  
         borderRadius: 30,
         alignItems: 'center',
+        marginTop: height * 0.02,
     },
-
-    buttonTextLogin: {
-        color: '#fff',
-        fontSize: 12,
-    },
-
-    signupContainerLogin: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginTop: 30,
-    },
-
-    signupLinkLogin: {
-        fontSize: 14,
-        color: '#6c44f4',
-        marginLeft: 5,
-    },
-
-    forgotPasswordLogin: {
-        fontSize: 14,
-        color: '#6c44f4',
-        textAlign: 'center',
-        marginVertical: 20,
-    },
-
     buttonTextForgotPassword: {
         color: '#fff',
-        fontSize: 18,
+        fontSize: height * 0.02,
         fontWeight: 'bold',
     },
     messageForgotPassword: {
         marginTop: 20,
-        fontSize: 16,
+        fontSize: height * 0.02,
         color: '#f44336',
         textAlign: 'center',
     },
@@ -197,103 +252,113 @@ const styles = StyleSheet.create({
         color: '#007BFF',
         textDecorationLine: 'underline',
     },
-    titleLogin: {
-        fontSize: 26,
-        fontWeight: 'bold',
-        marginBottom: 30,
-        textAlign: 'center',
-        color: '#333',
-    },
-    inputWrapperLogin: {
-        marginBottom: 20,
-        position: 'relative',
-    },
-   
-    inputLogin: {
-        height: 50,
-        borderColor: '#ccc',
-        borderWidth: 1,
+    // Estilos para el Home
+    postContainer: {
+        marginBottom: 16,
+        padding: 10,
+        backgroundColor: 'white',
         borderRadius: 10,
-        paddingLeft: 10,
-        fontSize: 12,
-        position: 'relative',
-        zIndex: 0,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
     },
-
-    inputLabelLogin: {
-        position: 'absolute',
-        top: -10,
-        left: 10,
-        fontSize: 12,
-        color: '#888', 
-        backgroundColor: '#fff', 
-        paddingHorizontal: 5, 
-        zIndex: 1,
+    userInfo: {
+        marginBottom: 8,
     },
-
-    buttonLogin: {
-        backgroundColor: '#6c44f4',
-        paddingVertical: 15,
-        borderRadius: 30,
-        alignItems: 'center',
-    },
-
-    buttonTextLogin: {
-        color: '#fff',
-        fontSize: 14,
-    },
-
-    signupTextLogin: {
-        fontSize: 14,
+    username: {
+        fontSize: width * 0.045,
+        fontWeight: 'bold',
         color: '#333',
+    },
+    locationContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 4,
+    },
+    locationIcon: {
+        marginRight: 4,
+    },
+    location: {
+        fontSize: width * 0.04,
+        color: '#666',
+    },
+    postImage: {
+        height: height * 0.35,
+        resizeMode: 'cover',
+    },
+    paginationContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginTop: 8,
+    },
+    paginationDot: {
+        width: width * 0.02,
+        height: width * 0.02,
+        borderRadius: width * 0.015,
+        marginHorizontal: 4,
+    },
+    date: {
+        marginTop: 8,
+        fontSize: width * 0.035,
+        color: '#999',
+        textAlign: 'right',  
+    },
+    caption: {
+        fontSize: width * 0.045,
+        fontWeight: '600',
+        color: '#000',
+        marginTop: 8,
+    },
+    description: {
+        fontSize: width * 0.04,
+        color: '#555',
+        marginTop: 4,
+    },
+    actionsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        marginTop: 12,
+    },
+    buttonIcon: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    
+        marginRight: 25,
+    },
+    buttonIconText: {
+        marginLeft: 4,
+        fontSize: width * 0.04,
+        color: '#000',
+    },
+    modalContent: {
+        backgroundColor: 'white',
+        padding: 16,
+        borderRadius: 8,
+        maxHeight: height * 0.6,
+    },
+    commentContainer: {
+        paddingVertical: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
     },
     
-    // Estilos para el Home
+    commentInput: {
+        marginTop: 12,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 4,
+        padding: 8,
+        fontSize: width * 0.04,
+    },
     homeScrollContainer: {
         paddingHorizontal: 20,
         paddingTop: 20,
         paddingBottom: 80, // Espacio para el footer
     },
-    postContainer: {
-        marginBottom: 20,
-        backgroundColor: "#f9f9f9",
-        borderRadius: 10,
-        padding: 10,
-        position: "relative",
-    },
-    userInfo: {
-        //flexDirection: 'row',
-        justifyContent: "space-between",
-        marginBottom: 10,
-        flex: 1,
-        marginLeft: 10,
-        marginTop: 10
-    },
-    username: {
-        fontSize: 16,
-        fontWeight: "bold",
-    },
-
-    locationContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 5,
-    },
-    locationIcon: {
-        marginRight: 5, // Espacio entre el ícono y el texto
-    },
-    location: {
-        fontSize: 12,
-        color: "#666",
-    },
-
-
-
-    caption: {
-        fontSize: 14,
-        marginBottom: 5,
-    },
-
+  
+   
     actionText: {
         fontSize: 14,
     },
@@ -301,22 +366,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     },
-    actionsContainer: {
-        flexDirection: "row", // Alinea los elementos en una fila
-        justifyContent: "flex-start", // Alinea al inicio
-        padding: 10,
-    },
-    buttonIcon: {
-        flexDirection: "row", // Alinea ícono y texto en una fila
-        alignItems: "center", // Centra verticalmente los íconos y textos
-        marginRight: 25, // Espacio a la derecha de cada botón
-    },
-    buttonIconText: {
-        marginLeft: 5, // Espacio entre ícono y texto
-        fontSize: 16, // Ajusta el tamaño de fuente si es necesario
-        alignSelf: "center", // Centra verticalmente el texto con respecto al ícono
-    },
-
+  
+  
     // Estilos para la publicidad
     adContainer: {
         marginTop: 20,
@@ -337,8 +388,8 @@ const styles = StyleSheet.create({
     },
 
     // Footer reutilizable
-    footer: {
-        position: "absolute",
+     footer: {
+        position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
@@ -357,7 +408,8 @@ const styles = StyleSheet.create({
     activeIcon: {
         color: "#6c44f4", // Color violeta para el ícono activo
     },
-
+  
+    
     // Header reutilizable
     header: {
         height: 60,
@@ -366,17 +418,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderBottomColor: "#ddd",
         borderBottomWidth: 1,
-        flexDirection: "row", // Permite que el logo y el icono estén en la misma fila
+        flexDirection: 'row', 
     },
     headerLogo: {
         width: 120,
         height: 50,
-        resizeMode: "contain",
-        flex: 1, // Ocupa el espacio restante para centrar el logo
     },
     logoContainer: {
         flex: 1,
-        alignItems: "center", // Centra el logo en el espacio disponible
+        alignItems: 'center', 
     },
     headerContainer: {
         flexDirection: "row",
@@ -387,15 +437,17 @@ const styles = StyleSheet.create({
         borderBottomColor: "#ddd",
         borderBottomWidth: 1,
         height: 60,
+        width: '100%',
+
     },
     headerTitle: {
         fontSize: 20,
         fontWeight: "bold",
     },
-
+   
     settingsIcon: {
-        position: "absolute",
-        right: 10, // Posiciona el icono a la derecha del logo
+        position: 'absolute',
+        right: 10, 
         padding: 5,
     },
 
@@ -415,42 +467,23 @@ const styles = StyleSheet.create({
     },
 
     likeButton: {
-        // Sin fondo para el botón de Me gusta
-        backgroundColor: "transparent",
+        backgroundColor: 'transparent',  
     },
     commentButton: {
-        // Sin fondo para el botón de Comentarios
-        backgroundColor: "transparent",
+        backgroundColor: 'transparent',
     },
     favoriteButton: {
-        // Sin fondo para el botón de Favoritos
-        backgroundColor: "transparent",
+        backgroundColor: 'transparent',
     },
-    description: {
-        fontSize: 11,
-        color: "#666",
-        marginBottom: 5,
-    },
-    date: {
-        fontSize: 12,
-        color: "#a1a1a1",
-        textAlign: "right", 
-        marginTop: 10, 
+    actionContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between', // Distribución uniforme
+        alignItems: 'center',
+        marginTop: 10,
+        paddingHorizontal: 20, // Espaciado lateral
     },
 
-    paginationContainer: {
-        flexDirection: "row",
-        justifyContent: "center",
-        marginTop: 5,
-    },
-    paginationDot: {
-        width: 8,
-        height: 8,
-        borderRadius: 4,
-        backgroundColor: "#000", // Color de los puntos
-        margin: 4,
-    },
-
+    
     //Estilos para perfil
     coverContainer: {
         position: "relative",
@@ -481,8 +514,8 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         paddingHorizontal: 10,
         paddingVertical: 5,
-        alignSelf: 'center',
-        zIndex: 1,
+        alignSelf: 'center', 
+        zIndex: 1, 
     },
 
     infoContainer: {
@@ -498,20 +531,20 @@ const styles = StyleSheet.create({
     },
     followContainer: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'flex-start', 
         paddingVertical: 10,
-        paddingLeft: 10,
+        paddingLeft: 10, 
     },
     followButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginHorizontal: 10,
+        marginHorizontal: 10, 
     },
     followNumber: {
         fontSize: 16,
         fontWeight: 'bold',
         color: '#000',
-        marginRight: 4,
+        marginRight: 4, 
     },
     followText: {
         fontSize: 16,
@@ -526,11 +559,7 @@ const styles = StyleSheet.create({
         color: "#888",
     },
 
-    postImage: {
-        width: "100%",
-        height: 250,
-        borderRadius: 10,
-    },
+ 
 
     actionText: {
         fontSize: 14,
@@ -566,97 +595,6 @@ const styles = StyleSheet.create({
     },
     //Para el Edit Profile
 
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'transparent',
-    },
-    modalContentEdit: {
-        width: '80%',
-        backgroundColor: '#f0f0f0',
-        borderRadius: 10,
-        borderColor: 'black',
-        borderWidth: 1,
-        padding: 20,
-        paddingVertical: 30,
-        alignItems: 'center',
-    },
-    modalText: {
-        fontSize: 18,
-        color: 'red', // Texto en rojo
-        marginBottom: 20,
-    },
-    buttonContainerEdit: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '100%',
-    },
-
-    confirmButtonEdit: {
-        backgroundColor: '#6c44f4',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 5,
-    },
-    modalbuttonText: {
-        color: 'white',
-        fontSize: 16,
-    },
-
-    formContainerEdit: {
-        marginTop: 10,
-        padding: 20,
-    },
-
-    label: {
-        fontSize: 16,
-        color: 'black',
-        width: 100,
-        marginBottom: 5,
-    },
-
-    nightModeContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: 10,
-    },
-
-    dropdownContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flex: 1,
-        height: 40,
-        paddingHorizontal: 10,
-    },
-    dropdownOption: {
-        color: 'gray',
-        borderBottomWidth: 1,
-        borderBottomColor: 'black',
-        textAlignVertical: 'center',
-        paddingHorizontal: 100,
-        marginVertical: 5,
-    },
-    dropdownOptions: {
-        position: 'relative',
-        marginTop: 5,
-        marginLeft: 10,
-        paddingVertical: 10,
-        backgroundColor: 'transparent',
-        width: '90%',
-        zIndex: 1000,
-
-    },
-    separator: {
-        height: 1,
-        backgroundColor: 'black',
-        marginHorizontal: 100,
-        position: 'relative',
-        marginRight: -25,
-    },
-
-
     actionsContainerConfigProfile: {
         width: "100%",
         height: "15%",
@@ -670,6 +608,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         padding: 15,
     },
+    
 
     // Search screnn
 
@@ -683,7 +622,7 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
     },
     searchIcon: {
-        marginRight: 8, // Espacio entre el icono y el TextInput
+        marginRight: 8, 
     },
     searchInput: {
         flex: 1,
@@ -707,14 +646,23 @@ const styles = StyleSheet.create({
         height: 50,
         borderRadius: 25,
     },
-
     userInfoSearch: {
         flex: 1,
         marginLeft: 10,
     },
-
+   
     fullName: {
         color: "#666",
+    },
+    followButtonSearch: {
+        backgroundColor: '#007AFF',
+        paddingVertical: 5,
+        paddingHorizontal: 15,
+        borderRadius: 20,
+    },
+    followTextSearch: {
+        color: '#fff',
+        fontWeight: 'bold',
     },
 
     // Estilos para UploadScreen
@@ -806,11 +754,7 @@ const styles = StyleSheet.create({
         color: "#333", // Añade color para resaltar
         width: "100%",
     },
-    separator: {
-        width: "100%",
-        height: 1,
-        backgroundColor: "#6c44f4",
-    },
+  
     galleryImage: {
         width: 100,
         height: 100,
@@ -847,14 +791,377 @@ const styles = StyleSheet.create({
         color: "#888",
         marginRight: 10,
     },
-    inputImagePost: {
+    
+    //Edit Profile
+    modalContainer: {
+        backgroundColor: '#d3d3d3', // Fondo gris del modal
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        padding: 15,
+        paddingBottom: 30, // Espacio para el input
+        height: '50%', // El modal ocupa la mitad de la pantalla
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#666', // Gris oscuro
+        textAlign: 'center',
+        marginBottom: 15,
+    },
+    separatorComment: {
+        height: 2,
+        backgroundColor: '#800080', // Línea violeta
+        marginBottom: 15,
+    },
+    commentItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        borderBottomWidth: 1,
+        borderBottomColor: '#aaa', 
+        paddingVertical: 10,
+    },
+    commentUser: {
+        fontWeight: 'bold',
+        color: '#444',
+        marginRight: 10,
+        fontSize: 16, 
+    },
+    commentText: {
         flex: 1,
-        height: 50,
-        borderColor: "#ccc",
+        color: '#333',
+        fontSize: 16,
+    },
+    inputContainerComment: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#d3d3d3', // Fondo gris claro
+        borderRadius: 15,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        marginTop: 15,
+        borderTopWidth: 2, // Línea superior violeta
+        borderTopColor: '#800080',
+    },
+
+    chatIcon: {
+        marginRight: 10, // Espacio entre el icono y el input
+    },
+    modalContentEdit: {
+        width: '80%',
+        backgroundColor: '#f0f0f0',
+        borderRadius: 10,
+        borderColor: 'black', 
+        borderWidth: 1,
+        padding: 20,
+        paddingVertical: 30,
+        alignItems: 'center',
+    },
+    modalText: {
+        fontSize: 18,
+        color: 'red', // Texto en rojo
+        marginBottom: 20,
+    },
+    buttonContainerEdit: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '100%',
+    },
+    confirmButton: {
+        backgroundColor: '#6c44f4', 
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 5,
+    },
+    modalbuttonText: {
+        color: 'white',
+        fontSize: 16,
+    },
+    noCommentsText: {
+        textAlign: 'center',
+        color: '#666',
+        marginVertical: 20,
+        fontSize: 16, // Texto más grande
+    },
+    formContainer: {
+        marginTop: 100,
+        padding: 16,
+    },
+    inputComment: {
+        flex: 1,
+        height: 40,
+        color: '#333',
+        fontSize: 16, // Texto más grande
+    },
+    addCommentButton: {
+        marginLeft: 10,
+    },
+    addCommentText: {
+        color: '#800080',
+        fontWeight: 'bold',
+    },
+    inputEdit: {
+        height: 40,
+        borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 5,
+        marginBottom: 16,
         paddingHorizontal: 10,
+    },
+  
+    saveButton: {
+        backgroundColor: '#007bff',
+        padding: 12,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    saveButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+
+    fieldContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+        height: 50, 
+    },
+    input2: {
+        flex: 1,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        height: 40, 
+    },
+    textArea: {
+        flex: 1,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        height: 40, 
+    },
+    dropdownText: {
+        color: 'black',
+    },
+   
+    line2: {
+        height: 1,
+        backgroundColor: '#6c44f4',
         marginVertical: 10,
+    },
+    triangleContainer: {
+        justifyContent: 'center',
+        alignItems: 'flex-end', 
+        marginLeft: 8,
+    },
+    
+   
+    coverIconContainer: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        padding: 5,
+        borderRadius: 15,
+    },
+    profileImageContainer: {
+        position: 'absolute',
+        bottom: -40,
+        left: 20,
+    },
+    noPostsContainer: {
+        flex: 1, 
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 50,
+        padding: 20,
+    },
+    noPostsImage: {
+        width: 100,
+        height: 100,
+        marginBottom: 20,
+    },
+    noPostsText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 20,
+    },
+    goToSearchButton: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        backgroundColor: '#6c44f4',
+        borderRadius: 5,
+    },
+    goToSearchButtonText: {
+        color: 'white',
+        fontSize: 16,
+    },
+    profileIconContainer: {
+        position: 'absolute',
+        bottom: 5,
+        right: 5,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
+        padding: 5,
+        borderRadius: 15,
+    },
+    formContainerEdit: {
+        marginTop: 10,
+        padding: 20,
+    },
+
+    label: {
+        fontSize: 16,
+        color: 'black',
+        width: 100,
+         marginBottom: 5, 
+    },
+   
+
+    nightModeContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+  
+    
+    dropdownContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flex: 1,
+        height: 40, 
+        paddingHorizontal: 10,
+    },
+    dropdownOption: {
+        color: 'gray',
+        borderBottomWidth: 1,
+        borderBottomColor: 'black', 
+        textAlignVertical: 'center',
+    paddingHorizontal: 100,
+    marginVertical: 5,
+    },
+    dropdownOptions: {
+        position: 'relative',
+        marginTop: 5,
+        marginLeft: 10, 
+        paddingVertical: 10,
+        backgroundColor: 'transparent', 
+        width: '90%', 
+        zIndex: 1000,
+    
+    },
+    separator: {
+    height: 1,
+    backgroundColor: 'black',  
+    marginHorizontal: 100,
+    position: 'relative',
+    marginRight: -25,
+},
+    logoutButton: {
+        marginTop: 10,
+        marginBottom: 10,
+
+    },
+    logoutText: {
+        color: 'blue',
+        fontSize: 16,
+    },
+    deleteAccountButton: {
+        marginTop: 10,
+    },
+    deleteAccountText: {
+        color: 'darkred',
+        fontSize: 16,
+    },
+    profileIconOverlay: {
+        position: 'absolute',
+        height: 40, 
+        width: 40, 
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        borderRadius: 20, 
+        padding: 4,
+        top: 80,  
+        left: 175, 
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+ 
+  
+    coverContainer: {
+        position: 'relative',
+        alignItems: 'center',
+        marginTop: 2,
+    },
+  
+    nightModeButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 3,
+        borderRadius: 5,
+        marginBottom: 3,
+    },
+    nightModeText: {
+        marginLeft: 8,
+        fontSize: 16,
+        color: 'black',
+    },
+    //header edit profile
+   
+    editCoverContainer: {
+        alignItems: 'center',
+        marginBottom: 16,
+    },
+
+    editCoverImage: {
+        width: '100%',
+        height: 150,
+        borderBottomLeftRadius: 20,
+        borderBottomRightRadius: 20,
+    },
+
+    editProfileImageContainer: {
+        position: 'absolute',
+        bottom: -30,
+        alignSelf: 'center',
+        borderWidth: 3,
+        borderColor: '#fff',
+        borderRadius: 50,
+    },
+
+    editHeaderContainer: {
+        height: 60,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 5,
+        backgroundColor: '#fff',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+
+    editHeaderTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: 'black', 
+        marginTop: 20, 
+    },
+
+    editButton: {
+        marginHorizontal: 10,
+    },
+
+    cancelTextStyle: {
+        fontSize: 16,
+        color: 'black',
+        marginTop: 20, 
+
+    },
+
+    doneTextStyle: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: '#6c44f4', 
+        marginTop: 20, 
     },
     shareButton: {
         backgroundColor: "#A020F0", // Color púrpura
@@ -918,101 +1225,79 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
 
-    //followers
-    containerFollower: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    tabContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        paddingVertical: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-    },
-    tab: {
-        alignItems: 'center',
-    },
-    activeTab: {
-        borderBottomWidth: 2,
-        borderBottomColor: 'purple',
-    },
-    tabText: {
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    activeTabText: {
-        color: 'black',
-    },
-    inactiveTabText: {
-        color: 'gray',
-    },
-    searchContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#f0f0f0',
-        borderRadius: 8,
-        padding: 8,
-        marginHorizontal: 16,
-        marginVertical: 10,
-    },
+    
+  //followers
+  containerFollower: {
+    flex: 1,
+    backgroundColor: '#fff',
+},
+tabContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+},
+tab: {
+    alignItems: 'center',
+},
+activeTab: {
+    borderBottomWidth: 2,
+    borderBottomColor: 'purple',
+},
+tabText: {
+    fontSize: 16,
+    fontWeight: '600',
+},
+activeTabText: {
+    color: 'black',
+},
+inactiveTabText: {
+    color: 'gray',
+},
+searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 8,
+    padding: 8,
+    marginHorizontal: 16,
+    marginVertical: 10,
+},
 
 
-    followerRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 10,
-        paddingHorizontal: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-    profileImageFollower: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        marginRight: 12,
-    },
-    userInfoFollower: {
-        flex: 1,
-    },
-    usernameFollower: {
-        fontSize: 16,
-        fontWeight: '600',
-    },
-    fullNameFollowers: {
-        fontSize: 14,
-        color: 'gray',
-    },
-    followIconContainer: {
-        padding: 8,
-    },
+followerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+},
+profileImageFollower: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 12,
+},
+userInfoFollower: {
+    flex: 1,
+},
+usernameFollower: {
+    fontSize: 16,
+    fontWeight: '600',
+},
+fullNameFollowers: {
+    fontSize: 14,
+    color: 'gray',
+},
+followIconContainer: {
+    padding: 8,
+},
 
-    //Estilos para el modal de comentarios
-    modalContent: {
-        backgroundColor: "white",
-        padding: 20,
-        borderRadius: 10,
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    commentText: {
-        fontSize: 16,
-        marginBottom: 10,
-    },
-    commentInput: {
-        borderWidth: 1,
-        borderColor: "#ccc",
-        borderRadius: 5,
-        padding: 10,
-        marginBottom: 10,
-        width: "100%",
-    },
 
     // Visualizacion de pop up de comentarios
-    commentContainer: {
-        marginBottom: 15, // Espacio inferior entre comentarios
-        paddingVertical: 5, // Padding vertical para separar los comentarios
-    },
+   
 
     commentAuthor: {
         fontWeight: "bold", // Nombre en negrita
@@ -1020,12 +1305,7 @@ const styles = StyleSheet.create({
         color: "#333", // Color de texto (ajustable)
     },
 
-    commentText: {
-        fontSize: 14, // Tamaño del texto del comentario
-        color: "#666", // Color del texto del comentario
-        marginLeft: 5, // Espacio entre el nombre y el comentario
-        flexWrap: "wrap", // Permite que el texto del comentario se ajuste en varias líneas si es necesario
-    },
+ 
     buttonsBox: {
         display: "flex",
         flexDirection: "row",
@@ -1054,201 +1334,46 @@ const styles = StyleSheet.create({
         textDecorationLine: 'underline',
     },
 
-    logoutButton: {
-        marginTop: 10,
-        marginBottom: 10,
-    },
 
-    logoutText: {
-        color: 'blue',
-        fontSize: 16,
-    },
-
-    deleteAccountButton: {
-        marginTop: 10,
-    },
-    deleteAccountText: {
-        color: 'darkred',
-        fontSize: 16,
-    },
-
-    profileIconOverlay: {
-        position: 'absolute',
-        height: 40,
-        width: 40,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        borderRadius: 20,
-        padding: 4,
-        top: 80,
-        left: 175,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-
-    coverContainer: {
-        position: 'relative',
-        alignItems: 'center',
-        marginTop: 2,
-    },
-
-    nightModeButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 3,
-        borderRadius: 5,
-        marginBottom: 3,
-    },
-    nightModeText: {
-        marginLeft: 8,
-        fontSize: 16,
-        color: 'black',
-    },
-
-    //header edit profile
-
-    editCoverContainer: {
-        alignItems: 'center',
-        marginBottom: 16,
-    },
-
-    editCoverImage: {
-        width: '100%',
-        height: 150,
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
-    },
-
-    editProfileImageContainer: {
-        position: 'absolute',
-        bottom: -30,
-        alignSelf: 'center',
-        borderWidth: 3,
-        borderColor: '#fff',
-        borderRadius: 50,
-    },
-
-    editHeaderContainer: {
-        height: 60,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingHorizontal: 5,
-        backgroundColor: '#fff',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-    },
-
-    editHeaderTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: 'black',
-        marginTop: 20,
-    },
-
-    editButton: {
-        marginHorizontal: 10,
-    },
-
-    cancelTextStyle: {
-        fontSize: 16,
-        color: 'black',
-        marginTop: 20,
-
-    },
-
-    doneTextStyle: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#6c44f4',
-        marginTop: 20,
-    },
-    shareButton: {
-        backgroundColor: "#A020F0", // Color púrpura
-        paddingVertical: 10,
-        borderRadius: 8,
-        alignItems: "center",
-        marginTop: 15,
-    },
-    shareButtonText: {
-        color: "#fff",
-        fontSize: 13,
-        fontWeight: "bold",
-    },
-
-    fieldContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        height: 50, 
-    },
-    input2: {
-        flex: 1,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        height: 40, 
-    },
-    textArea: {
-        flex: 1,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        height: 40, 
-    },
-    dropdownText: {
-        color: 'black',
-    },
-   
-    line2: {
-        height: 1,
-        backgroundColor: '#6c44f4',
-        marginVertical: 10,
-    },
-    triangleContainer: {
-        justifyContent: 'center',
-        alignItems: 'flex-end', 
-        marginLeft: 8,
-    },
 
 
     //Sign Up
     containerSignUp: {
         flex: 1,
         backgroundColor: '#fff',
-        marginTop: 50,
+        paddingHorizontal: width * 0.05,        
+        justifyContent: 'center', 
     },
     scrollContainerSignUp: {
         paddingHorizontal: 20,
         paddingVertical: 30,
     },
     titleSignUp: {
-        fontSize: 30,
+        fontSize: height * 0.04,
         fontWeight: 'bold',
         textAlign: 'center',
-        marginTop: 50,
     },
     inputWrapperSignUp: {
-        position: 'relative',
-        marginBottom: 25,
+        position: 'relative', 
+        marginBottom: 25, 
     },
     inputSignUp: {
-        height: 50,
         borderColor: '#ccc',
         borderWidth: 1,
         borderRadius: 10,
         paddingLeft: 10,
         fontSize: 16,
         position: 'relative',
-        zIndex: 0,
+        zIndex: 0, 
     },
     inputLabelSignUp: {
         position: 'absolute',
         top: -10,
         left: 10,
         fontSize: 14,
-        color: '#888',
-        backgroundColor: '#fff',
-        paddingHorizontal: 5,
+        color: '#888', 
+        backgroundColor: '#fff', 
+        paddingHorizontal: 5, 
         zIndex: 1,
     },
     profilePicButtonSignUp: {
@@ -1260,30 +1385,25 @@ const styles = StyleSheet.create({
     },
     profilePicButtonTextSignUp: {
         color: '#fff',
-        fontSize: 14,
+        fontSize: 16,
     },
     profilePicPreviewSignUp: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        marginBottom: 20,
+        borderRadius: width * 0.125, // Radio proporcional
         alignSelf: 'center',
     },
     buttonSignUp: {
         backgroundColor: '#6c44f4',
-        paddingVertical: 15,
+        paddingVertical: height * 0.02,
         borderRadius: 30,
-        marginBottom: 20,
         alignItems: 'center',
     },
     buttonTextSignUp: {
         color: '#fff',
-        fontSize: 18,
+        fontSize: height * 0.022,
     },
     signupContainerSignUp: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginTop: 20,
     },
     signupTextSignUp: {
         fontSize: 16,
@@ -1296,141 +1416,6 @@ const styles = StyleSheet.create({
         marginLeft: 5,
     },
 
-    uploadContainer: {
-        flex: 1,
-        backgroundColor: '#f3f3f3',
-    },
-    uploadTitle: {
-        textAlign: 'left',
-        margin: 10,
-        fontSize: 18,
-        color: 'gray',
-    },
-    cameraContainer: {
-        height: 300,
-        backgroundColor: '#d3d3d3',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    cameraPreview: {
-        width: '100%',
-        height: '100%',
-    },
-    cameraPlaceholder: {
-        fontSize: 18,
-        color: 'gray',
-    },
-    confirmButtonUpload: {
-        width: 60,
-        height: 40,
-        backgroundColor: '#6c44f4',
-        borderRadius: 8,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 40,
-    },
- 
-   
-    galleryContainer: {
-        paddingHorizontal: 10,
-    },
-    galleryCenteredContainer: {
-        paddingHorizontal: 10,
-        alignItems: 'center',
-    },
-    galleryImage: {
-        width: 120,
-        height: 120,
-        margin: 5,
-    },
-    cameraButtonText: {
-        color: "#fff",
-        fontSize: 18, // Aumenta el tamaño de la fuente
-        fontWeight: "bold",
-    },
- 
- 
- 
-    galleryButtonText: {
-        marginLeft: 8,
-        fontSize: 16,
-        color: '#333',
-    },
-   
-    confirmButtonText: {
-        fontSize: 16,
-        color: '#fff',
-        fontWeight: 'bold',
-    },
-    galleryTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginVertical: 16,
-        textAlign: 'center',
-    },
- 
-    cameraButtonContainer: {
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginTop: 10,
-        paddingHorizontal: 20,
-        width: '100%',
-    },
-    galleryButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        alignSelf: 'center',
-        backgroundColor: '#d3d3d3',
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        borderRadius: 20,
-        marginVertical: 20, // Espacio arriba y abajo del botón
-    },
- 
- 
-    cameraButton: {
-        width: 60,
-        height: 60,
-        backgroundColor: '#e0e0e0',
-        borderRadius: 30,
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: 'center',
- 
-    },
-    cameraButtonWrapper: {
-        flex: 1,                          // Asegura que el contenedor del botón de la cámara ocupe todo el espacio
-        alignItems: 'center',             // Centra el contenido horizontalmente
-        justifyContent: 'center',         // Alinea el botón al centro verticalmente
-    },
- 
- 
-    formContainer: {
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-    },
-    locationContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderBottomWidth: 1,
-        borderColor: "#ccc",
-        marginBottom: 10,
-        width: "100%",
-    },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderBottomWidth: 1,
-        borderColor: "#ccc",
-        marginBottom: 10,
-        width: "100%",
-    },
-    icon: {
-        fontSize: 18,
-        color: "#888",
-        marginRight: 10,
-    },
- 
 
 });
 
