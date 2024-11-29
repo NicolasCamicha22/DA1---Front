@@ -6,7 +6,7 @@ import Footer from '../Footer';
 import HeaderProfile from './HeaderProfile';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Post from '../Post/Post';
-import { useRouter } from 'expo-router'; 
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import styles from './ProfileStyles';
@@ -141,7 +141,7 @@ export default function ProfileScreen() {
 
     if (error) {
         return (
-            <View style={styles.container}>
+            <View style={commonStyles.container}>
                 <Text style={styles.errorText}>{error}</Text>
                 <Button title="Reintentar" onPress={() => loadProfileData()} />
             </View>
@@ -149,27 +149,15 @@ export default function ProfileScreen() {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={commonStyles.container}>
             <HeaderProfile onSettingsPress={() => router.push('/EditProfile')} />
 
             <FlatList
                 ListHeaderComponent={
                     userInfo && (
                         <View>
-                            <View style={styles.miniHeader}>
-                                <TouchableOpacity onPress={handleChangeCoverImage}>
-                                    <Text style={styles.changeCoverText}>Cambiar imagen de encabezado</Text>
-                                </TouchableOpacity>
-                            </View>
-
                             <View style={styles.coverContainer}>
-                                {userInfo.cover_image_url ? (
-                                    <Image source={{ uri: userInfo.cover_image_url }} style={styles.coverImage} />
-                                ) : (
-                                    <TouchableOpacity onPress={handleChangeCoverImage}>
-                                        <Text style={styles.changeCoverText}>Agregar imagen de encabezado</Text>
-                                    </TouchableOpacity>
-                                )}
+                                <Image source={{ uri: userInfo.cover_image_url }} style={styles.coverImage} />
                                 <Image source={{ uri: userInfo.profile_image_url }} style={styles.profileImage} />
                                 <View style={styles.usernameContainer}>
                                     <Text style={styles.username}>{userInfo.username}</Text>
@@ -180,10 +168,10 @@ export default function ProfileScreen() {
                             </View>
 
                             <View style={styles.infoContainer}>
-                                <Text style={styles.bio}>{userInfo.description || 'No description'}</Text>
+                                <Text style={styles.bio}>{userInfo.description || "No description"}</Text>
                                 <View style={styles.levelAndPosts}>
                                     <Text style={styles.level}>
-                                        {userInfo.level ? `Nivel: ${userInfo.level}` : 'Nivel: Null'}
+                                        {userInfo.level ? `Nivel: ${userInfo.level}` : "Nivel: Null"}
                                     </Text>
                                     <Text style={styles.postsCount}>{userInfo.posts_count} Posts</Text>
                                 </View>
@@ -200,8 +188,11 @@ export default function ProfileScreen() {
                                 </TouchableOpacity>
                             </View>
                         </View>
+
                     )
                 }
+
+
                 data={posts}
                 renderItem={renderItem}
                 keyExtractor={(item) => item.id.toString()}
@@ -209,7 +200,7 @@ export default function ProfileScreen() {
                 ListFooterComponent={loading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
             />
 
-            <Footer />
-        </View>
+            < Footer />
+        </View >
     );
 }

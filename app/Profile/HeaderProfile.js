@@ -13,9 +13,9 @@ export default function HeaderProfile() {
     };
 
     return (
-        <View style={styles.header}>
-            <Image source={require('../../assets/images/SocialMedia - logo.png')} style={styles.headerLogo} />
-            <TouchableOpacity onPress={handleSettingsPress} style={styles.settingsIcon}>
+        <View style={commonStyles.header}>
+            <Image source={require('../../assets/images/SocialMedia - logo.png')} style={commonStyles.headerLogo} />
+            <TouchableOpacity onPress={handleSettingsPress} style={commonStyles.settingsIcon}>
                 <Icon name="settings-outline" size={24} color="#000" />
             </TouchableOpacity>
         </View>

@@ -149,6 +149,40 @@ export default StyleSheet.create({
     },
 
 
+    //Estilos para cuando no hay post
+
+    noPostsContainer: {
+        flex: 1, 
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 50,
+        padding: 20,
+    },
+
+    noPostsImage: {
+        width: 100,
+        height: 100,
+        marginBottom: 20,
+    },
+    noPostsText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+        marginBottom: 20,
+    },
+
+    goToSearchButton: {
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        backgroundColor: '#6c44f4',
+        borderRadius: 5,
+    },
+    goToSearchButtonText: {
+        color: 'white',
+        fontSize: 16,
+    },
+
+
 
 
 
