@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, FlatList, ActivityIndicator, Text } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import styles from '../styles';
+import commonStyles from '../styles';
 import Footer from '../Footer';
 import Header from '../Header';
 import Post from '../Post/Post';
+import styles from './HomeStyles';
+
 
 export default function FavoritosScreen() {
     const [favorites, setFavorites] = useState([]);
@@ -63,7 +65,7 @@ export default function FavoritosScreen() {
     );
 
     return (
-        <View style={styles.container}>
+        <View style={commonStyles.container}>
             <Header />
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />

@@ -3,7 +3,8 @@ import { View, TextInput, TouchableOpacity, Text, Image, ScrollView } from 'reac
 import { resetPassword, sendCode } from '../api';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import styles from '../styles';
+import commonStyles from '../styles';
+import styles from './LoginStyles';
  
 const ResetPasswordScreen = () => {
     const [code, setCode] = useState('');

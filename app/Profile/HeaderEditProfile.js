@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router'; 
-import styles from '../styles';
+import commonStyles from '../styles';
+import styles from './ProfileStyles';
 
 const HeaderEditProfile = ({ onSave }) => {
     const router = useRouter();

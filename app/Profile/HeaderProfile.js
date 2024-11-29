@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import styles from '../styles';
+import commonStyles from '../styles';
 import { useRouter } from 'expo-router'; 
+import styles from './ProfileStyles';
 
 export default function HeaderProfile() {
     const router = useRouter();

@@ -5,7 +5,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../Header';
 import Footer from '../Footer';
-import styles from '../styles';
+import commonStyles from '../styles';
+import styles from './PostStyles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const ImagePostScreen = () => {

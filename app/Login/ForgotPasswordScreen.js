@@ -3,7 +3,8 @@ import { View, TextInput, Text, TouchableOpacity, Image, ScrollView } from 'reac
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { sendCode } from '../api';
-import styles from '../styles'; 
+import commonStyles from '../styles'; 
+import styles from './LoginStyles'; 
 
 const ForgotPasswordScreen = () => {
     const [email, setEmail] = useState('');

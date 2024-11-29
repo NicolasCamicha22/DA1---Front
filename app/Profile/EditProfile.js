@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import styles from '../styles';
+import commonStyles from '../styles';
 import HeaderEditProfile from './HeaderEditProfile';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';  // Usamos useRouter para navegar
+import styles from './ProfileStyles';
 
 export default function EditProfileScreen() {
     const router = useRouter();
@@ -112,7 +113,7 @@ export default function EditProfileScreen() {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={commonStyles.container}>
             <HeaderEditProfile onSave={handleSave} />
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={styles.coverContainer}>

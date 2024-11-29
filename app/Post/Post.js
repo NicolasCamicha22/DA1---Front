@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Image, FlatList, Dimensions, TextInput, Button } from 'react-native';
-import styles from '../styles';
+import commonStyles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from './PostStyles';
 
 
 

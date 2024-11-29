@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, FlatList, ActivityIndicator, Text } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import styles from '../styles';
+import commonStyles from '../styles';
 import Footer from '../Footer';
 import Header from '../Header';
 import Post from '../Post/Post';
-import Ad from './Ad'; // Componente para mostrar la publicidad
-import { Linking } from 'react-native';
+import Ad from './Ad'; 
 
 
 export default function HomeScreen() {
@@ -125,7 +124,7 @@ export default function HomeScreen() {
 
 
     return (
-        <View style={styles.container}>
+        <View style={commonStyles.container}>
             <Header />
             <FlatList
                 data={mixedContent}

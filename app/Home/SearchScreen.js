@@ -3,10 +3,11 @@ import { View, TextInput, FlatList, Text, TouchableOpacity, Image } from 'react-
 import { useRouter } from 'expo-router';
 import Header from '../Header';
 import Footer from '../Footer';
-import styles from '../styles';
+import commonStyles from '../styles';
 import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from './HomeStyles';
 
 const SearchScreen = () => {
     const [searchText, setSearchText] = useState('');
@@ -111,7 +112,7 @@ const SearchScreen = () => {
     );
 
     return (
-        <View style={styles.container}>
+        <View style={commonStyles.container}>
             <Header />
             <View style={styles.searchBox}>
                 <FontAwesome name="search" size={20} color="#999" style={styles.searchIcon} />

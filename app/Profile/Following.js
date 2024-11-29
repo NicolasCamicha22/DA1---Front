@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, TextInput, FlatList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import HeaderFollowers from './HeaderFollowers'; // Importa el header que definimos antes
-import styles from '../styles';
+import HeaderFollowers from './HeaderFollowers'; 
+import commonStyles from '../styles';
 import { useRouter } from 'expo-router'; 
+import styles from './ProfileStyles';
 
 export default function Following() {
     const [selectedTab, setSelectedTab] = useState('following');

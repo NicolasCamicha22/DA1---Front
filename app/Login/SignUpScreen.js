@@ -1,8 +1,8 @@
 // SignUpScreen.js
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, Alert, Image } from 'react-native';
-import { useRouter } from 'expo-router'; // Asegúrate de que esta importación esté disponible
-import SignUpForm from './SignUpForm'; // Asegúrate de que la ruta sea correcta
+import { useRouter } from 'expo-router';
+import SignUpForm from './SignUpForm'; 
 import { registerUser } from '../api';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';

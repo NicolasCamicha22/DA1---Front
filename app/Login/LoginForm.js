@@ -1,5 +1,6 @@
 import { View, Text, TextInput, Button, TouchableOpacity, KeyboardAvoidingView, Image, Platform, ScrollView, Alert } from 'react-native';
-import styles from '../styles';
+import commonStyles from '../styles';
+import styles from './LoginStyles';
 import React, { useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
@@ -26,7 +27,7 @@ export default function LoginForm({ onLogin, email, setEmail, password, setPassw
             behavior={Platform.OS === "ios" ? "padding" : "height"} // Para ajustar en iOS y Android
             keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0} // Ajuste del desplazamiento en iOS
         >
-            <ScrollView contentContainerStyle={styles.scrollContainerLogin} showsVerticalScrollIndicator={false}>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <Image source={require('../../assets/images/SocialMedia - logo.png')} style={styles.logo} />
                 <Text style={styles.titleLogin}>Login</Text>
 
@@ -42,7 +43,7 @@ export default function LoginForm({ onLogin, email, setEmail, password, setPassw
                     />
                 </View>
 
-                <View style={styles.inputWrapperPassword}>
+                <View style={styles.inputWrapperLogin}>
                     <Text style={styles.inputLabelLogin}>Password</Text>
                     <View style={styles.passwordContainer}>
                         <TextInput

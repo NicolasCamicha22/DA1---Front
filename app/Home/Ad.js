@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, Linking } from 'react-native';
-import styles from '../styles';
+import commonStyles from '../styles';
+import styles from './HomeStyles';
 
 function Ad({ title, imageUrl, linkUrl }) {
     const handlePress = () => {

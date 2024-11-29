@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList, ActivityIndicator, TouchableOpacity, Button, Alert } from 'react-native';
 import axios from 'axios';
-import styles from '../styles';
+import commonStyles from '../styles';
 import Footer from '../Footer';
 import HeaderProfile from './HeaderProfile';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -9,6 +9,7 @@ import Post from '../Post/Post';
 import { useRouter } from 'expo-router'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
+import styles from './ProfileStyles';
 
 export default function ProfileScreen() {
     const [userInfo, setUserInfo] = useState(null);
@@ -132,7 +133,7 @@ export default function ProfileScreen() {
 
     if (loading) {
         return (
-            <View style={styles.container}>
+            <View style={commonStyles.container}>
                 <ActivityIndicator size="large" color="#0000ff" />
             </View>
         );

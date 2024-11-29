@@ -6,7 +6,8 @@ import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Footer from '../Footer';
 import Header from '../Header';
-import styles from '../styles';
+import commonStyles from '../styles';
+import styles from './PostStyles';
 
 const ImageUploadScreen = () => {
     const [selectedImage, setSelectedImage] = useState(null);
@@ -106,10 +107,12 @@ const ImageUploadScreen = () => {
                     </TouchableOpacity>
                 </View>
 
-                <TouchableOpacity style={styles.galleryButton} onPress={selectImageFromGallery}>
-                    <Ionicons name="folder-open" size={25} color="black" />
-                    <Text style={styles.galleryButtonText}>Seleccionar desde la Galería</Text>
-                </TouchableOpacity>
+                <View style={styles.GaleriaButtonWrapper}>
+                    <TouchableOpacity style={styles.galleryButton} onPress={selectImageFromGallery}>
+                        <Ionicons name="folder-open" size={25} color="black" />
+                        <Text style={styles.galleryButtonText}>Seleccionar desde la Galería</Text>
+                    </TouchableOpacity>
+                </View>
 
                 <Text style={styles.galleryTitle}>Selected photos</Text>
 

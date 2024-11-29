@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Image } from 'react-native';
-import styles from '../styles'; // Asegúrate de que la ruta sea correcta
+import commonStyles from '../styles'; 
+import styles from './LoginStyles';
 
 export default function SignUpForm({ username, setUsername, name, setName, surname, setSurname, email, setEmail, password, setPassword, profilePic, selectProfilePic, onSignUp, onSignIn }) {
     return (
