@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, TextInput, FlatList, Image } from 'react-
 import Icon from 'react-native-vector-icons/Ionicons';
 import HeaderFollowers from './HeaderFollowers'; // Importa el header que definimos antes
 import styles from '../styles';
-import { useRouter } from 'expo-router'; 
+import { useNavigation } from '@react-navigation/native';
 
 export default function Followers() {
     const [selectedTab, setSelectedTab] = useState('followers');
@@ -14,7 +14,7 @@ export default function Followers() {
         { id: 3, username: 'MarianaPonce', fullName: 'Mariana Ponce', profileImage: 'https://example.com/image3.jpg', following: false },
         { id: 4, username: 'Lu_99', fullName: 'Lucia Lopez', profileImage: 'https://example.com/image4.jpg', following: false },
     ]);
-    const router = useRouter();
+    const navigation = useNavigation();
 
     const filteredFollowers = followersData.filter((follower) =>
         follower.username.toLowerCase().includes(searchQuery.toLowerCase()) || 
@@ -60,7 +60,7 @@ export default function Followers() {
                 >
                     <Text style={[styles.tabText, selectedTab === 'followers' && styles.activeTabText]}>14 Followers</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => router.push('./Following')}>
+                <TouchableOpacity onPress={() => navigation.navigate('Following')}>
                     <Text style={styles.inactiveTab}>20 Following</Text>
                 </TouchableOpacity>
             </View>
@@ -84,4 +84,5 @@ export default function Followers() {
             />
         </View>
     );
+
 }

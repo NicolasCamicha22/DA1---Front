@@ -21,7 +21,7 @@ function Ad({ title, imageUrl, linkUrl }) {
                 <Text style={styles.noImageText}>Imagen no disponible</Text>
             )}
             <Text style={styles.adTitle}>{title}</Text>
-            <TouchableOpacity onPress={handlePress} style={styles.visitButton}>
+            <TouchableOpacity onPress={handlePress} >
                 <Text style={styles.adButtonText}>Visitar</Text>
             </TouchableOpacity>
         </View>

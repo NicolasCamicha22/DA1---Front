@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useNavigation } from '@react-navigation/native';
 import styles from '../styles';
 import HeaderEditProfile from './HeaderEditProfile';
 import axios from "axios";
@@ -8,9 +9,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';  // Usamos useRouter para navegar
 
 export default function EditProfileScreen() {
+    const navigation = useNavigation();
     const router = useRouter();
     const handleSettingsPress = () => {
-        router.push('./PorfileScreen')
+        navigation.navigate('ProfileScreen'); 
     };
     
     const [userId, setUserId] = useState(null);
@@ -77,7 +79,7 @@ export default function EditProfileScreen() {
         try {
             const response = await axios.put(`https://da1-back.onrender.com/user/${userId}`, updatedData);
             console.log("Perfil actualizado:", response.data);
-            router.push('./PorfileScreen')
+            navigation.navigate("ProfileScreen");
         } catch (error) {
             console.error("Error al guardar los cambios:", error);
         }
@@ -88,7 +90,7 @@ export default function EditProfileScreen() {
             await AsyncStorage.removeItem('accessToken');
             await AsyncStorage.removeItem('refreshToken');
             await AsyncStorage.removeItem('userId');
-            router.push('../Login/LoginScreen'); 
+            router.push('../Login/LoginForm'); 
         } catch (error) {
             console.error('Error al cerrar sesión:', error);
         }
@@ -223,10 +225,11 @@ export default function EditProfileScreen() {
                             <View style={styles.modalContentEdit}>
                                 <Text style={styles.modalText}>Are you sure?</Text>
                                 <View style={styles.buttonContainerEdit}>
-                                    <TouchableOpacity style={styles.confirmButtonEdit} onPress={handleLogout}>
+                                    <TouchableOpacity style={styles.confirmButton} onPress={handleLogout}>
                                         <Text style={styles.modalbuttonText}>Yes</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={styles.confirmButtonEdit} onPress={toggleModal}>
+                                    <TouchableOpacity style={styles.confirmButton} onPress={toggleModal}>
+
                                         <Text style={styles.modalbuttonText}>No</Text>
                                     </TouchableOpacity>
                                 </View>

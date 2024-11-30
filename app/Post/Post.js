@@ -187,11 +187,14 @@ const Post = ({ id, username, location, imageUrl, caption, likes, comments, favo
                 {normalizedImageUrls.map((_, index) => (
                     <View
                         key={index}
-                        style={[styles.paginationDot, { opacity: currentImageIndex === index ? 1 : 0.5 }]}
+                        style={[
+                            styles.paginationDot,
+                            { backgroundColor: currentImageIndex === index ? '#6c44f4' : '#000' }
+                        ]}
                     />
                 ))}
             </View>
-            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.date}>{new Date(date).toLocaleDateString()}</Text>
             <Text style={styles.caption}>{caption}</Text>
             <Text style={styles.description}>{description}</Text>
             <View style={styles.actionsContainer}>

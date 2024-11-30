@@ -17,7 +17,7 @@ export default function HeaderFollowers() {
             setUserInfo(userData);
         }, 1000);
 
-        return () => clearTimeout(timer); // Limpieza del temporizador
+        return () => clearTimeout(timer); 
     }, []);
 
     const handleSettingsPress = () => {

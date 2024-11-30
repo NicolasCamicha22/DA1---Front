@@ -7,8 +7,8 @@ import { useRouter, useSegments } from 'expo-router';
 
 export default function Footer() {
     const router = useRouter();
-    const isActive = (screen) => segments[0] === screen; // Comprueba si estamos en la pantalla activa
-    const segments = useSegments(); // Obtiene el segmento actual de la ruta
+    const isActive = (screen) => segments[0] === screen; 
+    const segments = useSegments(); 
     return (
         <View style={styles.footer}>
             <TouchableOpacity onPress={() => router.push('../Home/HomeScreen')}>

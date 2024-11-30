@@ -98,9 +98,6 @@ export const validateAccessToken = async () => {
       await AsyncStorage.removeItem('accessToken');
       await AsyncStorage.removeItem('refreshToken');
       
-      // Opcionalmente, podrías hacer una solicitud al servidor para invalidar el refreshToken
-      // await api.post('/logout', { token: refreshToken });
-  
       // Redirigir a la pantalla de Login
       router.push('/LoginScreen');
     } catch (error) {

@@ -48,7 +48,6 @@ const ResetPasswordScreen = () => {
     };
  
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainerLogin}>
             <View style={styles.containerForgotPassword}>
                 <Image source={require('../../assets/images/SocialMedia - logo.png')} style={styles.logo} />
                 <Text style={styles.titleLogin}>Recovery</Text>
@@ -95,9 +94,8 @@ const ResetPasswordScreen = () => {
  
                 {/* Mostrar mensaje o error */}
                 {message ? <Text style={styles.messageForgotPassword}>{message}</Text> : null}
-                {error ? <Text style={styles.errorForgotPassword}>{error}</Text> : null}
+                {error ? <Text style={styles.messageForgotPassword}>{error}</Text> : null}
             </View>
-        </ScrollView>
     );
 };
  

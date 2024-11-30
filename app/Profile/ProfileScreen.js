@@ -155,12 +155,6 @@ export default function ProfileScreen() {
                 ListHeaderComponent={
                     userInfo && (
                         <View>
-                            <View style={styles.miniHeader}>
-                                <TouchableOpacity onPress={handleChangeCoverImage}>
-                                    <Text style={styles.changeCoverText}>Cambiar imagen de encabezado</Text>
-                                </TouchableOpacity>
-                            </View>
-
                             <View style={styles.coverContainer}>
                                 {userInfo.cover_image_url ? (
                                     <Image source={{ uri: userInfo.cover_image_url }} style={styles.coverImage} />

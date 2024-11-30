@@ -26,7 +26,6 @@ export default function LoginForm({ onLogin, email, setEmail, password, setPassw
             behavior={Platform.OS === "ios" ? "padding" : "height"} // Para ajustar en iOS y Android
             keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0} // Ajuste del desplazamiento en iOS
         >
-            <ScrollView contentContainerStyle={styles.scrollContainerLogin} showsVerticalScrollIndicator={false}>
                 <Image source={require('../../assets/images/SocialMedia - logo.png')} style={styles.logo} />
                 <Text style={styles.titleLogin}>Login</Text>
 
@@ -90,7 +89,6 @@ export default function LoginForm({ onLogin, email, setEmail, password, setPassw
                         style={styles.googleButtonLogin}
                     />
                 </TouchableOpacity>
-            </ScrollView>
         </KeyboardAvoidingView>
     );
 }

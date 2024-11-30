@@ -38,7 +38,7 @@ export default function LoginScreen() {
 
   // Navegar a la pantalla de SignUp
   const handleSignUp = () => {
-    router.push('./SignUpScreen');
+    router.push('./SignUpForm');
   };
 
   // Navegar a la pantalla de ForgotPassword

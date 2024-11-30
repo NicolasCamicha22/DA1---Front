@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, TextInput, Text, TouchableOpacity,  KeyboardAvoidingView, Platform,   Image, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { sendCode } from '../api';
@@ -23,17 +23,23 @@ const ForgotPasswordScreen = () => {
         }
     };
 
+    const { width, height } = Dimensions.get('window'); 
+
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainerLogin} style={styles.containerLogin}>
-            <View style={styles.containerForgotPassword}>
-                <Image source={require('../../assets/images/SocialMedia - logo.png')} style={styles.logo} />
-                <Text style={styles.titleLogin}>Recovery</Text>
+        <KeyboardAvoidingView
+    style={[styles.containerLogin, { width, height }]}
+    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+>
+       
+       <View style={styles.containerForgotPassword}>
+                <Image source={require('../../assets/images/SocialMedia - logo.png')} style={[styles.logo, { marginTop: -43 }]}/>
+                <Text style={styles.titleForgotPassword}>Recovery</Text>
 
                 {/* Campo de texto para email o nombre de usuario */}
-                <View style={styles.inputContainerForgotPassword}>
-                    <Text style={styles.inputLabelLogin}>email or username</Text>
+                <View style={[styles.inputContainerForgotPassword, { width: width * 0.9 }]}>
+                    <Text style={styles.inputLabelSignUp}>Email</Text>
                     <TextInput
-                        style={styles.inputLogin}
+                        style={[styles.inputLogin, { width: '100%' }]}
                         value={email}
                         onChangeText={setEmail}
                         keyboardType="email-address"
@@ -43,7 +49,7 @@ const ForgotPasswordScreen = () => {
                 </View>
 
                 {/* Botón para enviar el código */}
-                <TouchableOpacity style={styles.buttonForgotPassword} onPress={handleSendCode}>
+                <TouchableOpacity style={[styles.buttonForgotPassword, { width: width * 0.8 }]} onPress={handleSendCode}>
                     <Text style={styles.buttonTextLogin}>SEND EMAIL</Text>
                 </TouchableOpacity>
 
@@ -52,12 +58,13 @@ const ForgotPasswordScreen = () => {
 
                 {/* Enlace para volver al login */}
                 <View style={styles.signupContainerLogin}>
-                    <TouchableOpacity onPress={() => router.push('./LoginScreen')}>
+                    <TouchableOpacity onPress={() => router.push('./LoginForm')}>
                         <Text style={styles.forgotPasswordLogin}>Return</Text>
                     </TouchableOpacity>
                 </View>
             </View>
-        </ScrollView>
+    
+        </KeyboardAvoidingView>
     );
 };
 

@@ -104,8 +104,8 @@ const SearchScreen = () => {
                 <Text style={styles.username}>{item.username}</Text>
                 <Text style={styles.fullName}>{item.full_name}</Text>
             </View>
-            <TouchableOpacity onPress={() => toggleFollow(item.id)} style={styles.followButton}>
-                <Text style={styles.followText}>{item.following ? 'Unfollow' : 'Follow'}</Text>
+            <TouchableOpacity onPress={() => toggleFollow(item.id)} style={styles.followButtonSearch}>
+                <Text style={styles.followTextSearch}>{item.following ? 'Unfollow' : 'Follow'}</Text>
             </TouchableOpacity>
         </TouchableOpacity>
     );

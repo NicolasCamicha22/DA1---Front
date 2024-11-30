@@ -55,7 +55,7 @@ export default function SignUpScreen() {
             // Aquí envías los datos al backend usando Axios
             const response = await registerUser({ username, name, surname, email, password, profilePic });
             Alert.alert("Registro exitoso", response.message);
-            router.push('./LoginScreen'); // Redirige al login después de registrar
+            router.push('./LoginForm'); // Redirige al login después de registrar
         } catch (error) {
             Alert.alert("Error al registrar", error.message || "Hubo un error al intentar registrar");
         }
@@ -63,7 +63,7 @@ export default function SignUpScreen() {
 
     const handleSignIn = () => {
         // Lógica para volver a la pantalla de Login
-        router.push('./LoginScreen'); 
+        router.push('./LoginForm'); 
     };
 
     return (
