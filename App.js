@@ -10,13 +10,15 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="SignUp" component={SignUp} />
+        <Stack.Screen name="Login" component={LoginForm} />
+        <Stack.Screen name="SignUp" component={SignUpForm} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
             <Stack.Screen name="EditProfile" component={EditProfile} />
             <Stack.Screen name="Followers" component={Followers} /> 
             <Stack.Screen name="Following" component={Following} />
             <Stack.Screen name="HeaderProfile" component={HeaderProfile} />
+            <Stack.Screen name="Followers" component={Followers} />
+            <Stack.Screen name="Following" component={Following} />
       </Stack.Navigator>
     </NavigationContainer>
   );

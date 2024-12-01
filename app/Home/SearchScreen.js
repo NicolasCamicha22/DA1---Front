@@ -4,20 +4,20 @@ import { useRouter } from 'expo-router';
 import Header from '../Header';
 import Footer from '../Footer';
 import styles from '../styles';
-import { FontAwesome } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SearchScreen = () => {
     const [searchText, setSearchText] = useState('');
     const [results, setResults] = useState([]);
-    const router = useRouter(); 
-    const [userId, setUserId] = useState(null); // Cambiado a `userId` para ser consistente con HomeScreen.js
+    const router = useRouter();
+    const [userId, setUserId] = useState(null);
 
     useEffect(() => {
         const fetchUserId = async () => {
             try {
-                const storedUserId = await AsyncStorage.getItem('userId'); // Asegúrate de usar la misma clave
+                const storedUserId = await AsyncStorage.getItem('userId');
                 if (storedUserId) {
                     setUserId(storedUserId);
                     console.log('userId cargado desde AsyncStorage:', storedUserId);
@@ -48,7 +48,6 @@ const SearchScreen = () => {
             return;
         }
         try {
-            // Incluimos el currentUserId en los parámetros
             const response = await axios.get('https://da1-back.onrender.com/users/search', {
                 params: { query: text.trim(), currentUserId: userId }
             });
@@ -62,7 +61,6 @@ const SearchScreen = () => {
             setResults([]);
         }
     };
-    
 
     const toggleFollow = async (followingId) => {
         if (!userId) {
@@ -90,31 +88,30 @@ const SearchScreen = () => {
     };
 
     const renderUserItem = ({ item }) => (
-        <TouchableOpacity onPress={() => router.push(`/profile/${item.id}`)} style={styles.userContainer}>
-            {item.profile_pic ? (
-                <Image
-                    source={{ uri: item.profile_pic }}
-                    style={styles.profilePic}
-                    onError={(error) => console.error('Error al cargar imagen:', error.nativeEvent.error)}
-                />
-            ) : (
-                <Text>No Image Available</Text>
-            )}
-            <View style={styles.userInfo}>
-                <Text style={styles.username}>{item.username}</Text>
-                <Text style={styles.fullName}>{item.full_name}</Text>
+        <View style={styles.followerRow}>
+            <Image
+                source={{ uri: item.profile_pic }}
+                style={styles.profileImageFollower}
+            />
+            <View style={styles.userInfoFollower}>
+                <Text style={styles.usernameFollower}>{item.username}</Text>
+                <Text style={styles.fullNameFollowers}>{item.full_name}</Text>
             </View>
-            <TouchableOpacity onPress={() => toggleFollow(item.id)} style={styles.followButtonSearch}>
-                <Text style={styles.followTextSearch}>{item.following ? 'Unfollow' : 'Follow'}</Text>
+            <TouchableOpacity onPress={() => toggleFollow(item.id)} style={styles.followIconContainer}>
+                <Icon
+                    name={item.following ? 'person-remove-outline' : 'person-add-outline'}
+                    size={24}
+                    color={item.following ? 'red' : 'purple'}
+                />
             </TouchableOpacity>
-        </TouchableOpacity>
+        </View>
     );
 
     return (
-        <View style={styles.container}>
+        <View style={styles.containerFollower}>
             <Header />
-            <View style={styles.searchBox}>
-                <FontAwesome name="search" size={20} color="#999" style={styles.searchIcon} />
+            <View style={styles.searchContainer}>
+                <Icon name="search" size={20} color="#ccc" style={styles.searchIcon} />
                 <TextInput
                     style={styles.searchInput}
                     placeholder="Search"

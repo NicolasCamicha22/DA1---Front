@@ -6,7 +6,7 @@ import styles from '../styles';
 import HeaderEditProfile from './HeaderEditProfile';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';  // Usamos useRouter para navegar
+import { useRouter } from 'expo-router';  
 
 export default function EditProfileScreen() {
     const navigation = useNavigation();
@@ -22,8 +22,8 @@ export default function EditProfileScreen() {
         username: '',
         bio: '',
         gender: 'prefer not to say',
-        profileImage: "https://randomuser.me/api/portraits/men/41.jpg",
-        coverImage: "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg",
+        profileImage:'' ,
+        coverImage: '',
     });
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);

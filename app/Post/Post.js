@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Image, FlatList, Dimensions, TextInput, Button } from 'react-native';
+import { View, Text, Image, FlatList, Dimensions, TextInput,ScrollView,TouchableOpacity,Platform,KeyboardAvoidingView, Button } from 'react-native';
 import styles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -227,34 +227,64 @@ const Post = ({ id, username, location, imageUrl, caption, likes, comments, favo
                 </View>
             </View>
 
-            {/* Modal para mostrar y agregar comentarios */}
-            <Modal isVisible={modalVisible} onBackdropPress={toggleModal}>
-                <View style={styles.modalContent}>
-                    {commentList.length > 0 ? (
-                        <FlatList
-                            data={commentList}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem={({ item }) => (
-                                <View style={styles.commentContainer}>
-                                    <Text style={styles.commentText}>
-                                        <Text style={{ fontWeight: 'bold' }}>{item.username}: </Text>
-                                        {item.comment}
-                                    </Text>
-                                </View>
-                            )}
-                        />
-                    ) : (
-                        <Text>No hay comentarios disponibles</Text>
-                    )}
-                    <TextInput
-                        style={styles.commentInput}
-                        value={comment}
-                        onChangeText={setComment}
-                        placeholder="Escribe un comentario..."
-                    />
-                    <Button title="Comentar" onPress={handleComment} />
-                </View>
-            </Modal>
+            <Modal 
+    isVisible={modalVisible} 
+    onBackdropPress={toggleModal} 
+    style={{ justifyContent: 'flex-end', margin: 0 }} // Modal desde la mitad hacia abajo
+>
+    <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'} 
+        style={styles.keyboardAvoidingView}
+    >
+        <View style={styles.modalContainerComments}>
+            {/* Título */}
+            <Text style={styles.modalTitle}>Comments</Text>
+
+            {/* Línea separadora violeta */}
+            <View style={styles.separatorComment} />
+
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                {/* Lista de comentarios */}
+                {commentList.length > 0 ? (
+                    commentList.map((item, index) => (
+                        <View key={index.toString()} style={styles.commentItem}>
+                            <Text style={styles.commentUser}>{item.username}</Text>
+                            <Text style={styles.commentText}>{item.comment}</Text>
+                        </View>
+                    ))
+                ) : (
+                    <Text style={styles.noCommentsText}>No hay comentarios disponibles</Text>
+                )}
+            </ScrollView>
+
+            {/* Campo de texto para agregar nuevos comentarios */}
+            <View style={styles.inputContainerComment}>
+                <Ionicons 
+                    name="chatbubble-outline" 
+                    size={24} 
+                    color="#6c44f4" 
+                    style={styles.chatIcon} 
+                />
+                <TextInput
+                    style={styles.inputComment}
+                    value={comment}
+                    onChangeText={setComment}
+                    placeholder="Add a comment..."
+                    placeholderTextColor="#999"
+                />
+                <TouchableOpacity
+                    style={styles.addCommentButton}
+                    onPress={handleComment}
+                >
+                    <Ionicons name="send-outline" size={24} color="#6c44f4" />
+                </TouchableOpacity>
+            </View>
+        </View>
+    </KeyboardAvoidingView>
+</Modal>
+
+
+
 
         </View>
     );

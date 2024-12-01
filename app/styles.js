@@ -357,9 +357,6 @@ searchContainer: {
     marginHorizontal: 16,
     marginVertical: 10,
 },
-searchIcon: {
-    marginRight: 8, 
-},
 searchInput: {
     flex: 1,
     fontSize: 16,
@@ -513,10 +510,6 @@ commentContainer: {
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
 },
-commentText: {
-    fontSize: width * 0.04,
-    color: '#333',
-},
 commentInput: {
     marginTop: 12,
     borderWidth: 1,
@@ -524,6 +517,82 @@ commentInput: {
     borderRadius: 4,
     padding: 8,
     fontSize: width * 0.04,
+},
+addCommentButton: {
+    marginLeft: 10,
+},
+inputComment: {
+    flex: 1,
+    height: 40,
+    color: '#333',
+    fontSize: 16, // Texto más grande
+},
+chatIcon: {
+    marginRight: 10, // Espacio entre el icono y el input
+},
+inputContainerComment: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#d3d3d3', // Fondo gris claro
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginTop: 15,
+    borderTopWidth: 2, // Línea superior violeta
+    borderTopColor: '#6c44f4',
+},
+noCommentsText: {
+    textAlign: 'center',
+    color: '#666',
+    marginVertical: 20,
+    fontSize: 16, 
+},
+commentText: {
+    flex: 1,
+    color: '#333',
+    fontSize: 16,
+},
+commentUser: {
+    fontWeight: 'bold',
+    color: '#444',
+    marginRight: 10,
+    fontSize: 16, 
+},
+commentItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: '#aaa', 
+    paddingVertical: 10,
+},
+separatorComment: {
+    height: 2,
+    backgroundColor: '#6c44f4', 
+    marginBottom: 15,
+},
+modalContainerComments: {
+    backgroundColor: '#d3d3d3', 
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 15,
+    paddingBottom: 30,
+    height: '50%',
+},
+modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#666', 
+    textAlign: 'center',
+    marginBottom: 15,
+},
+keyboardAvoidingView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+},
+scrollViewContent: {
+    flexGrow: 1,
+    paddingBottom: 20, // Espacio para evitar solapamiento con el input
 },
 //Image Upload
 cameraContainer: {
@@ -895,41 +964,59 @@ buttonTextSignUp: {
 },
 //Ads
 adContainer: {
-    marginTop: 20,
+    marginBottom: 16,
     padding: 10,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: 'white',
     borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+},
+adHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between", // Espacio entre el label y el ícono
     alignItems: "center",
+    marginBottom: 5,
 },
 adLabel: {
     fontSize: 14,
     color: "#888",
     fontWeight: "bold",
-    marginBottom: 5,
 },
-
 adTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 5,
+    marginBottom: 10,
+    textAlign: "left",
 },
-adButtonText: {
-    color: "blue",
-    fontWeight: "bold",
+adFooter: {
+    flexDirection: "row",
+    justifyContent: "flex-start", 
+    alignItems: "center",
+    marginTop: 10,
+
+},
+visitButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+},
+visitButton: {
+    fontSize: 16,
+    color: '#6c44f4',
+    fontWeight: 'bold',
+    marginRight: 5, // Espacio entre texto y ícono
+    textAlign: "left",
+
+},
+linkIcon: {
+    marginLeft: 5,
 },
 noImageText: {
     textAlign: "center",
     marginTop: 20,
     color: "#999",
-  },
-  adButtonText: {
-    color: "blue",
-    fontWeight: "bold",
-},
-visitButton: {
-    fontSize: height * 0.015,
-    color: '#6c44f4',
-    fontWeight: 'bold',
 },
 //Favorite
 noResultsText: {

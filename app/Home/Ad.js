@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, Linking } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons'; // Usa Ionicons o cualquier biblioteca de íconos
 import styles from '../styles';
 
 function Ad({ title, imageUrl, linkUrl }) {
@@ -10,24 +12,34 @@ function Ad({ title, imageUrl, linkUrl }) {
                 .catch(err => console.error("Error al abrir el enlace:", err));
         }
     };
-    
 
     return (
         <View style={styles.adContainer}>
-            <Text style={styles.adLabel}>Publicidad</Text>
+            {/* Cabecera */}
+            <View style={styles.adHeader}>
+                <Text style={styles.adLabel}>Ad</Text>
+                <FontAwesome name="dollar" size={20} color="#6c44f4" />
+            </View>
+
+            {/* Título */}
+            <Text style={styles.adTitle}>{title}</Text>
+
+            {/* Imagen */}
             {imageUrl ? (
                 <Image source={{ uri: imageUrl }} style={styles.postImage} />
             ) : (
                 <Text style={styles.noImageText}>Imagen no disponible</Text>
             )}
-            <Text style={styles.adTitle}>{title}</Text>
-            <TouchableOpacity onPress={handlePress} >
-                <Text style={styles.adButtonText}>Visitar</Text>
-            </TouchableOpacity>
+
+            {/* Botón de Visitar */}
+            <View style={styles.adFooter}>
+                <TouchableOpacity onPress={handlePress} style={styles.visitButtonContainer}>
+                    <Text style={styles.visitButton}>Visitar</Text>
+                    <Ionicons name="link-outline" size={16} color="#6c44f4" style={styles.linkIcon} />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
-
-
 
 export default Ad;

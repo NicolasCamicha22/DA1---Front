@@ -3,12 +3,13 @@ import { View, Text, TouchableOpacity, TextInput, FlatList, Image } from 'react-
 import Icon from 'react-native-vector-icons/Ionicons';
 import HeaderFollowers from './HeaderFollowers'; // Importa el header que definimos antes
 import styles from '../styles';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 export default function Following() {
     const [selectedTab, setSelectedTab] = useState('following');
     const [searchQuery, setSearchQuery] = useState('');
-    const navigation = useNavigation();
+
+    const router = useRouter();
 
     // Ejemplo de datos hardcodeados para las personas seguidas
     const followingData = [
@@ -29,7 +30,7 @@ export default function Following() {
 
             {/* Selector de pestaña de Followers y Following */}
             <View style={styles.tabContainer}>
-                <TouchableOpacity onPress={() => navigation.navigate('Followers')}>
+                <TouchableOpacity onPress={() =>router.push('./Following')}>
                     <Text style={styles.inactiveTab}>14 Followers</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[styles.tab, selectedTab === 'following' && styles.activeTab]}>
