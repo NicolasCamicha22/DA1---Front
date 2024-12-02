@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Footer from '../Footer';
 import Header from '../Header';
 import styles from '../styles';
+import HeaderUpload from './HeaderUpload';
 
 const ImageUploadScreen = () => {
     const [selectedImage, setSelectedImage] = useState(null);
@@ -85,7 +86,10 @@ const ImageUploadScreen = () => {
 
     return (
         <View style={{ flex: 1 }}>
-            <Header />
+            <HeaderUpload 
+            galleryImages={galleryImages} 
+            goToPostScreen={goToPostScreen} 
+     />
             <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }} keyboardShouldPersistTaps="handled">
                 <View style={styles.cameraContainer}>
                     {selectedImage ? (
@@ -94,33 +98,33 @@ const ImageUploadScreen = () => {
                         <Text style={styles.cameraPlaceholder}>CAMARA</Text>
                     )}
                 </View>
-
+                
                 <View style={styles.cameraButtonContainer}>
                     <View style={styles.cameraButtonWrapper}>
                         <TouchableOpacity style={styles.cameraButton} onPress={openCamera}>
                             <Ionicons name="camera" size={30} color="black" />
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={styles.confirmButtonUpload} onPress={goToPostScreen}>
-                        <Text style={styles.confirmButtonText}>Post</Text>
-                    </TouchableOpacity>
                 </View>
 
                 <TouchableOpacity style={styles.galleryButton} onPress={selectImageFromGallery}>
                     <Ionicons name="folder-open" size={25} color="black" />
-                    <Text style={styles.galleryButtonText}>Seleccionar desde la Galería</Text>
+                    <Text style={styles.galleryButtonText}>Select from gallery</Text>
                 </TouchableOpacity>
 
                 <Text style={styles.galleryTitle}>Selected photos</Text>
 
+                {/* Línea divisoria */}
+                <View style={styles.divider} />
+
                 {/* Galería de imágenes seleccionadas */}
-                <View style={[styles.galleryCenteredContainer, { flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center' }]}>
+                <View style={styles.galleryGrid}>
                     {galleryImages.length > 0 ? (
                         galleryImages.map((item) => (
                             <Image key={item.id} source={{ uri: item.uri }} style={styles.galleryImage} />
                         ))
                     ) : (
-                        <Text>No hay imágenes en la galería</Text>
+                        <Text>No images selected</Text>
                     )}
                 </View>
             </ScrollView>

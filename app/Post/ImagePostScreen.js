@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, Image, FlatList, Dimensions, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Header from '../Header';
-import Footer from '../Footer';
-import styles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Footer from '../Footer';
+import Header from '../Header';
+import styles from '../styles';
+
+const screenWidth = Dimensions.get('window').width;
+const { height } = Dimensions.get('window');
 
 const ImagePostScreen = () => {
     const route = useRouter();
@@ -14,6 +17,9 @@ const ImagePostScreen = () => {
     const [description, setDescription] = useState('');
     const [caption, setCaption] = useState('');
     const [galleryImages, setGalleryImages] = useState([]);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const flatListRef = useRef(null);
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -66,25 +72,43 @@ const ImagePostScreen = () => {
         }
     };
 
+    const handleScroll = (event) => {
+        const contentOffsetX = event.nativeEvent.contentOffset.x;
+        const index = Math.floor(contentOffsetX / screenWidth);
+        setCurrentImageIndex(index);
+    };
+
     return (
         <View style={{ flex: 1 }}>
-            <Header />
             <ScrollView
                 contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}
                 keyboardShouldPersistTaps="handled"
             >
-                <Text style={styles.galleryPreviewTitle}>Fotos seleccionadas:</Text>
+                <Header />
+
                 <FlatList
+                    ref={flatListRef}
                     data={galleryImages}
                     horizontal
-                    keyExtractor={(item) => item.id}
+                    pagingEnabled
+                    keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
-                        <Image source={{ uri: item.uri }} style={styles.selectedImage} />
+                        <Image
+                            source={{ uri: item.uri }}
+                            style={[styles.selectedImage, { width: screenWidth }]}
+                        />
                     )}
-                    ListEmptyComponent={<Text>No hay imágenes seleccionadas</Text>}
-                    showsHorizontalScrollIndicator={false}
-                    style={{ marginVertical: 10 }}
+                    onScroll={handleScroll}
+                    scrollEventThrottle={16}
                 />
+                <View style={styles.paginationContainer}>
+                    {galleryImages.length > 1 && galleryImages.map((_, index) => (
+                        <View
+                            key={index}
+                            style={[styles.paginationDot, { backgroundColor: currentImageIndex === index ? '#6c44f4' : '#000' }]}
+                        />
+                    ))}
+                </View>
 
                 <View style={styles.formContainer}>
                     <TouchableOpacity style={styles.locationContainer}>
@@ -96,6 +120,7 @@ const ImagePostScreen = () => {
                             style={styles.inputImagePost}
                         />
                     </TouchableOpacity>
+                    <View style={styles.divider} />
 
                     <View style={styles.inputContainer}>
                         <Icon name="pencil" size={20} color="#000" style={styles.icon} />
@@ -118,8 +143,8 @@ const ImagePostScreen = () => {
                         />
                     </View>
 
-                    <TouchableOpacity style={styles.shareButton} onPress={handleSharePost}>
-                        <Text style={styles.shareButtonText}>SHARE</Text>
+                    <TouchableOpacity style={styles.buttonSignUp} onPress={handleSharePost}>
+                        <Text style={styles.buttonTextSignUp}>SHARE</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

@@ -525,20 +525,20 @@ inputComment: {
     flex: 1,
     height: 40,
     color: '#333',
-    fontSize: 16, // Texto más grande
+    fontSize: 16, 
 },
 chatIcon: {
-    marginRight: 10, // Espacio entre el icono y el input
+    marginRight: 10, 
 },
 inputContainerComment: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#d3d3d3', // Fondo gris claro
+    backgroundColor: '#d3d3d3', 
     borderRadius: 15,
     paddingHorizontal: 10,
     paddingVertical: 5,
     marginTop: 15,
-    borderTopWidth: 2, // Línea superior violeta
+    borderTopWidth: 2, 
     borderTopColor: '#6c44f4',
 },
 noCommentsText: {
@@ -592,7 +592,7 @@ keyboardAvoidingView: {
 },
 scrollViewContent: {
     flexGrow: 1,
-    paddingBottom: 20, // Espacio para evitar solapamiento con el input
+    paddingBottom: 20, 
 },
 //Image Upload
 cameraContainer: {
@@ -661,21 +661,53 @@ galleryButton: {
     marginVertical: 20, 
 },
 galleryTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginVertical: 16,
-    textAlign: 'center',
+    fontSize: 16,
+    textAlign: 'left',
+    color: 'gray',
+    marginLeft: 8,
 },
 galleryCenteredContainer: {
     paddingHorizontal: 10,
     alignItems: 'center',
 },
+uploadButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginTop: 10,
+    paddingHorizontal: 20,
+    width: '100%',
+},
+uploadButton: {
+    width: 60,
+    height: 60,
+    backgroundColor: '#6c44f4',
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+},
+
+divider: {
+    borderBottomWidth: 1,
+    borderColor: '#ccc',
+    marginVertical: 10,
+},
+
+galleryGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginHorizontal: 10,
+},
+
 galleryImage: {
-    width: 120,
+    width: '30%',
     height: 120,
-    margin: 5,
+    marginBottom: 10,
+    borderRadius: 5,
 },
 //Image Post
+
 galleryPreviewTitle: {
     marginTop: 20,
     fontSize: 20, 
@@ -686,30 +718,21 @@ galleryPreviewTitle: {
 },
 selectedImage: {
     width: 100, 
-    height: 100, 
-    borderRadius: 10,
+    height: height * 0.4,
+    borderRadius: 0,
     marginRight: 10, 
 },
 formContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingVertical: 10,
-    marginTop: 100,
     padding: 16,
 },
-locationContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderColor: "#ccc",
-    marginBottom: 10,
-    width: "100%",
-},
+
 inputImagePost: {
     flex: 1,
-    height: 50,
+    height: 30,
     borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 5,
+    borderWidth: 0,
     paddingHorizontal: 10,
     marginVertical: 10,
 },
@@ -726,17 +749,15 @@ inputContainer: {
     marginBottom: 10,
     width: "100%",
 },
-shareButton: {
-    backgroundColor: "#A020F0", 
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: "center",
-    marginTop: 15,
+postTextButton: {
+    position: 'absolute',
+    right: 10, 
+    padding: 5,
 },
-shareButtonText: {
-    color: "#fff",
-    fontSize: 13,
-    fontWeight: "bold",
+postText: {
+    fontSize: 16,
+    color: '#6c44f4',  
+    fontWeight: 'bold',
 },
 //Forgot Password
 containerForgotPassword: {
