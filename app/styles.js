@@ -723,7 +723,7 @@ selectedImage: {
     marginRight: 10, 
 },
 formContainer: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     paddingVertical: 10,
     padding: 16,
 },
