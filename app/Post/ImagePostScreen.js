@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,56 +14,77 @@ const ImagePostScreen = () => {
     const [location, setLocation] = useState('');
     const [description, setDescription] = useState('');
     const [caption, setCaption] = useState('');
-    const [galleryImages, setGalleryImages] = useState([]);
+    const [galleryImages, setGalleryImages] = useState([]); // Contendrá las URLs de las imágenes
 
     useEffect(() => {
         const fetchImages = async () => {
             try {
                 const storedImages = await AsyncStorage.getItem('galleryImages');
                 if (storedImages) {
-                    setGalleryImages(JSON.parse(storedImages));
+                    setGalleryImages(JSON.parse(storedImages));  // Recuperar las URLs desde AsyncStorage
                 }
             } catch (error) {
                 console.error("Error al recuperar imágenes:", error);
             }
         };
         fetchImages();
-    }, []);
+    }, []); // Recuperar las imágenes cuando se monta el componente
 
     const handleSharePost = async () => {
+        if (!caption.trim()) {
+            Alert.alert("Error", "El título (caption) no puede estar vacío.");
+            return;
+        }
+
+        if (galleryImages.length === 0) {
+            Alert.alert("Error", "Debe seleccionar al menos una imagen.");
+            return;
+        }
+
         try {
+            const token = await AsyncStorage.getItem('accessToken');
             const userId = await AsyncStorage.getItem('userId');
-            if (!userId) {
-                alert("No se encontró el ID de usuario. Por favor, inicia sesión nuevamente.");
+
+            if (!token || !userId) {
+                Alert.alert("Error", "No se encontró el token de acceso o el ID de usuario. Por favor, inicia sesión nuevamente.");
                 return;
             }
 
-            const formData = new FormData();
-            formData.append('userId', userId);
-            formData.append('location', location);
-            formData.append('caption', caption);
-            formData.append('description', description);
+            // Crear el payload con las imágenes en URLs
+            const media = galleryImages; // Aquí, directamente usamos las URLs que guardamos en AsyncStorage
 
-            galleryImages.forEach((image, index) => {
-                formData.append('images', {
-                    uri: image.uri,
-                    name: `image_${index}.jpg`,
-                    type: 'image/jpeg',
-                });
-            });
+            const payload = {
+                userId,
+                title: description,
+                caption,
+                location: location || 'Sin ubicación',
+                description: description || 'Sin descripción',
+                media,  // Aquí enviamos las URLs directamente
+            };
 
-            const response = await axios.post('https://da1-back.onrender.com/posts', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+            console.log("Payload enviado al backend:", payload);
 
-            console.log("Publicación compartida:", response.data);
-            alert("Post compartido exitosamente!");
-            route.push('../Home/HomeScreen');
+            const response = await axios.post(
+                'http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts',
+                payload, // Enviamos las URLs de las imágenes
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.data.status === 'success') {
+                console.log("Publicación compartida:", response.data);
+                Alert.alert("Éxito", "Publicación compartida exitosamente.");
+                route.push('../Home/HomeScreen');  // Redirige a la pantalla de inicio
+            } else {
+                Alert.alert("Error", "Hubo un problema al compartir la publicación.");
+            }
         } catch (error) {
-            console.error("Error al compartir publicación:", error);
-            alert("Ocurrió un error al compartir la publicación.");
+            console.error("Error al compartir publicación:", error.response || error.message);
+            Alert.alert("Error", "Ocurrió un error al compartir la publicación.");
         }
     };
 
@@ -78,9 +99,9 @@ const ImagePostScreen = () => {
                 <FlatList
                     data={galleryImages}
                     horizontal
-                    keyExtractor={(item) => item.id}
+                    keyExtractor={(item, index) => `${item}-${index}`}  // Usamos la URL directamente para las keys
                     renderItem={({ item }) => (
-                        <Image source={{ uri: item.uri }} style={styles.selectedImage} />
+                        <Image source={{ uri: item }} style={styles.selectedImage} />
                     )}
                     ListEmptyComponent={<Text>No hay imágenes seleccionadas</Text>}
                     showsHorizontalScrollIndicator={false}
@@ -91,7 +112,7 @@ const ImagePostScreen = () => {
                     <TouchableOpacity style={styles.locationContainer}>
                         <Icon name="map-marker" size={20} color="#000" style={styles.icon} />
                         <TextInput
-                            placeholder="Add Location"
+                            placeholder="Agregar ubicación"
                             value={location}
                             onChangeText={setLocation}
                             style={styles.inputImagePost}
@@ -101,7 +122,7 @@ const ImagePostScreen = () => {
                     <View style={styles.inputContainer}>
                         <Icon name="pencil" size={20} color="#000" style={styles.icon} />
                         <TextInput
-                            placeholder="Add Title"
+                            placeholder="Título"
                             value={caption}
                             onChangeText={setCaption}
                             style={styles.inputImagePost}
@@ -111,7 +132,7 @@ const ImagePostScreen = () => {
                     <View style={styles.inputContainer}>
                         <Icon name="pencil" size={20} color="#000" style={styles.icon} />
                         <TextInput
-                            placeholder="Add Description"
+                            placeholder="Descripción"
                             value={description}
                             onChangeText={setDescription}
                             style={styles.inputImagePost}
@@ -120,7 +141,7 @@ const ImagePostScreen = () => {
                     </View>
 
                     <TouchableOpacity style={styles.shareButton} onPress={handleSharePost}>
-                        <Text style={styles.shareButtonText}>SHARE</Text>
+                        <Text style={styles.shareButtonText}>Compartir</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

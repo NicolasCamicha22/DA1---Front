@@ -1,41 +1,47 @@
 import React, { useState } from 'react';
-import { useRouter } from 'expo-router'; // Asegúrate de usar el useRouter de expo-router
+import { useRouter } from 'expo-router';
 import LoginForm from './LoginForm';
-import { login } from '../api'; // Función de login
+import { login } from '../api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { Alert } from 'react-native';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [attempts, setAttempts] = useState(0); // Contador de intentos
   const router = useRouter();
+
+
+  
 
   // Función para intentar iniciar sesión
   const onLogin = async () => {
-    console.log('Intentando iniciar sesión con:', email, password);
-
+    if (attempts >= 3) {
+      Alert.alert('Cuenta bloqueada', 'Has superado el número de intentos. Por favor, recupera tu contraseña.');
+      router.push('./ForgotPasswordScreen');
+      return;
+    }
+  
     try {
-      const response = await login(email, password); // Llamada al backend
-      console.log('Respuesta completa de login:', response);
+      const response = await login(email, password);
+      if (response) {
+        const { accessToken, refreshToken, userId } = response;
+        await AsyncStorage.setItem('accessToken', accessToken);
+        await AsyncStorage.setItem('refreshToken', refreshToken);
+        await AsyncStorage.setItem('userId', userId.toString());
 
-      if (response && response.accessToken && response.refreshToken && response.userId) {
-        console.log('Tokens y userId recibidos:', response.accessToken, response.refreshToken, response.userId);
-
-        // Almacenar los tokens y userId en AsyncStorage
-        await AsyncStorage.setItem('accessToken', response.accessToken);
-        await AsyncStorage.setItem('refreshToken', response.refreshToken);
-        await AsyncStorage.setItem('userId', response.userId.toString());
-
-        // Redirigir al Home después de iniciar sesión
-        router.push('../Home/HomeScreen'); // Redirige a HomeScreen si el login es exitoso
-      } else {
-        console.log('No se recibieron datos de la API');
+        router.push('../Home/HomeScreen');
       }
     } catch (error) {
-      Alert.alert("Login Error", "Email o password incorrecta");
+      console.log(error); // Agregar log para obtener detalles del error
+      setAttempts((prev) => prev + 1);
+      Alert.alert('Error', 'Email o contraseña incorrectos');
     }
   };
+  
+  
+
 
   // Navegar a la pantalla de SignUp
   const handleSignUp = () => {

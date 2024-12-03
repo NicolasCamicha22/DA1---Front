@@ -1,9 +1,49 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, ScrollView, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import commonStyles from '../styles'; 
 import styles from './LoginStyles';
 
-export default function SignUpForm({ username, setUsername, name, setName, surname, setSurname, email, setEmail, password, setPassword, profilePic, selectProfilePic, onSignUp, onSignIn }) {
+export default function SignUpForm({
+    username, setUsername, 
+    name, setName, 
+    surname, setSurname, 
+    email, setEmail, 
+    password, setPassword, 
+    profilePic, selectProfilePic, 
+    onSignUp, onSignIn 
+}) {
+    // Estado para Confirm Password y error de validación
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    // Expresión regular para validar correo electrónico
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+    // Función para manejar el envío del formulario
+    const handleSignUp = () => {
+        // Validar que las contraseñas coinciden
+        if (password !== confirmPassword) {
+            Alert.alert(
+                'Error',
+                'Las contraseñas no coinciden. Por favor, ingrésalas nuevamente.',
+                [{ text: 'OK' }]
+            );
+            return;
+        }
+
+        // Validar el correo electrónico
+        if (!emailRegex.test(email)) {
+            Alert.alert(
+                'Error',
+                'Por favor, ingrese un correo electrónico válido.',
+                [{ text: 'OK' }]
+            );
+            return;
+        }
+
+        // Llamar la función de registro si todo es válido
+        onSignUp();
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.scrollContainerSignUp}>
             <Text style={styles.titleSignUp}>Sign Up</Text>
@@ -54,6 +94,7 @@ export default function SignUpForm({ username, setUsername, name, setName, surna
                     style={styles.inputSignUp}
                     placeholder="Email"
                     value={email}
+                    autoCapitalize="none"
                     onChangeText={setEmail}
                     keyboardType="email-address"
                 />
@@ -78,6 +119,9 @@ export default function SignUpForm({ username, setUsername, name, setName, surna
                 <TextInput
                     style={styles.inputSignUp}
                     placeholder="Confirm Password"
+                    value={confirmPassword}
+                    onChangeText={setConfirmPassword}
+                    autoCapitalize="none"
                     secureTextEntry
                 />
             </View>
@@ -90,11 +134,9 @@ export default function SignUpForm({ username, setUsername, name, setName, surna
             {profilePic && <Image source={{ uri: profilePic }} style={styles.profilePicPreviewSignUp} />}
 
             {/* Botón de registro */}
-            <TouchableOpacity style={styles.buttonSignUp} onPress={onSignUp}>
+            <TouchableOpacity style={styles.buttonSignUp} onPress={handleSignUp}>
                 <Text style={styles.buttonTextSignUp}>REGISTER</Text>
             </TouchableOpacity>
-
-           
         </ScrollView>
     );
 };

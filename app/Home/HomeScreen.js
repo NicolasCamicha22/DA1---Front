@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, FlatList, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import commonStyles from '../styles';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useRouter } from 'expo-router';
+import { apiClient } from '../Login/apiClient';  // Usamos el apiClient para hacer las peticiones autenticadas
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Importar los íconos
 import Footer from '../Footer';
 import Header from '../Header';
 import Post from '../Post/Post';
 import Ad from './Ad';
+import commonStyles from '../styles';
 import styles from './HomeStyles';
-import { useRouter } from 'expo-router';
-
+import axios from 'axios';
 
 export default function HomeScreen() {
     const [posts, setPosts] = useState([]);
@@ -23,14 +23,17 @@ export default function HomeScreen() {
 
     // Cargar posts desde el backend
     const fetchPosts = async (userId, page) => {
-        const response = await axios.get(`https://da1-back.onrender.com/posts`, {
-            params: { userId, page }
-        });
-        console.log('Posts obtenidos:', response.data);
-        return response.data;
+        try {
+            const response = await apiClient.get('/api/timeline', {
+                params: { userId, page }
+            });
+            console.log('Posts obtenidos:', response.data);
+            return response.data.data;
+        } catch (error) {
+            console.error('Error al obtener las publicaciones:', error);
+            return [];
+        }
     };
-
-
 
     const loadPosts = async () => {
         if (!userId) return;
@@ -38,9 +41,9 @@ export default function HomeScreen() {
         try {
             const postsData = await fetchPosts(userId, page);
             if (postsData.length === 0) {
-                setHasPosts(false); // Si no hay publicaciones, se marca como false
+                setHasPosts(false);
             } else {
-                setHasPosts(true); // Si hay publicaciones, se marca como true
+                setHasPosts(true);
                 setPosts(prevPosts => [...prevPosts, ...postsData]);
             }
         } catch (error) {
@@ -50,29 +53,27 @@ export default function HomeScreen() {
         }
     };
 
+    // Cargar userId desde AsyncStorage y cargar datos
     useEffect(() => {
         const fetchUserId = async () => {
             try {
                 const storedUserId = await AsyncStorage.getItem('userId');
                 setUserId(storedUserId);
                 console.log('userId cargado desde AsyncStorage:', storedUserId);
-                await loadAds(); // Asegúrate de cargar los anuncios
-                await loadPosts(); // También carga las publicaciones
+                await loadAds();  // Asegúrate de cargar los anuncios
+                await loadPosts();  // También carga las publicaciones
             } catch (error) {
                 console.error('Error al cargar userId de AsyncStorage:', error);
             }
         };
         fetchUserId();
-    }, []);
-
-
+    }, []);  // Solo lo hacemos una vez al cargar el componente
 
     useEffect(() => {
         if (userId) {
             loadPosts();
         }
     }, [userId, page]);
-
 
     // Intercalar las propagandas cada 3 publicaciones
     const mixedContent = posts.reduce((acc, post, index) => {
@@ -84,26 +85,20 @@ export default function HomeScreen() {
         return acc;
     }, []);
 
-
-    // Cargar propagandas del JSON externo
+    // Cargar propagandas desde el backend
     const loadAds = async () => {
         try {
-            const response = await axios.get('https://my-json-server.typicode.com/chrismazzeo/advertising_da1/ads');
+            const response = await axios.get('https://my-json-server.typicode.com/chrismazzeo/advertising_da1/ads');  // Cargar propagandas desde el backend
             setAds(response.data);
         } catch (error) {
             console.error('Error al cargar propagandas:', error);
         }
     };
 
-    const goToSearchScreen = () => {
-        router.push(`./SearchScreen`)
-    };
-
-
+    // Renderizar cada item, ya sea un post o una propaganda
     const renderItem = ({ item }) => {
         if (item.isAd) {
-            // Accede a la imagen de la forma correcta
-            const imageUrl = item.imagePath[0]?.landscape || '';
+            const imageUrl = item.imagePath[0]?.landscape || '';  // Accede a la imagen de la forma correcta
             return (
                 <Ad
                     title={item.commerce}
@@ -113,32 +108,32 @@ export default function HomeScreen() {
             );
         }
 
-
+        // Acceder al primer elemento de 'media' (que es un array con URLs de las imágenes)
+        const imageUrl = item.media && item.media.length > 0 ? item.media[0] : null;  // Accede a la URL de la primera imagen
+        const defaultImage = 'https://via.placeholder.com/150';  // Imagen predeterminada en caso de que no haya imágenes
 
         return (
             <Post
                 id={item.id}
-                username={item.username}
-                location={item.location}
-                imageUrl={item.images}
-                caption={item.caption}
-                description={item.description}
-                likes={item.likes_count}
-                comments={item.comments_count}
-                favorites={item.favorites_count}
-                date={item.date}
+                username={item.user?.name + ' ' + item.user?.surname || 'Usuario desconocido'}
+                location={item.location || 'Sin ubicación'}
+                media={item.media} 
+                description={item.description || 'Sin descripcion'}
+                caption={item.caption || 'Sin titulo'}  // Usar caption como descripción si falta
+                likes={item.likesCount || 0}
+                comments={item.comments?.length || 0}  // Asegúrate de que 'comments' sea un array antes de usarlo
+                favorites={item.isFavorite ? 1 : 0}  // Asegúrate de que este campo esté correctamente mapeado
+                date={new Date(item.date).toLocaleDateString()}
                 userId={userId}
+                isLiked={item.isLike}  // Pasar el estado de "me gusta"
+                isFavorited={item.isFavorite}  // Pasar el estado de "favorito"
             />
         );
     };
 
-
-
-
     const loadMorePosts = () => {
         setPage(prevPage => prevPage + 1);
     };
-
 
     return (
         <View style={commonStyles.container}>
@@ -148,11 +143,10 @@ export default function HomeScreen() {
                     data={mixedContent}
                     renderItem={renderItem}
                     keyExtractor={(item, index) => {
-                        // Verifica si el elemento es una publicidad o una publicación
                         if (item.isAd) {
-                            return `ad-${index}`;  // Para las propagandas, usa el índice como parte de la clave
+                            return `ad-${index}`;
                         } else {
-                            return `post-${item.id}-${index}`;  // Para las publicaciones, combina id y índice para asegurar unicidad
+                            return `post-${item.id}-${index}`;
                         }
                     }}
                     onEndReached={loadMorePosts}
@@ -161,12 +155,8 @@ export default function HomeScreen() {
                 />
             ) : (
                 <View style={styles.noPostsContainer}>
-                    {/* Ícono de usuario vacío */}
                     <Icon name="person-outline" size={80} color="#bbb" style={styles.noPostsIcon} />
                     <Text style={styles.noPostsText}>¡Aún no hay publicaciones!</Text>
-                    <TouchableOpacity onPress={goToSearchScreen} style={styles.goToSearchButton}>
-                        <Text style={styles.goToSearchButtonText}>Sigue personas para ver publicaciones</Text>
-                    </TouchableOpacity>
                 </View>
             )}
             <Footer />

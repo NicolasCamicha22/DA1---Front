@@ -10,6 +10,7 @@ import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import styles from './ProfileStyles';
+import { SvgUri } from 'react-native-svg';
 
 export default function ProfileScreen() {
     const [userInfo, setUserInfo] = useState(null);
@@ -19,20 +20,6 @@ export default function ProfileScreen() {
     const router = useRouter();
     const [userId, setUserId] = useState(null);
 
-    // Función para normalizar las URLs de las imágenes
-    const normalizeImageUrl = (imageUrl) => {
-        if (imageUrl && imageUrl.startsWith('https://')) {
-            return imageUrl;
-        }
-        if (imageUrl && imageUrl.startsWith('/uploads/')) {
-            return `https://da1-back.onrender.com${imageUrl}`;
-        }
-        if (imageUrl && imageUrl.startsWith('file://')) {
-            return `https://da1-back.onrender.com${imageUrl.replace('file://', '/uploads/')}`;
-        }
-        return 'https://da1-back.onrender.com/uploads/default.jpg';
-    };
-
     // Obtener el userId desde AsyncStorage
     useEffect(() => {
         const fetchUserId = async () => {
@@ -41,6 +28,8 @@ export default function ProfileScreen() {
                 if (storedUserId) {
                     setUserId(storedUserId);
                     console.log('userId cargado desde AsyncStorage:', storedUserId);
+                } else {
+                    console.log('No se encontró el userId');
                 }
             } catch (error) {
                 console.error('Error al cargar userId de AsyncStorage:', error);
@@ -52,34 +41,43 @@ export default function ProfileScreen() {
     // Cargar los datos del perfil cuando userId esté disponible
     useEffect(() => {
         const loadProfileData = async () => {
-            if (!userId) return;
+            const token = await AsyncStorage.getItem('accessToken');
 
-            setLoading(true);
-            setError(null);
+            if (!token || !userId) {
+                console.log('Token o userId no disponibles');
+                return;
+            }
 
             try {
-                const response = await axios.get(`https://da1-back.onrender.com/user/${userId}`);
-                const normalizedUserInfo = {
-                    ...response.data.user,
-                    profile_image_url: normalizeImageUrl(response.data.user.profile_image_url),
-                    cover_image_url: normalizeImageUrl(response.data.user.cover_image_url),
-                };
-                setUserInfo(normalizedUserInfo);
-                if (response.data.posts) {
-                    setPosts(response.data.posts);
-                    console.log('Posts cargados:', response.data.posts);
+                const response = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.data && response.data.data) {
+                    const userData = response.data.data;
+                    setUserInfo(userData);
+                    if (userData.posts) {
+                        setPosts(userData.posts);
+                    } else {
+                        console.error('No hay posts en la respuesta:', userData);
+                    }
                 } else {
-                    console.error('No hay posts en la respuesta:', response.data);
+                    console.error('Estructura de datos inesperada:', response.data);
+                    setError('Error en los datos del perfil');
                 }
             } catch (error) {
                 console.error('Error al cargar los datos del perfil:', error);
-                setError('Error al cargar los datos del perfil. Por favor, intenta de nuevo.');
+                setError(`Error al cargar los datos del perfil: ${error.message}`);
             } finally {
                 setLoading(false);
             }
         };
 
-        loadProfileData();
+        if (userId) {
+            loadProfileData();
+        }
     }, [userId]);
 
     const handleChangeCoverImage = async () => {
@@ -107,7 +105,7 @@ export default function ProfileScreen() {
 
                 setUserInfo((prevState) => ({
                     ...prevState,
-                    cover_image_url: normalizeImageUrl(response.data.coverImageUrl),
+                    cover_image_url: response.data.coverImageUrl, // Usamos la URL directamente
                 }));
 
                 Alert.alert('Imagen de encabezado cambiada con éxito');
@@ -118,18 +116,32 @@ export default function ProfileScreen() {
         }
     };
 
-    const renderItem = ({ item }) => (
-        <Post
-            location={item.location}
-            imageUrl={item.images}
-            caption={item.caption}
-            description={item.description}
-            likes={item.likes_count}
-            comments={item.comments_count}
-            favorites={item.favorites_count}
-            date={item.date}
-        />
-    );
+    const renderItem = ({ item }) => {
+        const imageUrl = item.media && item.media.length > 0 ? item.media[0] : null;
+        
+        return (
+            <Post
+                id={item.id}
+                username={item.username}  // Ahora estamos pasando 'username' directamente
+                location={item.location}
+                media={item.media}
+                caption={item.caption}
+                description={item.description}
+                likes={item.likes_count}
+                comments={item.comments_count}
+                favorites={item.favorites_count}
+                date={item.date}
+            />
+        );
+    };
+
+    const renderProfileImage = (uri) => {
+        if (uri && uri.startsWith('http')) {
+            return <SvgUri uri={uri} width={150} height={150} />;
+        } else {
+            return <Image source={require('../../assets/images/icon.png')} style={styles.profileImage} resizeMode="cover" />;
+        }
+    };
 
     if (loading) {
         return (
@@ -143,7 +155,7 @@ export default function ProfileScreen() {
         return (
             <View style={commonStyles.container}>
                 <Text style={styles.errorText}>{error}</Text>
-                <Button title="Reintentar" onPress={() => loadProfileData()} />
+                <Button title="Reintentar" onPress={() => setError(null)} />
             </View>
         );
     }
@@ -153,45 +165,31 @@ export default function ProfileScreen() {
             <HeaderProfile onSettingsPress={() => router.push('/EditProfile')} />
 
             <FlatList
-                ListHeaderComponent={
-                    userInfo && (
-                        <View>
-                            <View style={styles.coverContainer}>
-                                <Image source={{ uri: userInfo.cover_image_url }} style={styles.coverImage} />
-                                <Image source={{ uri: userInfo.profile_image_url }} style={styles.profileImage} />
-                                <View style={styles.usernameContainer}>
-                                    <Text style={styles.username}>{userInfo.username}</Text>
-                                    <TouchableOpacity onPress={() => router.push('../Profile/EditProfile')}>
-                                        <Icon name="create-outline" size={24} color="#fff" />
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
+                ListHeaderComponent={userInfo && (
+                    <View>
+                        <View style={styles.coverContainer}>
+                            <Image source={{ uri: userInfo.cover_image_url }} style={styles.coverImage} />
+                            {renderProfileImage(userInfo.profile_pic)}  
 
-                            <View style={styles.infoContainer}>
-                                <Text style={styles.bio}>{userInfo.description || "No description"}</Text>
-                                <View style={styles.levelAndPosts}>
-                                    <Text style={styles.level}>
-                                        {userInfo.level ? `Nivel: ${userInfo.level}` : "Nivel: Null"}
-                                    </Text>
-                                    <Text style={styles.postsCount}>{userInfo.posts_count} Posts</Text>
-                                </View>
-                            </View>
-
-                            <View style={styles.followContainer}>
-                                <TouchableOpacity onPress={() => router.push('./Followers')} style={styles.followButton}>
-                                    <Text style={styles.followNumber}>{userInfo.followers_count}</Text>
-                                    <Text style={styles.followText}>Followers</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => router.push('./Following')} style={styles.followButton}>
-                                    <Text style={styles.followNumber}>{userInfo.following_count}</Text>
-                                    <Text style={styles.followText}>Following</Text>
+                            <View style={styles.usernameContainer}>
+                                <Text style={styles.username}>{userInfo.username}</Text>
+                                <TouchableOpacity onPress={() => router.push('/Profile/EditProfile')}>
+                                    <Icon name="create-outline" size={24} color="#fff" />
                                 </TouchableOpacity>
                             </View>
                         </View>
 
-                    )
-                }
-
+                        <View style={styles.infoContainer}>
+                            <Text style={styles.bio}>{userInfo.descriptionProfile || "No description"}</Text>
+                            <View style={styles.levelAndPosts}>
+                                <Text style={styles.level}>
+                                    {userInfo.lvl ? `Nivel: ${userInfo.lvl}` : "Nivel: Null"}
+                                </Text>
+                                <Text style={styles.postsCount}>{userInfo.posts.length} Posts</Text>
+                            </View>
+                        </View>
+                    </View>
+                )}
 
                 data={posts}
                 renderItem={renderItem}
@@ -200,7 +198,7 @@ export default function ProfileScreen() {
                 ListFooterComponent={loading ? <ActivityIndicator size="large" color="#0000ff" /> : null}
             />
 
-            < Footer />
-        </View >
+            <Footer />
+        </View>
     );
 }

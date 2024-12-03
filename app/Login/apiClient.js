@@ -1,22 +1,24 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 const apiClient = axios.create({
-  baseURL: 'https://da1-back.onrender.com',
+  baseURL: 'http://ec2-34-203-234-215.compute-1.amazonaws.com:8080',
+  //baseURL: 'https://da1-back.onrender.com',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
-// Agregar un interceptor para manejar la expiración de tokens
+console.log('apiClient creado:', apiClient); 
+
 apiClient.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const accessToken = await AsyncStorage.getItem('accessToken');
+    if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 apiClient.interceptors.response.use(
@@ -24,30 +26,28 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Verifica si la solicitud falló debido a un 401 (token expirado)
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        // Obtener el `refreshToken` almacenado
-        const refreshToken = await AsyncStorage.getItem('refreshToken');
-        if (!refreshToken) {
-          throw new Error('No se encontró el refresh token');
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;  // Evita múltiples reintentos
+
+      const refreshToken = await AsyncStorage.getItem('refreshToken');
+      if (refreshToken) {
+        try {
+          const response = await apiClient.post('/api/auth/refresh-token', { refreshToken });
+          console.log('Refrescar token respuesta:', response.data);  // Agrega este log
+          const { accessToken } = response.data.data;
+
+
+          await AsyncStorage.setItem('accessToken', accessToken);
+
+          // Vuelve a enviar la solicitud original con el nuevo token
+          originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
+          console.log('Nuevo Authorization header:', originalRequest.headers['Authorization']);  // Agrega este log
+          return apiClient(originalRequest);  // Reenvía la solicitud con el nuevo token
+
+        } catch (refreshError) {
+          console.error('Error al refrescar el token:', refreshError.response?.data || refreshError.message);
+          return Promise.reject(refreshError);
         }
-
-        // Solicitar un nuevo `accessToken` usando el `refreshToken`
-        const response = await axios.post('https://da1-back.onrender.com/token', { token: refreshToken });
-        const { accessToken } = response.data;
-
-        // Almacenar el nuevo `accessToken`
-        await AsyncStorage.setItem('accessToken', accessToken);
-
-        // Actualizar el encabezado de la solicitud original
-        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        return apiClient(originalRequest); // Reintentar la solicitud original
-      } catch (error) {
-        console.error('Error al refrescar el token:', error);
-        // Puedes redirigir al usuario al inicio de sesión si no se pudo renovar el token
-        return Promise.reject(error);
       }
     }
 
@@ -55,4 +55,4 @@ apiClient.interceptors.response.use(
   }
 );
 
-export default apiClient;
+export {apiClient};

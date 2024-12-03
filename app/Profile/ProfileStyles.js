@@ -22,9 +22,7 @@ export default StyleSheet.create({
         height: 100,
         borderRadius: 50,
         borderWidth: 3,
-        borderColor: "#fff",
-        position: "absolute",
-        top: 50,
+        borderColor: '#fff',
     },
     usernameContainer: {
         position: 'absolute',

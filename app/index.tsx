@@ -1,42 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router'; 
-import { validateAccessToken, refreshAccessToken } from './api'; 
+import { refreshAccessToken } from './api'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Index() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);  // Estado de carga
 
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        // Intenta validar el accessToken
-        const isValidToken = await validateAccessToken();
-
-        if (isValidToken) {
-          router.push('./Home/HomeScreen');  // Si el token es válido, redirige al Home
+    const checkToken = async () => {
+      const accessToken = await AsyncStorage.getItem('accessToken');
+      if (accessToken) {
+        const isValid = await refreshAccessToken();
+        if (isValid) {
+          router.push('./Home/HomeScreen');  // Redirige a la pantalla de inicio
         } else {
-          // Si el token no es válido, intenta refrescarlo
-          const newAccessToken = await refreshAccessToken();
-          if (newAccessToken) {
-            router.push('./Home/HomeScreen');  // Redirige si el refresh token es válido
-          } else {
-            router.push('./Login/LoginScreen');  // Si no, redirige a Login
-          }
+          router.push('./Login/LoginScreen');  // Redirige a la pantalla de login
         }
-      } catch (error) {
-        console.error('Error al verificar tokens:', error);
-        router.push('./Login/LoginScreen');  // En caso de error, redirige a Login
-      } finally {
-        setLoading(false);  // Al finalizar, actualiza el estado de carga
+      } else {
+        router.push('./Login/LoginScreen');  // Si no hay token, va al login
       }
     };
 
-    checkAuthStatus();
+    checkToken();  // Ejecuta la función de validación al iniciar la aplicación
   }, [router]);
 
-  if (loading) {
-    return null;  // Mientras se valida el token, no renderiza nada
-  }
-
-  return null;  // Este componente no renderiza nada directamente
+  return null;  // El componente no necesita renderizar nada directamente
 }
