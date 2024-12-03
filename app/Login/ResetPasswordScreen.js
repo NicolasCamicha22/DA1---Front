@@ -11,21 +11,36 @@ const ResetPasswordScreen = () => {
     const [newPassword, setNewPassword] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
-    const [email, setEmail] = useState('');
+    const [emailOrUsername, setEmailOrUsername] = useState(''); 
     const router = useRouter();
- 
+
     useEffect(() => {
-        const fetchEmail = async () => {
-            const storedEmail = await AsyncStorage.getItem('email');
-            setEmail(storedEmail || '');
+        // Recuperar email o username de AsyncStorage
+        const fetchEmailOrUsername = async () => {
+            try {
+                const storedEmailOrUsername = await AsyncStorage.getItem('emailOrUsername');
+                if (storedEmailOrUsername) {
+                    setEmailOrUsername(storedEmailOrUsername); // Llena el campo automáticamente
+                }
+            } catch (error) {
+                console.error('Error al recuperar email o username:', error);
+            }
         };
-        fetchEmail();
+
+        fetchEmailOrUsername();
     }, []);
  
     const handleResetPassword = async () => {
         if (code && newPassword) {
             try {
-                const response = await resetPassword({ email, code, newPassword });
+                // Asegúrate de pasar correctamente el email o username
+                const data = emailOrUsername.includes('@') 
+                    ? { email: emailOrUsername } 
+                    : { username: emailOrUsername };
+                    const payload = { emailOrUsername, code, newPassword };
+                    console.log('Datos enviados a la API:', payload); 
+                const response = await resetPassword({ ...data, code, newPassword });
+
                 setMessage(response.message || 'Contraseña cambiada con éxito.');
                 setError('');
                 setTimeout(() => router.push('./LoginScreen'), 2000);
@@ -37,16 +52,23 @@ const ResetPasswordScreen = () => {
             setError('Por favor, completa todos los campos.');
         }
     };
- 
+
     const handleSendCode = async () => {
-        try {
-            await sendCode(email);
-            await AsyncStorage.setItem('email', email); // Guardar email en AsyncStorage
-            setMessage('Código enviado a tu email. Por favor, revisa tu bandeja de entrada.');
+        const data = emailOrUsername.includes('@') 
+            ? { email: emailOrUsername } 
+            : { username: emailOrUsername };
+        
+        try {console.log("Datos a enviar:", data);
+            const response = await sendCode(data); // Enviar email o username
+            console.log(response); // Verificar respuesta
+            setMessage('Código enviado. Revisa tu bandeja de entrada.');
         } catch (error) {
-            setError(error.response?.data?.message || 'Error al enviar el código.');
+            console.error('Error en sendCode:', error.response?.data || error.message);
         }
     };
+    
+
+    
  
     return (
         <ScrollView contentContainerStyle={styles.scrollContainerLogin}>

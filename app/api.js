@@ -8,14 +8,17 @@ const api = axios.create({
   baseURL: 'http://ec2-34-203-234-215.compute-1.amazonaws.com:8080'
 });
 
-export const sendCode = async (email) => {
+export const sendCode = async (data) => {
   try {
-    const response = await api.post('/forgot-password', { email });
-    return response.data;
+      const response = await api.post('/api/auth/forgot-password', data);
+      return response.data;
   } catch (error) {
-    throw error.response.data;
+      console.error('Error en sendCode:', error.response?.data || error.message);
+      throw error;
   }
 };
+
+
 
 export const registerUser = async (userData) => {
   try {
@@ -108,7 +111,7 @@ export const logout = async (router) => {
 
 export const resetPassword = async ({ email, code, newPassword }) => {
   try {
-    const response = await api.post('/reset-password', {
+    const response = await api.post('/api/auth/reset-password', {
       email,
       code,
       newPassword

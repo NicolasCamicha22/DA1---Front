@@ -188,24 +188,30 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
                 </View>
             </View>
 
-            {finalImageUrl ? (
-                <FlatList
-                    data={media}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <Image
-                            source={{ uri: item }}
-                            style={[styles.postImage, { width: screenWidth }]}
-                        />
-                    )}
-                    onScroll={handleScroll}
-                    scrollEventThrottle={16}
+           {finalImageUrl ? (
+    <FlatList
+        data={media}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item }) => {
+            // Imprimir la URL de la imagen
+            console.log("URL de la imagen:", item);
+
+            return (
+                <Image
+                    source={{ uri: item }}
+                    style={[styles.postImage, { width: screenWidth }]}
                 />
-            ) : (
-                <Text>No hay imágenes disponibles</Text>
-            )}
+            );
+        }}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+    />
+) : (
+    <Text>No hay imágenes disponibles</Text>
+)}
+
 
             <Text style={styles.date}>{date}</Text>
             <Text style={styles.caption}>{caption || 'Sin título'}</Text>
