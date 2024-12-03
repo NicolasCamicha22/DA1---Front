@@ -12,8 +12,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 const ImagePostScreen = () => {
     const route = useRouter();
     const [location, setLocation] = useState('');
-    const [description, setDescription] = useState('');
     const [caption, setCaption] = useState('');
+    const [description, setDescription] = useState('');
     const [galleryImages, setGalleryImages] = useState([]); // Contendrá las URLs de las imágenes
 
     useEffect(() => {

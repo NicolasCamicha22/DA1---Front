@@ -45,11 +45,20 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
                 setLikeCount(postData.likesCount);
                 setIsFavorited(postData.isFavorite);
                 setFavoriteCount(postData.isFavorite ? 1 : 0);
+                const storedLikeState = await AsyncStorage.getItem(`like_${id}`);
+                if (storedLikeState === 'true') {
+                    setIsLiked(true);
+                } else {
+                    setIsLiked(false);
+                }
 
+                
                 // Aquí actualizamos el estado para los comentarios
                 setCommentList(postData.Comments.map(comment => ({
                     text: comment.text,  // El texto del comentario
                     username: comment.User.username,  // El nombre de usuario que hizo el comentario
+
+                    
                 })));
             } catch (error) {
                 console.error('Error al cargar los datos del post:', error);
@@ -86,10 +95,12 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
 
             if (response.data.message === 'Like added') {
                 setIsLiked(true);
-                setLikeCount(prev => prev + 1);
+                setLikeCount(likeCount + 1);
+                await AsyncStorage.setItem(`like_${id}`, 'true'); 
             } else if (response.data.message === 'Like removed') {
                 setIsLiked(false);
-                setLikeCount(prev => prev + 1);
+                setLikeCount(likeCount - 1);
+                await AsyncStorage.setItem(`like_${id}`, 'false');
             }
         } catch (error) {
             console.error('Error al dar like:', error);
@@ -210,6 +221,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
             <Text style={styles.date}>{date}</Text>
             <Text style={styles.caption}>{caption || 'Sin título'}</Text>
             <Text style={styles.description}>{description || 'Sin descripción'}</Text>
+
 
             <View style={styles.actionsContainer}>
                 <View style={styles.buttonIcon}>

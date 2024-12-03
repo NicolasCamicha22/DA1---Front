@@ -1,5 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router'; // Asegúrate de usar useRouter en el componente que maneja la redirección
+
 const apiClient = axios.create({
   baseURL: 'http://ec2-34-203-234-215.compute-1.amazonaws.com:8080',
   //baseURL: 'https://da1-back.onrender.com',
@@ -8,7 +10,7 @@ const apiClient = axios.create({
   },
 });
 
-console.log('apiClient creado:', apiClient); 
+console.log('apiClient creado:', apiClient);
 
 apiClient.interceptors.request.use(
   async (config) => {
@@ -30,24 +32,32 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;  // Evita múltiples reintentos
 
       const refreshToken = await AsyncStorage.getItem('refreshToken');
+      
       if (refreshToken) {
         try {
           const response = await apiClient.post('/api/auth/refresh-token', { refreshToken });
-          console.log('Refrescar token respuesta:', response.data);  // Agrega este log
-          const { accessToken } = response.data.data;
+          console.log('Refrescar token respuesta:', response.data);
 
+          const { accessToken } = response.data.data;
 
           await AsyncStorage.setItem('accessToken', accessToken);
 
-          // Vuelve a enviar la solicitud original con el nuevo token
+          // Reenvía la solicitud original con el nuevo token
           originalRequest.headers['Authorization'] = `Bearer ${accessToken}`;
-          console.log('Nuevo Authorization header:', originalRequest.headers['Authorization']);  // Agrega este log
           return apiClient(originalRequest);  // Reenvía la solicitud con el nuevo token
 
         } catch (refreshError) {
           console.error('Error al refrescar el token:', refreshError.response?.data || refreshError.message);
+          
+          // Aquí rediriges al login cuando el refresh token también falla
+          const router = useRouter();
+          router.push('/LoginScreen');  // Redirige al login si el refresh token ha fallado
           return Promise.reject(refreshError);
         }
+      } else {
+        // Si no hay refresh token, redirige al login también
+        const router = useRouter();
+        router.push('/LoginScreen');
       }
     }
 
@@ -55,4 +65,4 @@ apiClient.interceptors.response.use(
   }
 );
 
-export {apiClient};
+export { apiClient };

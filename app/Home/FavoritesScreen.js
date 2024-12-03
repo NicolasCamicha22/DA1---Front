@@ -11,7 +11,6 @@ import styles from './HomeStyles';
 export default function FavoritosScreen() {
     const [favorites, setFavorites] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [posts, setPosts] = useState([]);
     const [userId, setUserId] = useState(null);
     const [accessToken, setAccessToken] = useState(null);
 
@@ -29,6 +28,7 @@ export default function FavoritosScreen() {
         }
     };
 
+    // Fetch favorites y luego obtener el username para cada post
     const fetchFavorites = async () => {
         if (!userId || !accessToken) {
             console.log("UserId o token no disponibles");
@@ -45,9 +45,20 @@ export default function FavoritosScreen() {
 
             // Verificamos que la respuesta contenga los datos esperados
             if (response.data && response.data.data) {
-                const updatedFavorites = response.data.data.map(post => ({
-                    ...post,
-                    isFavorited: true, // Marcar como favorito para todos los posts en la pantalla de favoritos
+                const updatedFavorites = await Promise.all(response.data.data.map(async (post) => {
+                    // Ahora hacemos una segunda consulta para obtener el username del usuario
+                    const userResponse = await axios.get(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile`, {
+                        headers: {
+                            Authorization: `Bearer ${accessToken}`,  // Usamos el mismo token
+                        }
+                    });
+
+                    const username = userResponse.data.data.username; // Obtenemos el username del usuario
+                    return {
+                        ...post,
+                        isFavorited: true,  // Marcar como favorito para todos los posts en la pantalla de favoritos
+                        username: username || 'Usuario desconocido',  // Asegúrate de agregar el username
+                    };
                 }));
                 setFavorites(updatedFavorites);
             } else {
@@ -62,6 +73,9 @@ export default function FavoritosScreen() {
         }
     };
 
+
+
+
     useEffect(() => {
         fetchUserIdAndToken();
     }, []);
@@ -73,81 +87,25 @@ export default function FavoritosScreen() {
         }
     }, [userId, accessToken]);
 
-    // Función para eliminar un favorito
-    const toggleFavorite = async (postId, isFavorited) => {
-        const token = await AsyncStorage.getItem('accessToken');
-
-        if (!token) {
-            console.error('No se encontró el token de acceso');
-            return;
-        }
-
-        try {
-            let response;
-            if (isFavorited) {
-                // Eliminar favorito
-                response = await axios.delete(
-                    `http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${postId}/favorites`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                        data: { userId }, // Enviar el userId en el cuerpo de la solicitud DELETE
-                    }
-                );
-
-                if (response.data.status === 'success') {
-                    setFavorites(prevFavorites => prevFavorites.filter(post => post.id !== postId));
-                }
-            } else {
-                // Marcar como favorito
-                response = await axios.post(
-                    `http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${postId}/favorites`,
-                    { userId },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-                );
-
-                if (response.data.status === 'success') {
-                    // Actualizar el post a favorito
-                    setFavorites(prevFavorites => [
-                        ...prevFavorites,
-                        {
-                            ...response.data.data,
-                            isFavorited: true,
-                        },
-                    ]);
-                }
-            }
-        } catch (error) {
-            console.error('Error al agregar o quitar de favoritos:', error);
-        }
-    };
 
 
     const renderItem = ({ item }) => {
-    
         return (
             <Post
                 id={item.id}
-                username={item.user?.username || 'Usuario desconocido'}
+                username={item.username || 'Usuario desconocido'}  // Asegúrate de que el nombre esté disponible
                 location={item.location}
                 media={item.media}
                 caption={item.caption}
-                description={item.description}
+                description={item.title}
                 likes={item.likesCount}
                 comments={item.commentsCount}
                 favorites={item.likesCount}
-                date={item.date}
-                toggleFavorite={() => toggleFavorite(item.id, item.isFavorited)}
+                date={new Date(item.date).toLocaleDateString()}
                 isFavorited={item.isFavorited}
             />
         );
     };
-    
 
     return (
         <View style={commonStyles.container}>

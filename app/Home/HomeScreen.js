@@ -44,7 +44,33 @@ export default function HomeScreen() {
                 setHasPosts(false);
             } else {
                 setHasPosts(true);
-                setPosts(prevPosts => [...prevPosts, ...postsData]);
+                const updatedPosts = await Promise.all(postsData.map(async (post) => {
+                    // Obtener el token de acceso desde AsyncStorage
+                    const storedToken = await AsyncStorage.getItem('accessToken');
+                    if (!storedToken) {
+                        console.error('Access Token no encontrado');
+                        return post;  // Si no se encuentra el token, devolvemos el post sin cambios
+                    }
+    
+                    // Realizamos la segunda consulta para obtener el username de cada usuario
+                    try {
+                        const userResponse = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile', {
+                            headers: {
+                                Authorization: `Bearer ${storedToken}`,  // Usamos el token para obtener la información del usuario
+                            }
+                        });
+    
+                        const username = userResponse.data.data.username; // Obtenemos el username del usuario
+                        return {
+                            ...post,
+                            username: username || 'Usuario desconocido',  // Asignamos el username al post
+                        };
+                    } catch (error) {
+                        console.error('Error al obtener el username:', error);
+                        return post;  // En caso de error, devolvemos el post sin el username
+                    }
+                }));
+                setPosts(prevPosts => [...prevPosts, ...updatedPosts]);
             }
         } catch (error) {
             console.error('Error al cargar publicaciones:', error);
@@ -52,6 +78,8 @@ export default function HomeScreen() {
             setLoading(false);
         }
     };
+    
+    
 
     // Cargar userId desde AsyncStorage y cargar datos
     useEffect(() => {
@@ -115,11 +143,11 @@ export default function HomeScreen() {
         return (
             <Post
                 id={item.id}
-                username={item.user?.name + ' ' + item.user?.surname || 'Usuario desconocido'}
+                username={item.username|| 'Usuario desconocido'}
                 location={item.location || 'Sin ubicación'}
                 media={item.media} 
-                description={item.description || 'Sin descripcion'}
                 caption={item.caption || 'Sin titulo'}  // Usar caption como descripción si falta
+                description={item.title || 'Sin descripcion'}
                 likes={item.likesCount || 0}
                 comments={item.comments?.length || 0}  // Asegúrate de que 'comments' sea un array antes de usarlo
                 favorites={item.isFavorite ? 1 : 0}  // Asegúrate de que este campo esté correctamente mapeado
