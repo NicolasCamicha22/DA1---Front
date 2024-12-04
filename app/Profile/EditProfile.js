@@ -37,34 +37,26 @@ const uploadImageToBackend = async (imageUri) => {
             },
         });
 
-        // Verificar si la respuesta es exitosa
         if (!response.ok) {
-            const errorMessage = await response.text();
+            const errorMessage = await response.text();  // Leer el mensaje de error si no es exitosa
             console.error('Error al subir la imagen:', errorMessage);
             throw new Error(`Error al subir la imagen: ${errorMessage}`);
         }
 
-        // Aquí debe ser la respuesta del backend
         const data = await response.json();
-        console.log('Imagen subida correctamente:', data);  // Verifica si la respuesta contiene la URL esperada
-
-        // Verifica si data.imageUrl existe
-        if (data && data.imageUrl) {
-            return data.imageUrl;  // Regresamos la URL de la imagen subida
-        } else {
-            throw new Error('La respuesta del backend no contiene la URL de la imagen');
-        }
+        console.log('Imagen subida correctamente:', data.data.imageUrl);
+        return data.data.imageUrl;  // Regresamos la URL de la imagen subida
     } catch (error) {
         console.error('Error al intentar subir la imagen:', error);
         Alert.alert('Error', 'No se pudo subir la imagen.');
-        return null;  // Devolvemos null en caso de error
     }
 };
 
-
 export default function EditProfile() {
     const router = useRouter();
-
+    const handleSettingsPress = () => {
+        router.push('./PorfileScreen');
+    };
 
     const [userId, setUserId] = useState(null);
     const [userInfo, setUserInfo] = useState('');
@@ -111,35 +103,33 @@ export default function EditProfile() {
         loadUserInfo();
     }, [userId]);
 
-
-
-
     const handleSave = async () => {
         if (!userId) return;
-    
+
+        // Subir las imágenes si han sido cambiadas
         let profileImageUrl = userInfo.profileImage;
         let coverImageUrl = userInfo.coverImage;
-    
-        // Si la imagen de perfil está seleccionada (y es local), la subimos
+
+        // Si la imagen de perfil está seleccionada, la subimos
         if (userInfo.profileImage && userInfo.profileImage.startsWith('file://')) {
             profileImageUrl = await uploadImageToBackend(userInfo.profileImage);  // Subir imagen de perfil
         }
-    
-        // Si la imagen de portada está seleccionada (y es local), la subimos
+
+        // Si la imagen de portada está seleccionada, la subimos
         if (userInfo.coverImage && userInfo.coverImage.startsWith('file://')) {
             coverImageUrl = await uploadImageToBackend(userInfo.coverImage);  // Subir imagen de portada
         }
-    
+
         const updatedData = {
             firstName: userInfo.firstName,
             lastName: userInfo.lastName,
             username: userInfo.username,
             bio: userInfo.bio,
             gender: userInfo.gender,
-            profileImage: profileImageUrl || "https://api.dicebear.com/8.x/initials/svg?radius=50&seed=NC",  // URL predeterminada si no se sube
-            coverImage: coverImageUrl || "https://api.dicebear.com/8.x/initials/svg?radius=50&seed=NC",  // URL predeterminada si no se sube
+            profile_pic: profileImageUrl || "https://api.dicebear.com/8.x/initials/svg?radius=50&seed=NC",  // Usa una URL predeterminada si no está definida
+            bannerImage: coverImageUrl || "https://api.dicebear.com/8.x/initials/svg?radius=50&seed=NC",  // Usa una URL predeterminada si no está definida
         };
-    
+
         try {
             const token = await AsyncStorage.getItem('accessToken');
             const response = await axios.put('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile', updatedData, {
@@ -147,7 +137,7 @@ export default function EditProfile() {
                     Authorization: `Bearer ${token}`,
                 }
             });
-    
+
             if (response.status === 200 && response.data.status === 'success') {
                 Alert.alert('Perfil actualizado con éxito');
                 router.push('./ProfileScreen');
@@ -159,7 +149,6 @@ export default function EditProfile() {
             Alert.alert('Error al actualizar el perfil', error.response ? error.response.data.message : error.message);
         }
     };
-    
 
     const handleLogout = async () => {
         try {
@@ -189,7 +178,6 @@ export default function EditProfile() {
         setIsModalVisible(!isModalVisible);
     };
 
-
     // Selección de imagen de perfil
     const handleProfileImageChange = async () => {
         const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -197,21 +185,21 @@ export default function EditProfile() {
             Alert.alert('Permiso denegado', 'Se necesitan permisos para acceder a la galería');
             return;
         }
-    
+
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
         });
-    
+
         if (!result.canceled) {
             const localUri = result.assets[0].uri;
             console.log('Imagen seleccionada:', localUri);
-    
+
             // Subir la imagen y obtener la URL pública
             const imageUrl = await uploadImageToBackend(localUri);
-            
+
             // Actualiza el estado con la URL pública
             setUserInfo((prevState) => ({
                 ...prevState,
@@ -220,8 +208,6 @@ export default function EditProfile() {
             console.log('URL de imagen de perfil subida:', imageUrl);  // Verifica si la URL pública es correcta
         }
     };
-    
-
 
     // Selección de imagen de portada
     const handleCoverImageChange = async () => {
@@ -239,11 +225,18 @@ export default function EditProfile() {
         });
 
         if (!result.canceled) {
+            const localUri = result.assets[0].uri;
+            console.log('Imagen de portada seleccionada:', localUri);
+
+            // Subir la imagen de portada y obtener la URL pública
+            const imageUrl = await uploadImageToBackend(localUri);
+
+            // Actualiza el estado con la URL pública de la portada
             setUserInfo((prevState) => ({
                 ...prevState,
-                coverImage: result.assets[0].uri,  // Asegúrate de actualizar correctamente el estado
+                coverImage: imageUrl,  // Actualiza con la URL pública de la portada
             }));
-            console.log('Imagen de portada seleccionada:', result.assets[0].uri);  // Verifica si la URI está correctamente actualizada
+            console.log('URL de imagen de portada subida:', imageUrl);  // Verifica si la URL pública es correcta
         }
     };
 
@@ -252,7 +245,7 @@ export default function EditProfile() {
             <HeaderEditProfile onSave={handleSave} />
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={styles.coverContainer}>
-                    <Image source={{ uri: userInfo.bannerImage }} style={styles.coverImage} />
+                    <Image source={{ uri: userInfo.coverImage }} style={styles.coverImage} />
                     <TouchableOpacity style={styles.coverIconContainer} onPress={handleCoverImageChange}>
                         <Ionicons name="camera" size={24} color="white" />
                     </TouchableOpacity>
@@ -352,12 +345,7 @@ export default function EditProfile() {
                         <Text style={styles.deleteAccountText}>Delete Account</Text>
                     </TouchableOpacity>
 
-                    <Modal
-                        visible={isModalVisible}
-                        transparent={true}
-                        animationType="fade"
-                        onRequestClose={toggleModal}
-                    >
+                    <Modal visible={isModalVisible} transparent={true} animationType="fade" onRequestClose={toggleModal}>
                         <View style={styles.modalContainer}>
                             <View style={styles.modalContentEdit}>
                                 <Text style={styles.modalText}>Are you sure?</Text>

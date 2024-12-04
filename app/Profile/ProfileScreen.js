@@ -110,7 +110,8 @@ export default function ProfileScreen() {
                 likes={userInfo.likesCount || 0}
                 comments={item.comments_count}
                 isLike={userInfo.isLike}
-                favorites={item.favoritesCount}
+                favorites={userInfo.isFavorite}
+                countFavorite={userInfo.favoritesCount}
                 date={new Date(item.date).toLocaleDateString()}
             />
         );
@@ -118,10 +119,10 @@ export default function ProfileScreen() {
 
 
     const renderProfileImage = (uri) => {
-        if (uri && uri.startsWith('http')) {
-            return <SvgUri uri={uri} width={150} height={150} />;  // Usar SVG si la URL es de una imagen en línea
+        if (uri && uri.startsWith('http') && uri.endsWith('.svg')) {
+            return <SvgUri uri={uri} width={150} height={150} />;
         } else {
-            return <Image source={require('../../assets/images/icon.png')} style={styles.profileImage} resizeMode="cover" />;
+            return <Image source={{ uri }} style={styles.profileImage} resizeMode="cover" />;
         }
     };
 
@@ -150,7 +151,7 @@ export default function ProfileScreen() {
                 ListHeaderComponent={userInfo && (
                     <View>
                         <View style={styles.coverContainer}>
-                            <Image source={{ uri: userInfo.cover_image_url }} style={styles.coverImage} />
+                            <Image source={{ uri: userInfo.bannerImage }} style={styles.coverImage} />
                             {renderProfileImage(userInfo.profile_pic)}
 
                             <View style={styles.usernameContainer}>

@@ -101,7 +101,7 @@ export default function FavoritosScreen() {
                 caption={item.caption}
                 description={item.title}
                 likes={item.likesCount}
-                favoriteCount={item.favoritesCount}
+                countFavorite={item.favoritesCount}
                 isLike={item.isLike}
                 comments={item.commentsCount}
                 favorites={item.isFavorited}
