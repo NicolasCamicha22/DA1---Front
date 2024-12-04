@@ -205,12 +205,17 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
-                    renderItem={({ item }) => (
-                        <Image
-                            source={{ uri: item }}
-                            style={[styles.postImage, { width: screenWidth }]}
-                        />
-                    )}
+                    renderItem={({ item }) => {
+            // Imprimir la URL de la imagen
+            console.log("URL de la imagen:", item);
+
+            return (
+                <Image
+                    source={{ uri: item }}
+                    style={[styles.postImage, { width: screenWidth }]}
+                />
+            );
+        }}
                     onScroll={handleScroll}
                     scrollEventThrottle={16}
                 />

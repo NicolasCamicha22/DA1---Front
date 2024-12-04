@@ -2,7 +2,7 @@
   "expo": {
     "name": "DA1",
     "slug": "Social-Pic",
-    "sdkVersion": "51.0.0",
+    "sdkVersion": "52.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
