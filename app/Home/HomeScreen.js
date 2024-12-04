@@ -52,6 +52,8 @@ export default function HomeScreen() {
                             }
                         });
 
+
+
                         const username = postResponse.data.data.User?.username || 'Usuario desconocido';  // Obtener el username desde la respuesta del post
                         return {
                             ...post,
@@ -129,6 +131,8 @@ export default function HomeScreen() {
         // Acceder al primer elemento de 'media' (que es un array con URLs de las imágenes)
         const imageUrl = item.media && item.media.length > 0 ? item.media[0] : null;  // Accede a la URL de la primera imagen
         const defaultImage = 'https://via.placeholder.com/150';  // Imagen predeterminada en caso de que no haya imágenes
+
+        //console.log('post:',item)
 
         return (
             <Post

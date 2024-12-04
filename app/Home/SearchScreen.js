@@ -10,8 +10,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './HomeStyles';
 import { SvgUri } from 'react-native-svg';
 
-
-
 const SearchScreen = () => {
     const [searchText, setSearchText] = useState('');
     const [results, setResults] = useState([]);
@@ -42,7 +40,11 @@ const SearchScreen = () => {
         }
         return 'https://www.example.com/default-image.jpg';  // Imagen predeterminada de prueba
     };
-    
+
+    // Función para determinar si la imagen es SVG
+    const isSvg = (uri) => {
+        return uri && uri.endsWith('.svg');
+    };
 
     const toggleFollow = async (followingId, isFriend) => {
         if (!userId) {
@@ -60,7 +62,6 @@ const SearchScreen = () => {
             console.error('No se encontró el token de acceso');
             return;
         }
-
 
         try {
             let response;
@@ -112,7 +113,6 @@ const SearchScreen = () => {
             console.error('Error al intentar seguir/dejar de seguir:', error.response ? error.response.data : error);
         }
     };
-
 
     // Maneja la búsqueda de usuarios
     const handleSearch = async (text) => {
@@ -171,20 +171,18 @@ const SearchScreen = () => {
         // Verifica si la URL de la imagen es válida antes de renderizarla
         const imageUri = normalizeImageUrl(item.profile_pic);
 
-
-
         if (!item.id) {
             console.error('El ID del usuario no está disponible', item);
             return null; 
         }
 
         return (
-            <TouchableOpacity onPress={() => router.push(`/Profile/${item.id}`)} style={styles.userContainer}>
-                <SvgUri
-                    uri={ imageUri }  
-                    style={styles.profilePic}
-
-                />
+            <TouchableOpacity onPress={() => router.push(`../Profile/UserProfileScreen/${item.id}`)} style={styles.userContainer}>
+                {isSvg(imageUri) ? (
+                    <SvgUri uri={imageUri} style={styles.profilePic} />
+                ) : (
+                    <Image source={{ uri: imageUri }} style={styles.profilePic} />
+                )}
                 <View style={styles.userInfo}>
                     <Text style={styles.username}>{item.username}</Text>
                     <Text style={styles.fullName}>{item.name} {item.surname}</Text>
@@ -199,7 +197,6 @@ const SearchScreen = () => {
             </TouchableOpacity>
         );
     };
-
 
     return (
         <View style={commonStyles.container}>

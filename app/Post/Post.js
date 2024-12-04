@@ -55,12 +55,12 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
 
 
                 // Aquí actualizamos el estado para los comentarios
-                setCommentList(postData.Comments.map(comment => ({
-                    text: comment.text,  // El texto del comentario
-                    username: comment.User.username,  // El nombre de usuario que hizo el comentario
+                // setCommentList(postData.Comments.map(comment => ({
+                //     text: comment.text,  // El texto del comentario
+                //     username: comment.User.username,  // El nombre de usuario que hizo el comentario
 
 
-                })));
+               // })));
             } catch (error) {
                 console.error('Error al cargar los datos del post:', error);
             }

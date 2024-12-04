@@ -41,7 +41,7 @@ const ResetPasswordScreen = () => {
                 console.log('Datos enviados a la API:', payload); 
 
                 const response = await resetPassword({ ...data, code, newPassword });
-
+                console.log('Respuesta de la API:', response);
                 // Mostrar mensaje de éxito
                 setMessage(response.message || 'Contraseña cambiada con éxito.');
                 setError('');  // Limpiar errores previos
