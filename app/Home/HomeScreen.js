@@ -78,7 +78,6 @@ export default function HomeScreen() {
             try {
                 const storedUserId = await AsyncStorage.getItem('userId');
                 setUserId(storedUserId);
-                console.log('userId cargado desde AsyncStorage:', storedUserId);
                 await loadAds();  // Asegúrate de cargar los anuncios
                 await loadPosts();  // También carga las publicaciones
             } catch (error) {
@@ -142,7 +141,7 @@ export default function HomeScreen() {
                 likes={item.likesCount || 0}
                 comments={item.comments?.length || 0}  // Asegúrate de que 'comments' sea un array antes de usarlo
                 favorites={item.isFavorite}  // Asegúrate de que este campo esté correctamente mapeado
-                favoriteCount={item.favoritesCount || 0}
+                countFavorite={item.favoritesCount || 0}
                 date={new Date(item.date).toLocaleDateString()}
                 userId={userId}
                 isLike={item.isLike}  // Pasar el estado de "me gusta"

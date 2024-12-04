@@ -60,10 +60,12 @@ export default function FavoritosScreen() {
                         ...post,
                         isFavorited: true,  // Marcar como favorito para todos los posts en la pantalla de favoritos
                         username: username,  // Agregar el username al post
+
                     };
                 }));
 
                 setFavorites(updatedFavorites);  // Actualizar el estado con los posts actualizados
+               
             } else {
                 console.error('Error: No se encontraron favoritos en la respuesta del backend');
                 setFavorites([]);  // Si no hay favoritos, poner el estado vacío
@@ -89,6 +91,7 @@ export default function FavoritosScreen() {
 
     // Renderizar cada item (post o publicidad)
     const renderItem = ({ item }) => {
+        console.log("PRUEBA:", item)
         return (
             <Post
                 id={item.id}
@@ -98,7 +101,7 @@ export default function FavoritosScreen() {
                 caption={item.caption}
                 description={item.title}
                 likes={item.likesCount}
-                favoriteCount={item.favoriteCount}
+                favoriteCount={item.favoritesCount}
                 isLike={item.isLike}
                 comments={item.commentsCount}
                 favorites={item.isFavorited}

@@ -8,27 +8,21 @@ const api = axios.create({
   baseURL: 'http://ec2-34-203-234-215.compute-1.amazonaws.com:8080'
 });
 
-export const sendCode = async (email) => {
+export const sendCode = async (data) => {
   try {
-    const response = await api.post('/forgot-password', { email });
+    const response = await api.post('/api/auth/forgot-password', data);
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    console.error('Error en sendCode:', error.response?.data || error.message);
+    throw error;
   }
 };
 
+
+
 export const registerUser = async (userData) => {
   try {
-    //const response = await api.post('/api/auth/register', userData);
-    const response = await axios.post(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/auth/register`, {
-      username: userData.username,
-      name: userData.username,
-      surname:userData.surname,
-      email:userData.email,
-      password: userData.password,
-      descriptionProfile:userData.descriptionProfile,
-      gender:userData.gender
-  });
+    const response = await api.post('/register', userData);
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -117,26 +111,28 @@ export const logout = async (router) => {
 
 export const resetPassword = async ({ email, code, newPassword }) => {
   try {
-    const response = await api.post('/reset-password', {
+    // Verifica que todos los campos estén presentes
+    if (!email || !code || !newPassword) {
+      throw new Error('Todos los campos son requeridos');
+    }
+
+    const response = await api.post('/api/auth/reset-password', {
       email,
       code,
       newPassword
     });
 
-    // Verificamos que los datos importantes estén en la respuesta
-    if (response.data && response.data.data) {
-      return response.data.data; // Retorna los datos dentro de `data` de la respuesta
+    // Asegúrate de que la respuesta esté correctamente recibida
+    if (response.status === 200 && response.data && response.data.status === 'success') {
+      return response.data;  // Solo devolvemos los datos, no hacemos nada más
     } else {
-      throw new Error('No se encontraron datos importantes en la respuesta del servidor');
+      throw new Error(response.data.message || 'Error desconocido');
     }
+
   } catch (error) {
     console.log('Error en la API:', error.response ? error.response.data : error.message);
-    throw error; // Re-lanza el error para que se pueda manejar en el componente
+    throw error;  // Re-lanza el error para que se pueda manejar en el componente
   }
-
-  
-
 };
-
 
 

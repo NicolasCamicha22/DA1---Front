@@ -9,12 +9,12 @@ import Modal from 'react-native-modal';
 
 const screenWidth = Dimensions.get('window').width;
 
-const Post = ({ id, username, location, media, caption, likes, comments, favorites, favoritesCount, date, description, isLike, imageUrl }) => {
+const Post = ({ id, username, location, media, caption, likes, comments, favorites, countFavorite, date, description, isLike, imageUrl }) => {
     const [isLiked, setIsLiked] = useState(isLike);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [likeCount, setLikeCount] = useState(likes || 0);
     const [isFavorited, setIsFavorited] = useState(favorites);
-    const [favoriteCount, setFavoriteCount] = useState(favoritesCount || 0);
+    const [favoriteCount, setFavoriteCount] = useState(countFavorite || 0);
     const [userId, setUserId] = useState(null);
     const [comment, setComment] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
@@ -47,7 +47,8 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
 
                 // Establecer los estados para like y favoritos
                 setLikeCount(postData.likesCount);
-                setFavoriteCount(postData.favoritesCount);
+                //setFavoriteCount(postData.favoritesCount);
+
 
 
 

@@ -57,6 +57,7 @@ export default function ProfileScreen() {
                 if (response.data && response.data.data) {
                     const userData = response.data.data;
                     setUserInfo(userData);
+                    console.log('userData:', userData)
                     if (userData.posts) {
                         // Aquí obtenemos los posts
                         const updatedPosts = await Promise.all(userData.posts.map(async (post) => {
@@ -69,7 +70,9 @@ export default function ProfileScreen() {
                             const username = postResponse.data.user?.username || 'Usuario desconocido';  // Aseguramos que username siempre tenga un valor válido
                             return {
                                 ...post,
-                                username: username,  // Aseguramos que cada post tenga el username correctamente
+                                isLike: userData.isLike,  // Estado del like
+                                isFavorite: userData.isFavorited,  // Estado del favorito
+                                username: username  // Aseguramos que cada post tenga el username correctamente
                             };
                         }));
                         setPosts(updatedPosts);
@@ -91,45 +94,11 @@ export default function ProfileScreen() {
         }
     }, [userId]);
 
-    const handleChangeCoverImage = async () => {
-        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (!permissionResult.granted) {
-            Alert.alert('Permiso denegado', 'Se necesitan permisos para acceder a la galería');
-            return;
-        }
 
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!result.canceled) {
-            const newImageUri = result.assets[0].uri;
-
-            try {
-                const response = await axios.post(`https://da1-back.onrender.com/user/update-cover-image`, {
-                    userId,
-                    coverImageUrl: newImageUri,
-                });
-
-                setUserInfo((prevState) => ({
-                    ...prevState,
-                    cover_image_url: response.data.coverImageUrl, // Usamos la URL directamente
-                }));
-
-                Alert.alert('Imagen de encabezado cambiada con éxito');
-            } catch (error) {
-                console.error('Error al actualizar la imagen de encabezado:', error);
-                Alert.alert('Error al actualizar la imagen de encabezado');
-            }
-        }
-    };
 
     const renderItem = ({ item }) => {
         const imageUrl = item.media && item.media.length > 0 ? item.media[0] : null;
-        
+
         return (
             <Post
                 id={item.id}
@@ -138,18 +107,19 @@ export default function ProfileScreen() {
                 media={item.media}
                 caption={item.caption}
                 description={item.title}
-                likes={item.likes_count}
+                likes={userInfo.likesCount || 0}
                 comments={item.comments_count}
-                favorites={item.favorites_count}
+                isLike={userInfo.isLike}
+                favorites={item.favoritesCount}
                 date={new Date(item.date).toLocaleDateString()}
             />
         );
     };
-    
+
 
     const renderProfileImage = (uri) => {
         if (uri && uri.startsWith('http')) {
-            return <SvgUri uri={uri} width={150} height={150} />;
+            return <SvgUri uri={uri} width={150} height={150} />;  // Usar SVG si la URL es de una imagen en línea
         } else {
             return <Image source={require('../../assets/images/icon.png')} style={styles.profileImage} resizeMode="cover" />;
         }
@@ -195,7 +165,7 @@ export default function ProfileScreen() {
                             <Text style={styles.bio}>{userInfo.descriptionProfile || "No description"}</Text>
                             <View style={styles.levelAndPosts}>
                                 <Text style={styles.level}>
-                                    {userInfo.lvl ? `Nivel: ${userInfo.lvl}` : "Nivel: Null"}
+                                    {userInfo.lvl ? `Nivel: ${userInfo.lvl}` : "Nivel: 0"}
                                 </Text>
                                 <Text style={styles.postsCount}>{userInfo.posts.length} Posts</Text>
                             </View>

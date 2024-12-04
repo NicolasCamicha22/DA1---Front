@@ -61,8 +61,6 @@ const SearchScreen = () => {
             return;
         }
 
-        console.log('userId:', userId);
-        console.log('followingId:', followingId);
 
         try {
             let response;
