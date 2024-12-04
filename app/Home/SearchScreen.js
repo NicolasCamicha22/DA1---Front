@@ -32,12 +32,10 @@ const SearchScreen = () => {
         fetchUserId();
     }, []);
 
-    // Normaliza la URL de la imagen de perfil
     const normalizeImageUrl = (imageUrl) => {
         if (imageUrl && imageUrl.startsWith('https://')) {
-            return imageUrl;  // Ya es una URL válida
+            return imageUrl;
         }
-        // Si la URL es relativa, la normalizamos
         if (imageUrl && imageUrl.startsWith('/uploads/')) {
             return `https://da1-back.onrender.com${imageUrl}`;
         }
@@ -51,7 +49,7 @@ const SearchScreen = () => {
 
         if (!followingId) {
             console.error('El followingId no está definido.');
-            return;  // Asegúrate de que followingId esté definido antes de hacer la solicitud
+            return;
         }
 
         const token = await AsyncStorage.getItem('accessToken');
@@ -61,7 +59,7 @@ const SearchScreen = () => {
         }
 
         console.log('userId:', userId);
-        console.log('followingId:', followingId);  // Verifica que `followingId` no sea undefined
+        console.log('followingId:', followingId);
 
         try {
             const response = await axios.post('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/request', {
@@ -69,7 +67,7 @@ const SearchScreen = () => {
                 followingId: followingId
             }, {
                 headers: {
-                    Authorization: `Bearer ${token}` // Verifica que el token esté siendo pasado correctamente
+                    Authorization: `Bearer ${token}`
                 }
             });
 
@@ -89,11 +87,6 @@ const SearchScreen = () => {
         }
     };
 
-
-
-
-
-    // Maneja la búsqueda
     const handleSearch = async (text) => {
         setSearchText(text);
         if (text.trim() === '') {
@@ -101,7 +94,6 @@ const SearchScreen = () => {
             return;
         }
 
-        // Obtener el token de acceso
         const token = await AsyncStorage.getItem('accessToken');
         if (!token) {
             console.error('No se encontró el token de acceso');
@@ -112,7 +104,7 @@ const SearchScreen = () => {
             const response = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/search', {
                 params: { query: text.trim(), currentUserId: userId },
                 headers: {
-                    Authorization: `Bearer ${token}` // Enviar el token en la cabecera de la solicitud
+                    Authorization: `Bearer ${token}`
                 }
             });
 
@@ -135,12 +127,12 @@ const SearchScreen = () => {
     const renderUserItem = ({ item }) => {
         if (!item.id) {
             console.error('El ID del usuario no está disponible', item);
-            return null;  // Si no tiene ID, no procesamos este item
+            return null;
         }
         return (
             <TouchableOpacity onPress={() => router.push(`/Profile/${item.id}`)} style={styles.userContainer}>
                 <Image
-                    source={{ uri: item.profile_pic }}  // Asegúrate de usar la URL correcta para las imágenes de perfil
+                    source={{ uri: item.profile_pic }}
                     style={styles.profilePic}
                 />
                 <View style={styles.userInfo}>
@@ -153,8 +145,7 @@ const SearchScreen = () => {
             </TouchableOpacity>
         );
     };
-
-
+     
     return (
         <View style={commonStyles.container}>
             <Header />
