@@ -27,7 +27,6 @@ export default function HomeScreen() {
             const response = await apiClient.get('/api/timeline', {
                 params: { userId, page }
             });
-            console.log('Posts obtenidos:', response.data);
             return response.data.data;
         } catch (error) {
             console.error('Error al obtener las publicaciones:', error);
@@ -45,31 +44,25 @@ export default function HomeScreen() {
             } else {
                 setHasPosts(true);
                 const updatedPosts = await Promise.all(postsData.map(async (post) => {
-                    // Obtener el token de acceso desde AsyncStorage
-                    const storedToken = await AsyncStorage.getItem('accessToken');
-                    if (!storedToken) {
-                        console.error('Access Token no encontrado');
-                        return post;  // Si no se encuentra el token, devolvemos el post sin cambios
-                    }
-    
-                    // Realizamos la segunda consulta para obtener el username de cada usuario
+                    // Hacemos una segunda consulta para obtener la información completa del post, incluido el username
                     try {
-                        const userResponse = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile', {
+                        const postResponse = await axios.get(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${post.id}`, {
                             headers: {
-                                Authorization: `Bearer ${storedToken}`,  // Usamos el token para obtener la información del usuario
+                                Authorization: `Bearer ${await AsyncStorage.getItem('accessToken')}`,
                             }
                         });
-    
-                        const username = userResponse.data.data.username; // Obtenemos el username del usuario
+
+                        const username = postResponse.data.data.User?.username || 'Usuario desconocido';  // Obtener el username desde la respuesta del post
                         return {
                             ...post,
-                            username: username || 'Usuario desconocido',  // Asignamos el username al post
+                            username: username,  // Asignamos el username al post
                         };
                     } catch (error) {
-                        console.error('Error al obtener el username:', error);
-                        return post;  // En caso de error, devolvemos el post sin el username
+                        console.error('Error al obtener el username del post:', error);
+                        return post;  // Si no se puede obtener el username, devolvemos el post sin modificar
                     }
                 }));
+
                 setPosts(prevPosts => [...prevPosts, ...updatedPosts]);
             }
         } catch (error) {
@@ -78,8 +71,6 @@ export default function HomeScreen() {
             setLoading(false);
         }
     };
-    
-    
 
     // Cargar userId desde AsyncStorage y cargar datos
     useEffect(() => {
@@ -126,7 +117,7 @@ export default function HomeScreen() {
     // Renderizar cada item, ya sea un post o una propaganda
     const renderItem = ({ item }) => {
         if (item.isAd) {
-            const imageUrl = item.imagePath[0]?.landscape || '';  // Accede a la imagen de la forma correcta
+            const imageUrl = item.imagePath[0]?.portraite || '';  // Accede a la imagen de la forma correcta
             return (
                 <Ad
                     title={item.commerce}
@@ -143,17 +134,18 @@ export default function HomeScreen() {
         return (
             <Post
                 id={item.id}
-                username={item.username|| 'Usuario desconocido'}
+                username={item.username || 'Usuario desconocido'}
                 location={item.location || 'Sin ubicación'}
-                media={item.media} 
+                media={item.media}
                 caption={item.caption || 'Sin titulo'}  // Usar caption como descripción si falta
                 description={item.title || 'Sin descripcion'}
                 likes={item.likesCount || 0}
                 comments={item.comments?.length || 0}  // Asegúrate de que 'comments' sea un array antes de usarlo
-                favorites={item.isFavorite ? 1 : 0}  // Asegúrate de que este campo esté correctamente mapeado
+                favorites={item.isFavorite}  // Asegúrate de que este campo esté correctamente mapeado
+                favoriteCount={item.favoritesCount || 0}
                 date={new Date(item.date).toLocaleDateString()}
                 userId={userId}
-                isLiked={item.isLike}  // Pasar el estado de "me gusta"
+                isLike={item.isLike}  // Pasar el estado de "me gusta"
                 isFavorited={item.isFavorite}  // Pasar el estado de "favorito"
             />
         );

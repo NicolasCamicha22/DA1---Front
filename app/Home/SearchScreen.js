@@ -8,6 +8,9 @@ import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './HomeStyles';
+import { SvgUri } from 'react-native-svg';
+
+
 
 const SearchScreen = () => {
     const [searchText, setSearchText] = useState('');
@@ -37,13 +40,11 @@ const SearchScreen = () => {
         if (imageUrl && imageUrl.startsWith('https://')) {
             return imageUrl;  // Ya es una URL válida
         }
-        // Si la URL es relativa, la normalizamos
-        if (imageUrl && imageUrl.startsWith('/uploads/')) {
-            return `https://da1-back.onrender.com${imageUrl}`;
-        }
+        return 'https://www.example.com/default-image.jpg';  // Imagen predeterminada de prueba
     };
+    
 
-    const toggleFollow = async (followingId) => {
+    const toggleFollow = async (followingId, isFriend) => {
         if (!userId) {
             console.error('El ID del usuario logueado no está disponible.');
             return;
@@ -51,7 +52,7 @@ const SearchScreen = () => {
 
         if (!followingId) {
             console.error('El followingId no está definido.');
-            return;  // Asegúrate de que followingId esté definido antes de hacer la solicitud
+            return;
         }
 
         const token = await AsyncStorage.getItem('accessToken');
@@ -61,39 +62,61 @@ const SearchScreen = () => {
         }
 
         console.log('userId:', userId);
-        console.log('followingId:', followingId);  // Verifica que `followingId` no sea undefined
+        console.log('followingId:', followingId);
 
         try {
-            const response = await axios.post('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/request', {
-                followerId: userId,
-                followingId: followingId
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}` // Verifica que el token esté siendo pasado correctamente
+            let response;
+            if (isFriend) {
+                // Si ya es amigo, hacemos una solicitud DELETE para eliminar la amistad
+                response = await axios.delete(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/${followingId}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                    data: {
+                        userId: userId  // Enviar también el userId
+                    }
+                });
+
+                if (response.data.status === 'success') {
+                    console.log('Amistad eliminada');
+                    // Actualiza la UI para reflejar que ya no es amigo
+                    setResults(prevResults =>
+                        prevResults.map(user =>
+                            user.id === followingId ? { ...user, isFriend: false } : user
+                        )
+                    );
+                } else {
+                    console.log('No se pudo eliminar la amistad');
                 }
-            });
-
-            if (response.data.following) {
-                console.log('Ahora sigues al usuario');
             } else {
-                console.log('Has dejado de seguir al usuario');
-            }
+                // Si no es amigo, hacemos una solicitud POST para seguir al usuario
+                response = await axios.post('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/request', {
+                    friendId: followingId,
+                    userId: userId  // Asegúrate de enviar el userId también
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
 
-            setResults(prevResults =>
-                prevResults.map(user =>
-                    user.id === followingId ? { ...user, following: !user.following } : user
-                )
-            );
+                if (response.data.status === 'success') {
+                    console.log('Solicitud de amistad enviada');
+                    setResults(prevResults =>
+                        prevResults.map(user =>
+                            user.id === followingId ? { ...user, isFriend: true } : user
+                        )
+                    );
+                } else {
+                    console.log('No se pudo enviar la solicitud de amistad');
+                }
+            }
         } catch (error) {
             console.error('Error al intentar seguir/dejar de seguir:', error.response ? error.response.data : error);
         }
     };
 
 
-
-
-
-    // Maneja la búsqueda
+    // Maneja la búsqueda de usuarios
     const handleSearch = async (text) => {
         setSearchText(text);
         if (text.trim() === '') {
@@ -109,18 +132,31 @@ const SearchScreen = () => {
         }
 
         try {
+            // Primero obtenemos los usuarios de la búsqueda
             const response = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/search', {
                 params: { query: text.trim(), currentUserId: userId },
                 headers: {
-                    Authorization: `Bearer ${token}` // Enviar el token en la cabecera de la solicitud
+                    Authorization: `Bearer ${token}`
                 }
             });
 
+            // Luego obtenemos la lista de amigos
+            const friendsResponse = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            const friendsIds = friendsResponse.data.data.following.map(friend => friend.id); // Lista de IDs de amigos
+
             if (response.data && Array.isArray(response.data.data)) {
+                // Ahora mapeamos los usuarios y comparamos con la lista de amigos
                 const normalizedResults = response.data.data.map(user => ({
                     ...user,
-                    profile_pic: normalizeImageUrl(user.profile_pic)
+                    imageUrl: normalizeImageUrl(user.profile_pic),
+                    isFriend: friendsIds.includes(user.id) // Si el usuario está en la lista de amigos, es amigo
                 }));
+
                 setResults(normalizedResults);
             } else {
                 console.error('La respuesta no contiene un array en "data":', response.data);
@@ -133,22 +169,34 @@ const SearchScreen = () => {
     };
 
     const renderUserItem = ({ item }) => {
+
+        // Verifica si la URL de la imagen es válida antes de renderizarla
+        const imageUri = normalizeImageUrl(item.profile_pic);
+
+
+
         if (!item.id) {
             console.error('El ID del usuario no está disponible', item);
-            return null;  // Si no tiene ID, no procesamos este item
+            return null; 
         }
+
         return (
             <TouchableOpacity onPress={() => router.push(`/Profile/${item.id}`)} style={styles.userContainer}>
-                <Image
-                    source={{ uri: item.profile_pic }}  // Asegúrate de usar la URL correcta para las imágenes de perfil
+                <SvgUri
+                    uri={ imageUri }  
                     style={styles.profilePic}
+
                 />
                 <View style={styles.userInfo}>
                     <Text style={styles.username}>{item.username}</Text>
-                    <Text style={styles.fullName}>{item.fullName}</Text>
+                    <Text style={styles.fullName}>{item.name} {item.surname}</Text>
                 </View>
-                <TouchableOpacity onPress={() => toggleFollow(item.id)} style={styles.followButton}>
-                    <Text style={styles.followText}>{item.following ? 'Unfollow' : 'Follow'}</Text>
+                <TouchableOpacity
+                    onPress={() => toggleFollow(item.id, item.isFriend)}  // Pasa el estado correcto del botón
+                    style={styles.followButton}>
+                    <Text style={styles.followText}>
+                        {item.isFriend ? 'Unfollow' : 'Follow'}  {/* Mostrar correctamente Follow/Unfollow */}
+                    </Text>
                 </TouchableOpacity>
             </TouchableOpacity>
         );

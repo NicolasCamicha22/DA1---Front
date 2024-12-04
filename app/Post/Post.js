@@ -9,12 +9,12 @@ import Modal from 'react-native-modal';
 
 const screenWidth = Dimensions.get('window').width;
 
-const Post = ({ id, username, location, media, caption, likes, comments, favorites, date, description, imageUrl }) => {
-    const [isLiked, setIsLiked] = useState(likes > 0);
+const Post = ({ id, username, location, media, caption, likes, comments, favorites, favoritesCount, date, description, isLike, imageUrl }) => {
+    const [isLiked, setIsLiked] = useState(isLike);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [likeCount, setLikeCount] = useState(likes || 0);
-    const [isFavorited, setIsFavorited] = useState(favorites > 0);
-    const [favoriteCount, setFavoriteCount] = useState(favorites || 0);
+    const [isFavorited, setIsFavorited] = useState(favorites);
+    const [favoriteCount, setFavoriteCount] = useState(favoritesCount || 0);
     const [userId, setUserId] = useState(null);
     const [comment, setComment] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
@@ -23,7 +23,11 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
     useEffect(() => {
         const fetchUserId = async () => {
             const storedUserId = await AsyncStorage.getItem('userId');
-            setUserId(storedUserId);
+            if (storedUserId) {
+                setUserId(storedUserId);
+            } else {
+                console.error("No userId found");
+            }
         };
         fetchUserId();
     }, []);
@@ -40,25 +44,21 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
 
                 const postData = response.data.data;  // Asegurándonos de que el post esté dentro de "data"
 
-                // Establecer los estados para like y favoritos
-                setIsLiked(postData.isLike);
-                setLikeCount(postData.likesCount);
-                setIsFavorited(postData.isFavorite);
-                setFavoriteCount(postData.isFavorite ? 1 : 0);
-                const storedLikeState = await AsyncStorage.getItem(`like_${id}`);
-                if (storedLikeState === 'true') {
-                    setIsLiked(true);
-                } else {
-                    setIsLiked(false);
-                }
 
-                
+                // Establecer los estados para like y favoritos
+                setLikeCount(postData.likesCount);
+                setFavoriteCount(postData.favoritesCount);
+
+
+
+
+
                 // Aquí actualizamos el estado para los comentarios
                 setCommentList(postData.Comments.map(comment => ({
                     text: comment.text,  // El texto del comentario
                     username: comment.User.username,  // El nombre de usuario que hizo el comentario
 
-                    
+
                 })));
             } catch (error) {
                 console.error('Error al cargar los datos del post:', error);
@@ -96,7 +96,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
             if (response.data.message === 'Like added') {
                 setIsLiked(true);
                 setLikeCount(likeCount + 1);
-                await AsyncStorage.setItem(`like_${id}`, 'true'); 
+                await AsyncStorage.setItem(`like_${id}`, 'true');
             } else if (response.data.message === 'Like removed') {
                 setIsLiked(false);
                 setLikeCount(likeCount - 1);
@@ -131,7 +131,8 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
 
                 if (response.data.status === 'success') {
                     setIsFavorited(false);
-                    setFavoriteCount(prev => (prev > 0 ? prev - 1 : 0));
+                    setFavoriteCount(favoriteCount - 1);
+                    await AsyncStorage.setItem(`favorite_${id}`, 'false');
                 }
             } else {
                 console.log('Marcando como favorito...');
@@ -149,7 +150,8 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
 
                 if (response.data.status === 'success' && response.data.favorited) {
                     setIsFavorited(true);
-                    setFavoriteCount(prev => prev + 1);
+                    setFavoriteCount(favoriteCount + 1);
+                    await AsyncStorage.setItem(`favorite_${id}`, 'true');
                 }
             }
         } catch (error) {
@@ -162,6 +164,8 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
         if (!comment) return;
         try {
             const token = await AsyncStorage.getItem('accessToken');
+    
+            // Hacer la solicitud para agregar el comentario
             const response = await axios.post(
                 `http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}/comments`,
                 { userId, text: comment },
@@ -172,13 +176,30 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
                 }
             );
             console.log('Comentario agregado:', response.data);
+    
+            // Obtener el username del comentario
+            const commentUserId = response.data.data.userId;  // Obtener el userId del comentario
+            const userResponse = await axios.get(
+                `http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+    
+            const username = userResponse.data.username || 'Usuario desconocido';  // Obtener el username
+    
+            // Limpiar el campo de comentario
             setComment('');
-            setCommentList((prev) => [
+    
+            // Agregar el nuevo comentario con el username a la lista sin necesidad de recargar
+            setCommentList(prev => [
                 ...prev,
                 {
                     userId,
-                    username: response.data.data.User.username, // Asegúrate de agregar el nombre de usuario
-                    text: response.data.data.text
+                    username,  // Asignar el username obtenido
+                    text: response.data.data.text,
                 }
             ]);
         } catch (error) {
@@ -186,6 +207,8 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
             alert(error.response?.data?.message || 'Error al agregar comentario');
         }
     };
+    
+
 
     const finalImageUrl = imageUrl || 'https://via.placeholder.com/150';
 

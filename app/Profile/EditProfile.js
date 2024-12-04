@@ -29,7 +29,7 @@ export default function EditProfileScreen() {
     const [isNightMode, setIsNightMode] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
 
-    useEffect(() => {
+    useEffect(() => {   
         const fetchUserId = async () => {
             try {
                 const storedUserId = await AsyncStorage.getItem('userId');

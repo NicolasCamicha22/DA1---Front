@@ -156,9 +156,10 @@ export default StyleSheet.create({
         paddingLeft: 15,
         fontSize: 16,
         position: 'relative',
-        height: 38,
+        height: 38,  // Asegúrate de que esto sea consistente
         zIndex: 0,
     },
+    
     inputLabelSignUp: {
         position: 'absolute',
         top: -10,

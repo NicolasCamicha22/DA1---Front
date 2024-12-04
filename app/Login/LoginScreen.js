@@ -34,7 +34,6 @@ export default function LoginScreen() {
         router.push('../Home/HomeScreen');
       }
     } catch (error) {
-      console.log(error); // Agregar log para obtener detalles del error
       setAttempts((prev) => prev + 1);
       Alert.alert('Error', 'Email o contraseña incorrectos');
     }

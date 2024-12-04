@@ -4,8 +4,7 @@ import { KeyboardAvoidingView, Platform, Alert, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import SignUpForm from './SignUpForm'; 
 import { registerUser } from '../api';
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
+
 
 
 export default function SignUpScreen() {
@@ -15,45 +14,16 @@ export default function SignUpScreen() {
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [profilePic, setProfilePic] = useState(null);
-
-    const selectProfilePic = async () => {
-        try {
-            const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if (!permissionResult.granted) {
-                alert('Permiso para acceder a la galería es necesario.');
-                return;
-            }
-
-            const result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                aspect: [1, 1],
-                quality: 0.5,
-            });
-
-            if (!result.canceled && result.assets && result.assets[0].uri) {
-                const uri = result.assets[0].uri;
-                const base64Image = await FileSystem.readAsStringAsync(uri, {
-                    encoding: FileSystem.EncodingType.Base64,
-                });
-                setProfilePic(`data:image/jpeg;base64,${base64Image}`);
-                Alert.alert("Foto de Perfil", "¡Foto seleccionada con éxito!");
-            } else {
-                console.warn("No se encontró un URI válido para la imagen.");
-                Alert.alert("Error", "No se pudo seleccionar la imagen. Intenta nuevamente.");
-            }
-        } catch (error) {
-            console.error("Error al seleccionar la imagen:", error);
-            Alert.alert("Error", "Hubo un problema al seleccionar la imagen. Intenta nuevamente.");
-        }
-    };
+    const [gender, setGender] = useState(''); 
+    const [descriptionProfile, setDescriptionProfile] = useState('');
+    
 
 
     const handleSignUp = async () => {
         try {
             // Aquí envías los datos al backend usando Axios
-            const response = await registerUser({ username, name, surname, email, password, profilePic });
+            const response = await registerUser({ username, name, surname, email, password, descriptionProfile, gender });
+
             Alert.alert("Registro exitoso", response.message);
             router.push('./LoginScreen'); // Redirige al login después de registrar
         } catch (error) {
@@ -83,8 +53,10 @@ export default function SignUpScreen() {
                 setEmail={setEmail}
                 password={password}
                 setPassword={setPassword}
-                profilePic={profilePic}
-                selectProfilePic={selectProfilePic}
+                gender={gender}
+                setGender={setGender}
+                descriptionProfile={descriptionProfile}
+                setDescriptionProfile={setDescriptionProfile}
                 onSignUp={handleSignUp}
                 onSignIn={handleSignIn} // Pasa la función para volver al login
             />

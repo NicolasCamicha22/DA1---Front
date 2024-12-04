@@ -19,7 +19,16 @@ export const sendCode = async (email) => {
 
 export const registerUser = async (userData) => {
   try {
-    const response = await api.post('/register', userData);
+    //const response = await api.post('/api/auth/register', userData);
+    const response = await axios.post(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/auth/register`, {
+      username: userData.username,
+      name: userData.username,
+      surname:userData.surname,
+      email:userData.email,
+      password: userData.password,
+      descriptionProfile:userData.descriptionProfile,
+      gender:userData.gender
+  });
     return response.data;
   } catch (error) {
     throw error.response.data;

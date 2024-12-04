@@ -9,12 +9,12 @@ import Post from '../Post/Post';
 import styles from './HomeStyles';
 
 export default function FavoritosScreen() {
-    const [favorites, setFavorites] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [userId, setUserId] = useState(null);
-    const [accessToken, setAccessToken] = useState(null);
+    const [favorites, setFavorites] = useState([]);  // Lista de favoritos
+    const [loading, setLoading] = useState(false);  // Estado de carga
+    const [userId, setUserId] = useState(null);  // ID del usuario
+    const [accessToken, setAccessToken] = useState(null);  // Token de acceso
 
-    const screenWidth = Dimensions.get('window').width;
+    const screenWidth = Dimensions.get('window').width;  // Ancho de la pantalla
 
     // Obtener userId y accessToken desde AsyncStorage
     const fetchUserIdAndToken = async () => {
@@ -46,63 +46,63 @@ export default function FavoritosScreen() {
             // Verificamos que la respuesta contenga los datos esperados
             if (response.data && response.data.data) {
                 const updatedFavorites = await Promise.all(response.data.data.map(async (post) => {
-                    // Ahora hacemos una segunda consulta para obtener el username del usuario
-                    const userResponse = await axios.get(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile`, {
+                    // Hacemos una segunda consulta para obtener la información completa del post, incluyendo el username
+                    const postResponse = await axios.get(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${post.id}`, {
                         headers: {
-                            Authorization: `Bearer ${accessToken}`,  // Usamos el mismo token
+                            Authorization: `Bearer ${accessToken}`,
                         }
                     });
 
-                    const username = userResponse.data.data.username; // Obtenemos el username del usuario
+                    // Ahora obtenemos directamente el username desde el objeto 'user' del post
+                    const username = postResponse.data.data.User?.username|| 'Usuario desconocido';  // Acceder a 'user.username'
+
                     return {
                         ...post,
                         isFavorited: true,  // Marcar como favorito para todos los posts en la pantalla de favoritos
-                        username: username || 'Usuario desconocido',  // Asegúrate de agregar el username
+                        username: username,  // Agregar el username al post
                     };
                 }));
-                setFavorites(updatedFavorites);
+
+                setFavorites(updatedFavorites);  // Actualizar el estado con los posts actualizados
             } else {
                 console.error('Error: No se encontraron favoritos en la respuesta del backend');
-                setFavorites([]);
+                setFavorites([]);  // Si no hay favoritos, poner el estado vacío
             }
         } catch (error) {
             console.error('Error al obtener los favoritos:', error.response?.data?.message || error);
-            setFavorites([]);
+            setFavorites([]);  // Si hay error, limpiar los favoritos
         } finally {
-            setLoading(false);
+            setLoading(false);  // Desactivar el indicador de carga
         }
     };
 
-
-
-
     useEffect(() => {
-        fetchUserIdAndToken();
+        fetchUserIdAndToken();  // Obtener el userId y el accessToken al cargar el componente
     }, []);
 
     useEffect(() => {
         if (userId && accessToken) {
-            setLoading(true);
-            fetchFavorites();
+            setLoading(true);  // Activar el indicador de carga
+            fetchFavorites();  // Obtener los favoritos
         }
     }, [userId, accessToken]);
 
-
-
+    // Renderizar cada item (post o publicidad)
     const renderItem = ({ item }) => {
         return (
             <Post
                 id={item.id}
-                username={item.username || 'Usuario desconocido'}  // Asegúrate de que el nombre esté disponible
+                username={item.username || 'Usuario desconocido'}  // Asegúrate de que el username esté bien asignado
                 location={item.location}
                 media={item.media}
                 caption={item.caption}
                 description={item.title}
                 likes={item.likesCount}
+                favoriteCount={item.favoriteCount}
+                isLike={item.isLike}
                 comments={item.commentsCount}
-                favorites={item.likesCount}
+                favorites={item.isFavorited}
                 date={new Date(item.date).toLocaleDateString()}
-                isFavorited={item.isFavorited}
             />
         );
     };

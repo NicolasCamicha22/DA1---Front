@@ -1,7 +1,11 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Linking, Dimensions } from 'react-native';
 import commonStyles from '../styles';
 import styles from './HomeStyles';
+
+
+const screenWidth = Dimensions.get('window').width;
+
 
 function Ad({ title, imageUrl, linkUrl }) {
     const handlePress = () => {
@@ -17,7 +21,7 @@ function Ad({ title, imageUrl, linkUrl }) {
         <View style={styles.adContainer}>
             <Text style={styles.adLabel}>Publicidad</Text>
             {imageUrl ? (
-                <Image source={{ uri: imageUrl }} style={styles.postImage} />
+                <Image source={{ uri: imageUrl }}  style={[styles.postImage, { width: screenWidth }]} />
             ) : (
                 <Text style={styles.noImageText}>Imagen no disponible</Text>
             )}

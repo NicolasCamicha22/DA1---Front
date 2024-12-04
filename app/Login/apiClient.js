@@ -10,7 +10,6 @@ const apiClient = axios.create({
   },
 });
 
-console.log('apiClient creado:', apiClient);
 
 apiClient.interceptors.request.use(
   async (config) => {

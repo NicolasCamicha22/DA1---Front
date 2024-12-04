@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
-import commonStyles from '../styles'; 
+import { Picker } from '@react-native-picker/picker';  // Importamos el Picker
+import commonStyles from '../styles';
 import styles from './LoginStyles';
 
 export default function SignUpForm({
-    username, setUsername, 
-    name, setName, 
-    surname, setSurname, 
-    email, setEmail, 
-    password, setPassword, 
-    profilePic, selectProfilePic, 
-    onSignUp, onSignIn 
+    username, setUsername,
+    name, setName,
+    surname, setSurname,
+    email, setEmail,
+    password, setPassword,
+    descriptionProfile, setDescriptionProfile,
+    gender, setGender,
+    onSignUp, onSignIn
 }) {
     // Estado para Confirm Password y error de validación
     const [confirmPassword, setConfirmPassword] = useState('');
+    
 
     // Expresión regular para validar correo electrónico
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -126,12 +129,33 @@ export default function SignUpForm({
                 />
             </View>
 
-            {/* Foto de perfil */}
-            <TouchableOpacity style={styles.profilePicButtonSignUp} onPress={selectProfilePic}>
-                <Text style={styles.profilePicButtonTextSignUp}>Elegir Foto de Perfil</Text>
-            </TouchableOpacity>
+            {/* Gender (Aquí usamos el Picker) */}
+            <View style={styles.inputWrapperSignUp}>
+                <Text style={styles.inputLabelSignUp}>Gender</Text>
+                <Picker
+                    selectedValue={gender}
+                    onValueChange={(itemValue) => setGender(itemValue)}
+                    style={[styles.inputSignUp, { height: 45 }]} // Se aplica la misma altura que en los inputs
+                >
+                    <Picker.Item label="Select Gender" value="" />
+                    <Picker.Item label="Male (M)" value="M" />
+                    <Picker.Item label="Female (F)" value="F" />
+                    <Picker.Item label="Non-binary (X)" value="X" />
+                    <Picker.Item label="Prefer not to say (-)" value="-" />
+                </Picker>
+            </View>
 
-            {profilePic && <Image source={{ uri: profilePic }} style={styles.profilePicPreviewSignUp} />}
+
+            {/* Description Profile */}
+            <View style={styles.inputWrapperSignUp}>
+                <Text style={styles.inputLabelSignUp}>Description Profile</Text>
+                <TextInput
+                    style={styles.inputSignUp}
+                    placeholder="Description profile..."
+                    value={descriptionProfile}
+                    onChangeText={setDescriptionProfile}
+                />
+            </View>
 
             {/* Botón de registro */}
             <TouchableOpacity style={styles.buttonSignUp} onPress={handleSignUp}>
