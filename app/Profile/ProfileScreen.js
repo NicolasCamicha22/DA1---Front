@@ -42,7 +42,6 @@ export default function ProfileScreen() {
     useEffect(() => {
         const loadProfileData = async () => {
             const token = await AsyncStorage.getItem('accessToken');
-
             if (!token || !userId) {
                 console.log('Token o userId no disponibles');
                 return;
@@ -59,9 +58,21 @@ export default function ProfileScreen() {
                     const userData = response.data.data;
                     setUserInfo(userData);
                     if (userData.posts) {
-                        setPosts(userData.posts);
-                    } else {
-                        console.error('No hay posts en la respuesta:', userData);
+                        // Aquí obtenemos los posts
+                        const updatedPosts = await Promise.all(userData.posts.map(async (post) => {
+                            const postResponse = await axios.get(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${post.id}`, {
+                                headers: {
+                                    Authorization: `Bearer ${token}`,
+                                }
+                            });
+
+                            const username = postResponse.data.user?.username || 'Usuario desconocido';  // Aseguramos que username siempre tenga un valor válido
+                            return {
+                                ...post,
+                                username: username,  // Aseguramos que cada post tenga el username correctamente
+                            };
+                        }));
+                        setPosts(updatedPosts);
                     }
                 } else {
                     console.error('Estructura de datos inesperada:', response.data);
@@ -122,18 +133,19 @@ export default function ProfileScreen() {
         return (
             <Post
                 id={item.id}
-                username={item.username}  // Ahora estamos pasando 'username' directamente
+                username={userInfo.username || 'Usuario desconocido'}  // Asegúrate de que se muestra 'Usuario desconocido' si no se encuentra el username
                 location={item.location}
                 media={item.media}
                 caption={item.caption}
-                description={item.description}
+                description={item.title}
                 likes={item.likes_count}
                 comments={item.comments_count}
                 favorites={item.favorites_count}
-                date={item.date}
+                date={new Date(item.date).toLocaleDateString()}
             />
         );
     };
+    
 
     const renderProfileImage = (uri) => {
         if (uri && uri.startsWith('http')) {
@@ -169,7 +181,7 @@ export default function ProfileScreen() {
                     <View>
                         <View style={styles.coverContainer}>
                             <Image source={{ uri: userInfo.cover_image_url }} style={styles.coverImage} />
-                            {renderProfileImage(userInfo.profile_pic)}  
+                            {renderProfileImage(userInfo.profile_pic)}
 
                             <View style={styles.usernameContainer}>
                                 <Text style={styles.username}>{userInfo.username}</Text>

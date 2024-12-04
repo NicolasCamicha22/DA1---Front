@@ -9,21 +9,35 @@ export default function Index() {
 
   useEffect(() => {
     const checkToken = async () => {
-      const accessToken = await AsyncStorage.getItem('accessToken');
-      if (accessToken) {
-        const isValid = await refreshAccessToken();
-        if (isValid) {
-          router.push('./Home/HomeScreen');  // Redirige a la pantalla de inicio
+      try {
+        const accessToken = await AsyncStorage.getItem('accessToken');
+
+        if (accessToken) {
+          // Intenta refrescar el token
+          const newAccessToken = await refreshAccessToken();
+          
+          if (newAccessToken) {
+            router.push('./Home/HomeScreen');  // Redirige a la pantalla de inicio
+          } else {
+            router.push('./Login/LoginScreen');  // Redirige al login si no se pudo refrescar el token
+          }
         } else {
-          router.push('./Login/LoginScreen');  // Redirige a la pantalla de login
+          router.push('./Login/LoginScreen');  // Si no hay token, va al login
         }
-      } else {
-        router.push('./Login/LoginScreen');  // Si no hay token, va al login
+      } catch (error) {
+        console.error("Error al verificar el token:", error);
+        router.push('./Login/LoginScreen');  // En caso de error, ir al login
+      } finally {
+        setLoading(false);  // Termina el estado de carga
       }
     };
 
     checkToken();  // Ejecuta la función de validación al iniciar la aplicación
   }, [router]);
+
+  if (loading) {
+    return null;  // Puedes mostrar una pantalla de carga aquí si lo prefieres
+  }
 
   return null;  // El componente no necesita renderizar nada directamente
 }

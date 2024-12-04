@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import { View, TextInput, FlatList, Text, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import Header from '../Header';
@@ -130,7 +130,9 @@ const SearchScreen = () => {
             return null;
         }
         return (
-            <TouchableOpacity onPress={() => router.push(`/Profile/${item.id}`)} style={styles.userContainer}>
+            <TouchableOpacity onPress={() => router.push({ pathname: '/Profile/ProfileUsers', params: { userId: item.id } })}
+
+            style={styles.userContainer}>
                 <Image
                     source={{ uri: item.profile_pic }}
                     style={styles.profilePic}
