@@ -54,7 +54,7 @@ export default function FavoritosScreen() {
                     });
 
                     // Ahora obtenemos directamente el username desde el objeto 'user' del post
-                    const username = postResponse.data.data.User?.username|| 'Usuario desconocido';  // Acceder a 'user.username'
+                    const username = postResponse.data.data.user?.username|| 'Usuario desconocido';  // Acceder a 'user.username'
 
                     return {
                         ...post,

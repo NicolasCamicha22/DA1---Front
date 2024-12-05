@@ -35,15 +35,16 @@ const SearchScreen = () => {
 
     // Normaliza la URL de la imagen de perfil
     const normalizeImageUrl = (imageUrl) => {
+        console.log(imageUrl);
         if (imageUrl && imageUrl.startsWith('https://')) {
             return imageUrl;  // Ya es una URL válida
         }
         return 'https://www.example.com/default-image.jpg';  // Imagen predeterminada de prueba
     };
 
-    // Función para determinar si la imagen es SVG
+    // Verifica si la imagen es un SVG
     const isSvg = (uri) => {
-        return uri && uri.endsWith('.svg');
+        return uri && (uri.endsWith('.svg') || uri.includes('dicebear.com'));
     };
 
     const toggleFollow = async (followingId, isFriend) => {
@@ -78,7 +79,6 @@ const SearchScreen = () => {
 
                 if (response.data.status === 'success') {
                     console.log('Amistad eliminada');
-                    // Actualiza la UI para reflejar que ya no es amigo
                     setResults(prevResults =>
                         prevResults.map(user =>
                             user.id === followingId ? { ...user, isFriend: false } : user
@@ -114,7 +114,6 @@ const SearchScreen = () => {
         }
     };
 
-    // Maneja la búsqueda de usuarios
     const handleSearch = async (text) => {
         setSearchText(text);
         if (text.trim() === '') {
@@ -122,7 +121,6 @@ const SearchScreen = () => {
             return;
         }
 
-        // Obtener el token de acceso
         const token = await AsyncStorage.getItem('accessToken');
         if (!token) {
             console.error('No se encontró el token de acceso');
@@ -130,7 +128,6 @@ const SearchScreen = () => {
         }
 
         try {
-            // Primero obtenemos los usuarios de la búsqueda
             const response = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/search', {
                 params: { query: text.trim(), currentUserId: userId },
                 headers: {
@@ -138,7 +135,6 @@ const SearchScreen = () => {
                 }
             });
 
-            // Luego obtenemos la lista de amigos
             const friendsResponse = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends', {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -148,11 +144,10 @@ const SearchScreen = () => {
             const friendsIds = friendsResponse.data.data.following.map(friend => friend.id); // Lista de IDs de amigos
 
             if (response.data && Array.isArray(response.data.data)) {
-                // Ahora mapeamos los usuarios y comparamos con la lista de amigos
                 const normalizedResults = response.data.data.map(user => ({
                     ...user,
                     imageUrl: normalizeImageUrl(user.profile_pic),
-                    isFriend: friendsIds.includes(user.id) // Si el usuario está en la lista de amigos, es amigo
+                    isFriend: friendsIds.includes(user.id)
                 }));
 
                 setResults(normalizedResults);
@@ -173,13 +168,13 @@ const SearchScreen = () => {
 
         if (!item.id) {
             console.error('El ID del usuario no está disponible', item);
-            return null; 
+            return null;
         }
 
         return (
             <TouchableOpacity onPress={() => router.push(`../Profile/UserProfileScreen/${item.id}`)} style={styles.userContainer}>
                 {isSvg(imageUri) ? (
-                    <SvgUri uri={imageUri} style={styles.profilePic} />
+                    <SvgUri uri={imageUri} style={styles.profilePic} width={50} height={50} />
                 ) : (
                     <Image source={{ uri: imageUri }} style={styles.profilePic} />
                 )}

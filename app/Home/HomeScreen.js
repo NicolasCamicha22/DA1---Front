@@ -53,8 +53,7 @@ export default function HomeScreen() {
                         });
 
 
-
-                        const username = postResponse.data.data.User?.username || 'Usuario desconocido';  // Obtener el username desde la respuesta del post
+                        const username = postResponse.data.data.user?.username || 'Usuario desconocido';  // Obtener el username desde la respuesta del post
                         return {
                             ...post,
                             username: username,  // Asignamos el username al post
