@@ -1,20 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView, Alert } from 'react-native';
+import React, { useState, useEffect,useRef } from 'react';
+import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView,Dimensions, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../Header';
 import Footer from '../Footer';
 import commonStyles from '../styles';
-import styles from './PostStyles';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import styles from './PostStyles';
+
+const screenWidth = Dimensions.get('window').width;
+const { height } = Dimensions.get('window');
+
 
 const ImagePostScreen = () => {
     const route = useRouter();
     const [location, setLocation] = useState('');
     const [caption, setCaption] = useState('');
     const [description, setDescription] = useState('');
-    const [galleryImages, setGalleryImages] = useState([]); // Contendrá las URLs de las imágenes
+    const [galleryImages, setGalleryImages] = useState([]); 
+    const flatListRef = useRef(null);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
 
     useEffect(() => {
         const fetchImages = async () => {
@@ -87,32 +94,50 @@ const ImagePostScreen = () => {
             Alert.alert("Error", "Ocurrió un error al compartir la publicación.");
         }
     };
+    const handleScroll = (event) => {
+        const contentOffsetX = event.nativeEvent.contentOffset.x;
+        const index = Math.floor(contentOffsetX / screenWidth);
+        setCurrentImageIndex(index);
+    };
 
     return (
         <View style={{ flex: 1 }}>
-            <Header />
+          <Header />
             <ScrollView
                 contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}
                 keyboardShouldPersistTaps="handled"
             >
-                <Text style={styles.galleryPreviewTitle}>Fotos seleccionadas:</Text>
+           
+
                 <FlatList
+                ref={flatListRef}
                     data={galleryImages}
                     horizontal
+                    pagingEnabled
                     keyExtractor={(item, index) => `${item}-${index}`}  // Usamos la URL directamente para las keys
                     renderItem={({ item }) => (
-                        <Image source={{ uri: item }} style={styles.selectedImage} />
+                        <Image source={{ uri: item }} style={[styles.selectedImage, { width: screenWidth }]} />
                     )}
                     ListEmptyComponent={<Text>No hay imágenes seleccionadas</Text>}
                     showsHorizontalScrollIndicator={false}
                     style={{ marginVertical: 10 }}
+                    onScroll={handleScroll}
+                    scrollEventThrottle={16}
                 />
+<View style={styles.paginationContainer}>
+                    {galleryImages.length > 1 && galleryImages.map((_, index) => (
+                        <View
+                            key={index}
+                            style={[styles.paginationDot, { backgroundColor: currentImageIndex === index ? '#6c44f4' : '#000' }]}
+                        />
+                    ))}
+                </View>
 
-                <View style={styles.formContainer}>
+                <View style={styles.formContainerPost}>
                     <TouchableOpacity style={styles.locationContainer}>
                         <Icon name="map-marker" size={20} color="#000" style={styles.icon} />
                         <TextInput
-                            placeholder="Agregar ubicación"
+                            placeholder="Add Location"
                             value={location}
                             onChangeText={setLocation}
                             style={styles.inputImagePost}
@@ -122,7 +147,7 @@ const ImagePostScreen = () => {
                     <View style={styles.inputContainer}>
                         <Icon name="pencil" size={20} color="#000" style={styles.icon} />
                         <TextInput
-                            placeholder="Título"
+                            placeholder="Add Title"
                             value={caption}
                             onChangeText={setCaption}
                             style={styles.inputImagePost}
@@ -132,7 +157,7 @@ const ImagePostScreen = () => {
                     <View style={styles.inputContainer}>
                         <Icon name="pencil" size={20} color="#000" style={styles.icon} />
                         <TextInput
-                            placeholder="Descripción"
+                            placeholder="Add Description"
                             value={description}
                             onChangeText={setDescription}
                             style={styles.inputImagePost}
@@ -141,7 +166,7 @@ const ImagePostScreen = () => {
                     </View>
 
                     <TouchableOpacity style={styles.shareButton} onPress={handleSharePost}>
-                        <Text style={styles.shareButtonText}>Compartir</Text>
+                        <Text style={styles.shareButtonText}>SHARE</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>

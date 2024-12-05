@@ -9,6 +9,7 @@ import Header from '../Header';
 import commonStyles from '../styles';
 import styles from './PostStyles';
 import * as FileSystem from 'expo-file-system';
+import HeaderUpload from './HeaderUpload';
 
 // Función para subir la imagen al backend y obtener la URL
 const uploadImageToBackend = async (imageUri) => {
@@ -146,7 +147,10 @@ const ImageUploadScreen = () => {
 
     return (
         <View style={{ flex: 1 }}>
-            <Header />
+            <HeaderUpload
+                goToPostScreen={(images) => goToPostScreen(images)} // Conecta la función
+                galleryImages={galleryImages} // Pasa las imágenes seleccionadas
+            />
             <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }} keyboardShouldPersistTaps="handled">
                 <View style={styles.cameraContainer}>
                     {selectedImage ? (
@@ -162,28 +166,26 @@ const ImageUploadScreen = () => {
                             <Ionicons name="camera" size={30} color="black" />
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={styles.confirmButtonUpload} onPress={goToPostScreen}>
-                        <Text style={styles.confirmButtonText}>Post</Text>
-                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.GaleriaButtonWrapper}>
                     <TouchableOpacity style={styles.galleryButton} onPress={selectImageFromGallery}>
                         <Ionicons name="folder-open" size={25} color="black" />
-                        <Text style={styles.galleryButtonText}>Seleccionar desde la Galería</Text>
+                        <Text style={styles.galleryButtonText}>Select from gallery</Text>
                     </TouchableOpacity>
                 </View>
 
                 <Text style={styles.galleryTitle}>Selected photos</Text>
 
-                {/* Galería de imágenes seleccionadas */}
-                <View style={[styles.galleryCenteredContainer, { flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center' }]}>
+                <View style={styles.divider} />
+             
+                <View style={[styles.galleryGrid, {  flexDirection: 'row' }]}>
                     {galleryImages.length > 0 ? (
                         galleryImages.map((item) => (
                             <Image key={item.id} source={{ uri: item.uri }} style={styles.galleryImage} />
                         ))
                     ) : (
-                        <Text>No hay imágenes en la galería</Text>
+                        <Text>No images selected</Text>
                     )}
                 </View>
             </ScrollView>

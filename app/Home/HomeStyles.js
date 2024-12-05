@@ -3,6 +3,14 @@ import { Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
 export default StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        paddingHorizontal: 0,
+        padding: 20,
+        backgroundColor: '#fff',
+    
+    },
     containerHome: {
         flex: 1,
         backgroundColor: '#fff',
@@ -50,72 +58,92 @@ export default StyleSheet.create({
 
     // Estilos para la publicidad
     adContainer: {
-        marginTop: 20,
+        marginBottom: 16,
         padding: 10,
-        backgroundColor: "#f2f2f2",
+        backgroundColor: 'white',
         borderRadius: 10,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    adHeader: {
+        flexDirection: "row",
+        justifyContent: "space-between", // Espacio entre el label y el ícono
         alignItems: "center",
+        marginBottom: 5,
     },
-    adImage: {
-        width: "100%",
-        height: 100,
-        borderRadius: 10,
-        marginBottom: 10,
-    },
-    adText: {
-        fontSize: 16,
+    adLabel: {
+        fontSize: 14,
+        color: "#888",
         fontWeight: "bold",
     },
-
     adTitle: {
         fontSize: 16,
         fontWeight: "bold",
-        marginBottom: 5,
+        marginBottom: 10,
+        textAlign: "left",
     },
-
-    adButtonText: {
-        color: "blue",
-        fontWeight: "bold",
+    adFooter: {
+        flexDirection: "row",
+        justifyContent: "flex-start", 
+        alignItems: "center",
+        marginTop: 10,
+    
     },
-
-    //Search screen
-    userContainer: {
+    visitButtonContainer: {
         flexDirection: "row",
         alignItems: "center",
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: "#eee",
     },
-
-    profilePic: {
+    visitButton: {
+        fontSize: 16,
+        color: '#6c44f4',
+        fontWeight: 'bold',
+        marginRight: 5, // Espacio entre texto y ícono
+        textAlign: "left",
+    
+    },
+    linkIcon: {
+        marginLeft: 5,
+    },
+    noImageText: {
+        textAlign: "center",
+        marginTop: 20,
+        color: "#999",
+    },
+    //Search screen
+    followerRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+    },
+    profileImageFollower: {
         width: 50,
         height: 50,
         borderRadius: 25,
-        backgroundColor: '#ccc',
+        marginRight: 12,
     },
-
-    userInfo: {
-        marginBottom: 8,
+    userInfoFollower: {
         flex: 1,
-        marginLeft: 10,
     },
-
-    username: {
-        fontSize: width * 0.045,
-        fontWeight: 'bold',
-        color: '#333',
+    usernameFollower: {
+        fontSize: 16,
+        fontWeight: '600',
     },
-
-    fullName: {
-        color: "#666",
+    fullNameFollowers: {
+        fontSize: 14,
+        color: 'gray',
     },
-
-    followButton: {
-        flexDirection: 'row',
-        alignItems: 'right',
-        marginHorizontal: 10,
-        paddingHorizontal: 10,
-        marginRight: 5
+    followIconContainer: {
+        padding: 8,
+    },
+    containerFollower: {
+        flex: 1,
+        backgroundColor: '#fff',
     },
 
     searchBox: {
@@ -160,11 +188,6 @@ export default StyleSheet.create({
         padding: 20,
     },
 
-    noPostsImage: {
-        width: 100,
-        height: 100,
-        marginBottom: 20,
-    },
     noPostsText: {
         fontSize: 18,
         fontWeight: 'bold',

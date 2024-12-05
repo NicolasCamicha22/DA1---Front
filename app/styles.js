@@ -48,6 +48,11 @@ export default StyleSheet.create({
         backgroundColor: '#ddd',
         marginVertical: 10,
     },
+    noResultsText: {
+        textAlign: "center",
+        marginTop: 20,
+        color: "#999",
+    },
 
     // Footer reutilizable
     footer: {

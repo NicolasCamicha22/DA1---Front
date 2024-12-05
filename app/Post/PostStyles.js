@@ -51,87 +51,124 @@ export default StyleSheet.create({
         padding: 15,
     },
     cameraContainer: {
-        height: 200,
-        backgroundColor: '#f0f0f0',
-        justifyContent: 'center',
+        height: 300,
+        backgroundColor: '#d3d3d3',
         alignItems: 'center',
-        borderRadius: 10,
-        marginBottom: 15,
+        justifyContent: 'center',
     },
     cameraPreview: {
         width: '100%',
         height: '100%',
-        borderRadius: 10,
+    },
+    cameraPlaceholder: {
+        fontSize: 18,
+        color: 'gray',
     },
     cameraButtonContainer: {
-        flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: 20,
-        marginBottom: 20,
-    },
-    cameraButtonWrapper: {
-        flex: 1,
         alignItems: 'center',
+        marginTop: 10,
+        paddingHorizontal: 20,
+        width: '100%',
     },
     cameraButton: {
         width: 60,
         height: 60,
-        backgroundColor: '#6c44f4',
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: '#e0e0e0',
         borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+    
+    },
+    cameraButtonWrapper: {
+        flex: 1,                        
+        alignItems: 'center',             
+        justifyContent: 'center',         
     },
     confirmButtonUpload: {
+        width: 60,
+        height: 40,
         backgroundColor: '#6c44f4',
-        padding: 15,
-        borderRadius: 10,
+        borderRadius: 8,
         alignItems: 'center',
-        marginVertical: 10,
+        justifyContent: 'center',
+        marginTop: 40,
     },
     confirmButtonText: {
+        fontSize: 16,
         color: '#fff',
-        fontSize: 24,
         fontWeight: 'bold',
     },
-    galleryButton: {
-        backgroundColor: '#ddd',
-        padding: 10,
-        borderRadius: 10,
-        alignItems: 'center',
-        marginVertical: 10,
-
-
-    },
     galleryButtonText: {
+        marginLeft: 8,
         fontSize: 16,
         color: '#333',
-        marginLeft: 10,
-
+    },
+    galleryButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'center',
+        backgroundColor: 'lightblue',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 20,
+        marginVertical: 20, 
+    },
+    galleryTitle: {
+        fontSize: 16,
+        textAlign: 'left',
+        color: 'gray',
+        marginLeft: 8,
+    },
+    galleryCenteredContainer: {
+        paddingHorizontal: 10,
+        alignItems: 'center',
+    },
+    uploadButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        marginTop: 10,
+        paddingHorizontal: 20,
+        width: '100%',
+    },
+    uploadButton: {
+        width: 60,
+        height: 60,
+        backgroundColor: '#6c44f4',
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    
+    divider: {
+        borderBottomWidth: 1,
+        borderColor: '#ccc',
+        marginVertical: 10,
+    },
+    
+    galleryGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        marginHorizontal: 10,
+    },
+    
+    galleryImage: {
+        width: '30%',
+        height: 120,
+        marginBottom: 10,
+        borderRadius: 5,
     },
 
+   
     GaleriaButtonWrapper: {
         flex: 1,
         alignItems: 'center',
         marginVertical: 5,
     },
 
-
-    galleryImage: {
-        width: 100,
-        height: 100,
-        margin: 5,
-        borderRadius: 10,
-    },
-    galleryCenteredContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    galleryTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 10,
-    },
 
     userInfo: {
         marginBottom: 8,
@@ -143,11 +180,6 @@ export default StyleSheet.create({
         color: '#333',
     },
 
-    locationContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 4,
-    },
     locationIcon: {
         marginRight: 4,
     },
@@ -225,23 +257,52 @@ export default StyleSheet.create({
         padding: 8,
         fontSize: width * 0.04,
     },
-
-
-    //ImageUploadScreen
-
+    postTextButton: {
+        position: 'absolute',
+        right: 10, 
+        padding: 5,
+    },
+    postText: {
+        fontSize: 16,
+        color: '#6c44f4',  
+        fontWeight: 'bold',
+    },
+    //ImagePostScreen
     galleryPreviewTitle: {
         marginTop: 20,
-        fontSize: 20, // Aumenta el tamaño
+        fontSize: 20, 
         textAlign: "left",
         fontWeight: "bold",
-        color: "#333", // Añade color para resaltar
+        color: "#333",
         width: "100%",
     },
     selectedImage: {
-        width: 100, // Ajusta el ancho según tus necesidades
-        height: 100, // Ajusta la altura según tus necesidades
-        borderRadius: 10,
-        marginRight: 10, // Espacio entre imágenes
+        width: 100, 
+        height: height * 0.4,
+        borderRadius: 0,
+        marginRight: 10, 
+    },
+  
+    inputImagePost: {
+        flex: 1,
+        height: 30,
+        borderColor: "#ccc",
+        borderWidth: 0,
+        paddingHorizontal: 10,
+        marginVertical: 10,
+    },
+    icon: {
+        fontSize: 18,
+        color: "#888",
+        marginRight: 10,
+    },
+    inputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        borderBottomWidth: 1,
+        borderColor: "#ccc",
+        marginBottom: 10,
+        width: "100%",
     },
 
     locationContainer: {
@@ -252,22 +313,9 @@ export default StyleSheet.create({
         marginBottom: 10,
         width: "100%",
     },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderBottomWidth: 1,
-        borderColor: "#ccc",
-        marginBottom: 10,
-        width: "100%",
-    },
-    icon: {
-        fontSize: 18,
-        color: "#888",
-        marginRight: 10,
-    },
-
+    
     shareButton: {
-        backgroundColor: "#A020F0", // Color púrpura
+        backgroundColor: "#6c44f4", 
         paddingVertical: 10,
         borderRadius: 8,
         alignItems: "center",
@@ -289,27 +337,11 @@ export default StyleSheet.create({
     cameraContainerBoxText: {
         textAlign: "center",
     },
-
-    confirmButtonText: {
-        color: "#fff", // Color del texto
-        fontSize: 9, // Tamaño de la fuente
-        fontWeight: "bold", // Peso de la fuente
-        textAlign: "center", // Alinear el texto al centro
-        borderRadius: 20,
+    formContainerPost: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        padding: 16,
     },
-
-
-    galleryTitle: {
-        marginTop: 20,
-        fontSize: 20, // Aumenta el tamaño
-        textAlign: "left",
-        fontWeight: "bold",
-        color: "#333", // Añade color para resaltar
-        width: "100%",
-        textAlign: 'center'
-    },
-
-
 
 
 });
