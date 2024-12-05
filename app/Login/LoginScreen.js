@@ -13,7 +13,7 @@ export default function LoginScreen() {
   const router = useRouter();
 
 
-  
+
 
   // Función para intentar iniciar sesión
   const onLogin = async () => {
@@ -22,7 +22,7 @@ export default function LoginScreen() {
       router.push('./ForgotPasswordScreen');
       return;
     }
-  
+
     try {
       const response = await login(email, password);
       if (response) {
@@ -38,8 +38,8 @@ export default function LoginScreen() {
       Alert.alert('Error', 'Email o contraseña incorrectos');
     }
   };
-  
-  
+
+
 
 
   // Navegar a la pantalla de SignUp

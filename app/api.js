@@ -1,5 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import NetInfo from '@react-native-community/netinfo';
 
 
 const api = axios.create({
@@ -33,16 +34,21 @@ export const registerUser = async (userData) => {
 
 export const login = async (email, password) => {
   try {
+    // Verificar si hay conexión a Internet
+    const state = await NetInfo.fetch();
+    if (!state.isConnected) {
+      throw new Error('No hay conexión a internet');
+    }
+
     const response = await api.post('/api/auth/login', { email, password });
 
-    // Ahora accedemos a los datos dentro de response.data.data
     const { accessToken, refreshToken, user } = response.data.data;
 
     if (accessToken && refreshToken && user) {
       return {
         accessToken,
         refreshToken,
-        userId: user.id // Aquí tomamos el `user.id` como `userId`
+        userId: user.id
       };
     } else {
       throw new Error('Faltan datos importantes en la respuesta del servidor');
@@ -52,7 +58,6 @@ export const login = async (email, password) => {
     throw error;  // Lanza el error para que sea manejado en el front
   }
 };
-
 
 
 

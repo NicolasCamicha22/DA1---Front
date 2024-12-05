@@ -4,16 +4,29 @@ import styles from './LoginStyles';
 import React, { useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+import { useNetworkStatus } from '../useNetworkStatus';
+
 export default function LoginForm({ onLogin, email, setEmail, password, setPassword, onSignUp, onGoogleLogin, onPasswordReset }) {
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
+    const isConnected = useNetworkStatus();
 
     const handleLogin = async () => {
+
+        // Verifica si hay conexión a Internet
+        if (!isConnected) {
+            Alert.alert('Error', 'No hay conexión a internet');
+            return;
+        }
+
         // Verifica si los campos están vacíos
         if (!email || !password) {
             Alert.alert("Error", "Por favor, complete los campos.");
             return;
         }
+
+
+        // Si hay conexión, intenta hacer login
         onLogin(email, password)
             .catch((error) => {
                 // Maneja el error del backend mostrando un mensaje de alerta amigable

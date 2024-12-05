@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import styles from './ProfileStyles';
 import { SvgUri } from 'react-native-svg';
+import NetInfo from '@react-native-community/netinfo';
 
 export default function ProfileScreen() {
     const [userInfo, setUserInfo] = useState(null);
@@ -25,6 +26,10 @@ export default function ProfileScreen() {
         const fetchUserId = async () => {
             try {
                 const storedUserId = await AsyncStorage.getItem('userId');
+                const state = await NetInfo.fetch();
+                if (!state.isConnected) {
+                    throw new Error('No hay conexión a internet');
+                }
                 if (storedUserId) {
                     setUserId(storedUserId);
                     console.log('userId cargado desde AsyncStorage:', storedUserId);
@@ -119,10 +124,19 @@ export default function ProfileScreen() {
 
 
     const renderProfileImage = (uri) => {
-        if (uri && uri.startsWith('http') && uri.endsWith('.svg')) {
-            return <SvgUri uri={uri} width={150} height={150} />;
+        const validUri = uri && uri.trim();
+    
+        // Si la URL es válida y es un SVG (como las generadas por dicebear), usamos SvgUri
+        if (validUri && validUri.includes("dicebear.com")) {
+            return <SvgUri uri={validUri} width={100} height={100} />;
+        }
+    
+        // Si la URL es un JPG/PNG, usamos Image para mostrar la imagen
+        if (validUri && validUri.startsWith('http')) {
+            return <Image source={{ uri: validUri }} style={styles.profileImage} resizeMode="cover" />;
         } else {
-            return <Image source={{ uri }} style={styles.profileImage} resizeMode="cover" />;
+            // Si la URL no es válida, mostramos una imagen por defecto
+            return <Image source={require('../../assets/images/icon.png')} style={styles.profileImage} resizeMode="cover" />;
         }
     };
 
