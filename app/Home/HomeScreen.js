@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, ActivityIndicator, Text, TouchableOpacity } from 'react-native';
+import { View, FlatList, ActivityIndicator, Text,useColorScheme  } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
 import { apiClient } from '../Login/apiClient';  // Usamos el apiClient para hacer las peticiones autenticadas
 import Icon from 'react-native-vector-icons/MaterialIcons'; // Importar los íconos
 import Footer from '../Footer';
 import Header from '../Header';
 import Post from '../Post/Post';
 import Ad from './Ad';
-import commonStyles from '../styles';
-import styles from './HomeStyles';
+import { createStyles } from '../styles';
+import { createStylesHome } from './HomeStyles';;
 import axios from 'axios';
+import { lightTheme, darkTheme } from '../themes';
+
 
 export default function HomeScreen() {
     const [posts, setPosts] = useState([]);
@@ -19,7 +20,10 @@ export default function HomeScreen() {
     const [userId, setUserId] = useState(null);
     const [page, setPage] = useState(1); // Para la paginación de posts
     const [hasPosts, setHasPosts] = useState(true);
-    const router = useRouter();
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const commonStyles = createStyles(theme);
+    const styles = createStylesHome(theme);
 
     // Cargar posts desde el backend
     const fetchPosts = async (userId, page) => {

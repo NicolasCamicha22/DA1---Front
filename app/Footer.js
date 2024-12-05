@@ -1,14 +1,18 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, useColorScheme } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import styles from './styles';
 import { useRouter, useSegments } from 'expo-router';
-
+import { createStyles } from './styles';
+import { lightTheme, darkTheme } from './themes';
 
 export default function Footer() {
     const router = useRouter();
+    const segments = useSegments();  // Obtiene el segmento actual de la ruta
     const isActive = (screen) => segments[0] === screen; // Comprueba si estamos en la pantalla activa
-    const segments = useSegments(); // Obtiene el segmento actual de la ruta
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;   
+    const styles = createStyles(theme);
+
     return (
         <View style={styles.footer}>
             <TouchableOpacity onPress={() => router.push('../Home/HomeScreen')}>
@@ -44,4 +48,3 @@ export default function Footer() {
         </View>
     );
 }
-

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
 import axios from 'axios';
-import commonStyles from '../styles';
 import Footer from '../Footer';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import styles from './ProfileStyles';
 import { SvgUri } from 'react-native-svg';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStyles } from '../styles';
+import { createStylesProfile} from './ProfileStyles';
 
 export default function UserProfileScreen() {
     const [userInfo, setUserInfo] = useState(null);
@@ -14,6 +16,10 @@ export default function UserProfileScreen() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const router = useRouter();
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const commonStyles = createStyles(theme);
+    const styles = createStylesProfile(theme);
     //const { userId } = router.query;  // Accede al userId pasado por la URL
     const { userId } = useLocalSearchParams();
 

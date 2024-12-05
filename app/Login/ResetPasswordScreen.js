@@ -3,8 +3,10 @@ import { View, TextInput, TouchableOpacity, Text, Image, ScrollView } from 'reac
 import { resetPassword, sendCode } from '../api';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import commonStyles from '../styles';
-import styles from './LoginStyles';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStylesLogin} from './LoginStyles';
+
 
 const ResetPasswordScreen = () => {
     const [code, setCode] = useState('');
@@ -13,6 +15,10 @@ const ResetPasswordScreen = () => {
     const [error, setError] = useState('');
     const [emailOrUsername, setEmailOrUsername] = useState('');
     const router = useRouter();
+    const colorScheme = useColorScheme(); 
+ const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesLogin(theme);
+
 
     useEffect(() => {
         // Recuperar email o username de AsyncStorage

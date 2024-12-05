@@ -1,13 +1,19 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet,useColorScheme   } from 'react-native';
 import { Dimensions } from 'react-native';
+import { lightTheme, darkTheme } from '../themes';
 
 const { width, height } = Dimensions.get('window');
 
-export default StyleSheet.create({
+export const createStylesPost = () => {
+    const colorScheme = useColorScheme();
+  const currentTheme = colorScheme === 'light' ? lightTheme : darkTheme;
+
+    
+    return  StyleSheet.create({
     postContainer: {
         marginBottom: 16,
         padding: 10,
-        backgroundColor: 'white',
+        backgroundColor:  currentTheme.backgroundColor,
         borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -21,7 +27,7 @@ export default StyleSheet.create({
     },
     postCaption: {
         fontSize: 14,
-        color: '#555',
+        color: currentTheme.postCaptionColor,
         marginBottom: 5,
     },
     postActions: {
@@ -29,11 +35,11 @@ export default StyleSheet.create({
         justifyContent: 'space-between',
         padding: 10,
         borderTopWidth: 1,
-        borderTopColor: '#eee',
+        borderTopColor: currentTheme.borderColor,
     },
     postActionIcon: {
         fontSize: 20,
-        color: '#333',
+        color: currentTheme.iconColor, 
     },
 
     formContainer: {
@@ -44,15 +50,19 @@ export default StyleSheet.create({
     },
 
     // UPLOAD STYLES
-
+    mainBackground: {
+        flex: 1,
+        backgroundColor: currentTheme.backgroundColor, 
+    },
+    
     uploadContainer: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
         padding: 15,
     },
     cameraContainer: {
         height: 300,
-        backgroundColor: '#d3d3d3',
+        backgroundColor: currentTheme.cameraBackgroundColor,
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -62,7 +72,7 @@ export default StyleSheet.create({
     },
     cameraPlaceholder: {
         fontSize: 18,
-        color: 'gray',
+        color: currentTheme.cameraTextColor,
     },
     cameraButtonContainer: {
         justifyContent: 'space-between',
@@ -74,7 +84,7 @@ export default StyleSheet.create({
     cameraButton: {
         width: 60,
         height: 60,
-        backgroundColor: '#e0e0e0',
+        backgroundColor: currentTheme.cameraButtonBackground,
         borderRadius: 30,
         alignItems: 'center',
         justifyContent: 'center',
@@ -103,7 +113,7 @@ export default StyleSheet.create({
     galleryButtonText: {
         marginLeft: 8,
         fontSize: 16,
-        color: '#333',
+        color: currentTheme.galleryButtonTextColor,
     },
     galleryButton: {
         flexDirection: 'row',
@@ -118,7 +128,7 @@ export default StyleSheet.create({
     galleryTitle: {
         fontSize: 16,
         textAlign: 'left',
-        color: 'gray',
+        color: currentTheme.galleryTitleColor,
         marginLeft: 8,
     },
     galleryCenteredContainer: {
@@ -144,8 +154,11 @@ export default StyleSheet.create({
     
     divider: {
         borderBottomWidth: 1,
-        borderColor: '#ccc',
+        borderColor: currentTheme.dividerColor,
         marginVertical: 10,
+    },
+    noText: {
+        borderColor: currentTheme.noText,
     },
     
     galleryGrid: {
@@ -177,7 +190,7 @@ export default StyleSheet.create({
     username: {
         fontSize: width * 0.045,
         fontWeight: 'bold',
-        color: '#333',
+        color: currentTheme.usernameColor, 
     },
 
     locationIcon: {
@@ -185,7 +198,7 @@ export default StyleSheet.create({
     },
     location: {
         fontSize: width * 0.04,
-        color: '#666',
+        color: currentTheme.locationColor, 
     },
 
     postImage: {
@@ -213,12 +226,12 @@ export default StyleSheet.create({
     caption: {
         fontSize: width * 0.045,
         fontWeight: '600',
-        color: '#000',
+        color: currentTheme.captionColor,
         marginTop: 8,
     },
     description: {
         fontSize: width * 0.04,
-        color: '#555',
+        color: currentTheme.descriptionColor,
         marginTop: 4,
     },
     actionsContainer: {
@@ -235,28 +248,15 @@ export default StyleSheet.create({
     buttonIconText: {
         marginLeft: 4,
         fontSize: width * 0.04,
-        color: '#000',
+        color: currentTheme.buttonIconTextColor, 
     },
     modalContent: {
-        backgroundColor: 'white',
+        backgroundColor: currentTheme.modalContentBackground,
         padding: 16,
         borderRadius: 8,
         maxHeight: height * 0.6,
     },
-    commentContainer: {
-        paddingVertical: 8,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-    },
-
-    commentInput: {
-        marginTop: 12,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 4,
-        padding: 8,
-        fontSize: width * 0.04,
-    },
+    
     postTextButton: {
         position: 'absolute',
         right: 10, 
@@ -343,5 +343,104 @@ export default StyleSheet.create({
         padding: 16,
     },
 
-
+ 
+//posts
+commentContainer: {
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    flex: 1,
+},
+commentInput: {
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 4,
+    padding: 8,
+    fontSize: width * 0.04,
+},
+addCommentButton: {
+    marginLeft: 10,
+},
+inputComment: {
+    flex: 1,
+    height: 40,
+    color: '#333',
+    fontSize: 16, 
+},
+chatIcon: {
+    marginRight: 10, 
+},
+inputContainerComment: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: currentTheme.modalBackgroundColor,
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginTop: 15,
+    borderTopWidth: 2, 
+    borderTopColor: '#6c44f4',
+},
+noCommentsText: {
+    textAlign: 'center',
+    color: '#666',
+    marginVertical: 20,
+    fontSize: 16, 
+},
+commentText: {
+    flex: 1,
+    color: currentTheme.commentText,
+    fontSize: 16,
+},
+commentUser: {
+    fontWeight: 'bold',
+    color: currentTheme.commentTextUser,
+    marginRight: 10,
+    fontSize: 16, 
+},
+commentItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: '#aaa', 
+    paddingVertical: 10,
+},
+separatorComment: {
+    height: 2,
+    backgroundColor: '#6c44f4', 
+    marginBottom: 15,
+},
+modalContainerComments: {
+    height: '50%',
+    backgroundColor: currentTheme.modalBackgroundColor,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    overflow: 'hidden',
+    
+},
+modalContentComments: {
+    flex: 1,
+    justifyContent: 'space-between', 
+    padding: 16,
+    
+},
+modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: currentTheme.modalTitleColor, 
+    textAlign: 'center',
+    marginBottom: 15,
+},
+keyboardAvoidingView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    
+},
+scrollViewContent: {
+    flexGrow: 1,
+},
+    
 });
+};

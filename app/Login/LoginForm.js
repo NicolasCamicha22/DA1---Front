@@ -1,13 +1,21 @@
 import { View, Text, TextInput, Button, TouchableOpacity, KeyboardAvoidingView, Image, Platform, ScrollView, Alert } from 'react-native';
-import commonStyles from '../styles';
-import styles from './LoginStyles';
 import React, { useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStyles } from '../styles';
+import { createStylesLogin} from './LoginStyles';
+
+
 export default function LoginForm({ onLogin, email, setEmail, password, setPassword, onSignUp, onGoogleLogin, onPasswordReset }) {
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
-
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+       const commonStyles = createStyles(theme);
+       const styles = createStylesLogin(theme);
+   
     const handleLogin = async () => {
         // Verifica si los campos están vacíos
         if (!email || !password) {

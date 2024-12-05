@@ -3,18 +3,28 @@ import { View, TextInput, FlatList, Text, TouchableOpacity, Image } from 'react-
 import { useRouter } from 'expo-router';
 import Header from '../Header';
 import Footer from '../Footer';
-import commonStyles from '../styles';
 import { FontAwesome } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import styles from './HomeStyles';
 import { SvgUri } from 'react-native-svg';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStylesHome } from './HomeStyles';;
+import { createStyles } from '../styles';
 
 const SearchScreen = () => {
     const [searchText, setSearchText] = useState('');
     const [results, setResults] = useState([]);
     const router = useRouter();
     const [userId, setUserId] = useState(null);
+    const colorScheme = useColorScheme(); 
+    const styles = createStylesHome(theme);
+
+
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+       const commonStyles = createStyles(theme);
+   
 
     useEffect(() => {
         const fetchUserId = async () => {
@@ -178,20 +188,22 @@ const SearchScreen = () => {
                 }
             })} style={styles.userContainer}>
                 {isSvg(imageUri) ? (
-                    <SvgUri uri={imageUri} style={styles.profilePic} width={50} height={50} />
+                    <SvgUri uri={imageUri} style={styles.profileImageFollower} width={50} height={50} />
                 ) : (
-                    <Image source={{ uri: imageUri }} style={styles.profilePic} />
+                    <Image source={{ uri: imageUri }} style={styles.profileImageFollower} />
                 )}
-                <View style={styles.userInfo}>
-                    <Text style={styles.username}>{item.username}</Text>
-                    <Text style={styles.fullName}>{item.name} {item.surname}</Text>
+                <View style={styles.userInfoFollower}>
+                    <Text style={styles.usernameFollower}>{item.username}</Text>
+                    <Text style={styles.fullNameFollowers}>{item.name} {item.surname}</Text>
                 </View>
                 <TouchableOpacity
                     onPress={() => toggleFollow(item.id, item.isFriend)}
-                    style={styles.followButton}>
-                    <Text style={styles.followText}>
-                        {item.isFriend ? 'Unfollow' : 'Follow'}
-                    </Text>
+                    style={styles.followIconContainer}>
+                      <Icon
+        name={item.isFriend ? 'person-remove-outline' : 'person-add-outline'} 
+        size={24}
+        color={item.isFriend ? 'red' : 'purple'} 
+    />
                 </TouchableOpacity>
             </TouchableOpacity>
         );

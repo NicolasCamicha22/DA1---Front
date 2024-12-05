@@ -1,13 +1,14 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect,useRef  } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, FlatList, ScrollView,Dimensions, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../Header';
 import Footer from '../Footer';
-import commonStyles from '../styles';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import styles from './PostStyles';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStylesPost} from './PostStyles';
 
 const screenWidth = Dimensions.get('window').width;
 const { height } = Dimensions.get('window');
@@ -21,6 +22,9 @@ const ImagePostScreen = () => {
     const [galleryImages, setGalleryImages] = useState([]); 
     const flatListRef = useRef(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesPost(theme);
 
 
     useEffect(() => {
@@ -101,7 +105,7 @@ const ImagePostScreen = () => {
     };
 
     return (
-        <View style={{ flex: 1 }}>
+        <View  style={styles.mainBackground}>
           <Header />
             <ScrollView
                 contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}

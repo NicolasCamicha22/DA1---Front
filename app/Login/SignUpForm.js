@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';  // Importamos el Picker
-import commonStyles from '../styles';
-import styles from './LoginStyles';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStylesLogin} from './LoginStyles';
 
 export default function SignUpForm({
     username, setUsername,
@@ -13,7 +14,11 @@ export default function SignUpForm({
     descriptionProfile, setDescriptionProfile,
     gender, setGender,
     onSignUp, onSignIn
-}) {
+}) {  const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme; 
+       const styles = createStylesLogin(theme);
+   
+   
     // Estado para Confirm Password y error de validación
     const [confirmPassword, setConfirmPassword] = useState('');
     

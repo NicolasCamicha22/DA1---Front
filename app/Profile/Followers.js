@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, FlatList, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import HeaderFollowers from './HeaderFollowers'; 
-import commonStyles from '../styles';
 import { useRouter } from 'expo-router'; 
-import styles from './ProfileStyles';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStylesProfile} from './ProfileStyles';
+
 
 export default function Followers() {
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesProfile(theme);
     const [selectedTab, setSelectedTab] = useState('followers');
     const [searchQuery, setSearchQuery] = useState('');
     const [followersData, setFollowersData] = useState([

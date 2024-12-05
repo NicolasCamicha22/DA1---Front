@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList, ActivityIndicator, TouchableOpacity, Button, Alert } from 'react-native';
 import axios from 'axios';
-import commonStyles from '../styles';
 import Footer from '../Footer';
 import HeaderProfile from './HeaderProfile';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -9,8 +8,12 @@ import Post from '../Post/Post';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
-import styles from './ProfileStyles';
 import { SvgUri } from 'react-native-svg';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStyles } from '../styles';
+import { createStylesProfile} from './ProfileStyles';
+
 
 export default function ProfileScreen() {
     const [userInfo, setUserInfo] = useState(null);
@@ -19,6 +22,11 @@ export default function ProfileScreen() {
     const [error, setError] = useState(null);
     const router = useRouter();
     const [userId, setUserId] = useState(null);
+
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const commonStyles = createStyles(theme);
+    const styles = createStylesProfile(theme);
 
     // Obtener el userId desde AsyncStorage
     useEffect(() => {
@@ -99,7 +107,7 @@ export default function ProfileScreen() {
     const renderItem = ({ item }) => {
         const imageUrl = item.media && item.media.length > 0 ? item.media[0] : null;
 
-        return (
+        return ( 
             <Post
                 id={item.id}
                 username={userInfo.username || 'Usuario desconocido'}  // Asegúrate de que se muestra 'Usuario desconocido' si no se encuentra el username

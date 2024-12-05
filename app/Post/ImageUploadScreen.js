@@ -5,16 +5,19 @@ import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import Footer from '../Footer';
-import Header from '../Header';
-import commonStyles from '../styles';
-import styles from './PostStyles';
 import * as FileSystem from 'expo-file-system';
 import HeaderUpload from './HeaderUpload';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStyles } from '../styles';
+import { createStylesPost} from './PostStyles';
+
 
 // Función para subir la imagen al backend y obtener la URL
 const uploadImageToBackend = async (imageUri) => {
     const fileName = imageUri.split('/').pop();  // Extraemos el nombre del archivo
     const fileType = 'image/jpeg';  // Suponiendo que la imagen siempre será JPEG. Cambia según sea necesario.
+
 
     try {
         // Leer la imagen y convertirla a base64
@@ -58,6 +61,9 @@ const ImageUploadScreen = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [galleryImages, setGalleryImages] = useState([]);
     const router = useRouter();
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesPost(theme);
 
     useEffect(() => {
         requestPermissions();
@@ -146,7 +152,7 @@ const ImageUploadScreen = () => {
     };
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={styles.mainBackground}>
             <HeaderUpload
                 goToPostScreen={(images) => goToPostScreen(images)} // Conecta la función
                 galleryImages={galleryImages} // Pasa las imágenes seleccionadas
@@ -185,7 +191,7 @@ const ImageUploadScreen = () => {
                             <Image key={item.id} source={{ uri: item.uri }} style={styles.galleryImage} />
                         ))
                     ) : (
-                        <Text>No images selected</Text>
+                        <Text style={styles.noText}>No images selected</Text>
                     )}
                 </View>
             </ScrollView>

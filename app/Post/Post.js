@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList, Dimensions, TextInput, Button } from 'react-native';
+import { View, Text, Image, FlatList,useColorScheme , Dimensions, TextInput, Button, ScrollView, TouchableOpacity, KeyboardAvoidingView,
+ Platform, } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import styles from './PostStyles';
 import Modal from 'react-native-modal';
+import { lightTheme, darkTheme } from '../themes';
+import { createStylesPost } from './PostStyles';
+
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -19,6 +22,10 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
     const [comment, setComment] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [commentList, setCommentList] = useState([]);
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesPost(theme);
+
 
     useEffect(() => {
         const fetchUserId = async () => {
@@ -264,40 +271,58 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
                         name="chatbubble-outline"
                         size={22}
                         color="black"
-                        onPress={() => setModalVisible(!modalVisible)}
+                        onPress={() => setModalVisible(true)}
                     />
                     <Text style={styles.buttonIconText}>{commentList.length}</Text>
                 </View>
             </View>
 
-            <Modal isVisible={modalVisible} onBackdropPress={() => setModalVisible(false)}>
-                <View style={styles.modalContent}>
+            <Modal isVisible={modalVisible} onBackdropPress={() => setModalVisible(false)}  style={{ justifyContent: 'flex-end', margin: 0 }}>
+            <KeyboardAvoidingView
+                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                    style={styles.modalContainerComments}
+                >
+                <View style={styles.modalContentComments}>
+            {/* Título */}
+            <Text style={styles.modalTitle}>Comments</Text>
+            <View style={styles.separatorComment} />
+
+                  <ScrollView contentContainerStyle={styles.scrollViewContent}>
                     {commentList.length > 0 ? (
-                        <FlatList
-                            data={commentList}
-                            keyExtractor={(item, index) => index.toString()}
-                            renderItem={({ item }) => (
-                                <View style={styles.commentContainer}>
-                                    <Text style={styles.commentText}>
-                                        <Text style={{ fontWeight: 'bold' }}>
-                                            {item.username}:
-                                        </Text>
-                                        {item.text}
-                                    </Text>
+                        commentList.map((item, index) => (
+                                <View key={index} style={styles.commentItem}>
+                                    <Text style={styles.commentUser}>{item.username}:</Text>
+                                    <Text style={styles.commentText}>{item.text}</Text>
                                 </View>
-                            )}
-                        />
-                    ) : (
-                        <Text>No hay comentarios disponibles</Text>
-                    )}
-                    <TextInput
-                        style={styles.commentInput}
-                        value={comment}
-                        onChangeText={setComment}
-                        placeholder="Escribe un comentario..."
-                    />
-                    <Button title="Comentar" onPress={handleComment} />
+                            ))
+                        ) : (
+                            <Text style={styles.noCommentsText}>Sé el primero en comentar</Text>
+                        )}
+                    </ScrollView>
+                      
+                    <View style={styles.inputContainerComment}>
+                <Ionicons 
+                    name="chatbubble-outline" 
+                    size={24} 
+                    color="#6c44f4" 
+                    style={styles.chatIcon} 
+                />
+                <TextInput
+                    style={styles.inputComment}
+                    value={comment}
+                    onChangeText={setComment}
+                    placeholder="Add a comment..."
+                    placeholderTextColor="#999"
+                />
+                    <TouchableOpacity
+                    style={styles.addCommentButton}
+                    onPress={handleComment}
+                >
+                    <Ionicons name="send-outline" size={24} color="#6c44f4" />
+                </TouchableOpacity>
                 </View>
+                </View>
+                </KeyboardAvoidingView>
             </Modal>
         </View>
     );

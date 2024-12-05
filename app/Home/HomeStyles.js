@@ -1,19 +1,26 @@
-import { StyleSheet } from 'react-native';
 import { Dimensions } from 'react-native';
-const { width, height } = Dimensions.get('window');
+import { StyleSheet,useColorScheme  } from 'react-native';
+import { lightTheme, darkTheme } from '../themes';
 
-export default StyleSheet.create({
+export const createStylesHome = () => {
+    const colorScheme = useColorScheme(); 
+  const currentTheme = colorScheme === 'light' ? lightTheme : darkTheme;
+  const { width, height } = Dimensions.get('window');
+    
+    return  StyleSheet.create({
+
+        
     container: {
         flex: 1,
         justifyContent: "center",
         paddingHorizontal: 0,
         padding: 20,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
     
     },
     containerHome: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
     },
     feedContainer: {
         padding: 10,
@@ -60,7 +67,7 @@ export default StyleSheet.create({
     adContainer: {
         marginBottom: 16,
         padding: 10,
-        backgroundColor: 'white',
+        backgroundColor: currentTheme.backgroundColor,
         borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -113,6 +120,21 @@ export default StyleSheet.create({
         color: "#999",
     },
     //Search screen
+    userContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: "#eee",
+    },
+    profilePic: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+    },
+    fullName: {
+        color: "#666",
+    },
     followerRow: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -133,6 +155,7 @@ export default StyleSheet.create({
     usernameFollower: {
         fontSize: 16,
         fontWeight: '600',
+        color: currentTheme.usernameColor,
     },
     fullNameFollowers: {
         fontSize: 14,
@@ -143,13 +166,13 @@ export default StyleSheet.create({
     },
     containerFollower: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
     },
 
     searchBox: {
         flexDirection: "row",
         //alignItems: "center",
-        backgroundColor: "#f0f0f0", // Fondo gris claro
+        backgroundColor: currentTheme.backgroundColorSearch, 
         borderRadius: 8,
         margin: 10,
         paddingHorizontal: 10,
@@ -164,7 +187,7 @@ export default StyleSheet.create({
     searchInput: {
         flex: 1,
         fontSize: 16,
-        color: "#333",
+        color: currentTheme.textColorSearch, 
     },
     noResultsText: {
         textAlign: "center",
@@ -211,3 +234,5 @@ export default StyleSheet.create({
 
 
 });
+};
+

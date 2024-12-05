@@ -2,11 +2,19 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, Linking, Dimensions } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; // Usa Ionicons o cualquier biblioteca de íconos
-import styles from './HomeStyles';
+import { createStylesHome } from './HomeStyles';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 
 function Ad({ title, imageUrl, linkUrl }) {
+    const colorScheme = useColorScheme(); 
+
+
+ const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesHome(theme);
+
     const handlePress = () => {
         console.log("Abriendo URL:", linkUrl);
         if (linkUrl) {

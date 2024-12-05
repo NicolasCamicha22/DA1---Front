@@ -1,12 +1,18 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet,useColorScheme   } from 'react-native';
 import { Dimensions } from 'react-native';
+import { lightTheme, darkTheme } from '../themes';
 
-const { width, height } = Dimensions.get('window');
 
-export default StyleSheet.create({
+export const createStylesProfile = () => {
+    const colorScheme = useColorScheme(); 
+  const currentTheme = colorScheme === 'light' ? lightTheme : darkTheme;
+    const { width, height } = Dimensions.get('window');
+    
+    return  StyleSheet.create({
+
     containerProfile: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
     },
     coverContainer: {
         position: 'relative',
@@ -132,7 +138,7 @@ export default StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 5,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
@@ -297,7 +303,7 @@ export default StyleSheet.create({
 
     modalContentEdit: {
         width: '80%',
-        backgroundColor: '#f0f0f0',
+        backgroundColor: currentTheme.backgroundColor,
         borderRadius: 10,
         borderColor: 'black',
         borderWidth: 1,
@@ -330,5 +336,5 @@ export default StyleSheet.create({
 
 
 
-
 });
+};

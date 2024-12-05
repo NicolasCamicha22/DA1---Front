@@ -1,9 +1,15 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet,useColorScheme  } from 'react-native';
+import { lightTheme, darkTheme } from '../themes';
 import { Dimensions } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
 
-export default StyleSheet.create({
+export const createStylesLogin = () => {
+    const colorScheme = useColorScheme(); 
+  const currentTheme = colorScheme === 'light' ? lightTheme : darkTheme; 
+  const { width, height } = Dimensions.get('window');
+
+    return  StyleSheet.create({
+
     containerLogin: {
         flex: 1,
         backgroundColor: '#fff',
@@ -271,5 +277,5 @@ export default StyleSheet.create({
     },
 
 
-
 });
+};

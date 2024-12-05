@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, Modal, ScrollView, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import commonStyles from '../styles';
-import HeaderEditProfile from './HeaderEditProfile';
+import Header from '../Header';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import styles from './ProfileStyles';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStyles } from '../styles';
+import { createStylesProfile} from './ProfileStyles';
 
 // Función para subir la imagen al backend y obtener la URL
 const uploadImageToBackend = async (imageUri) => {
     const fileName = imageUri.split('/').pop();  // Extraemos el nombre del archivo
     const fileType = 'image/jpeg';  // Suponiendo que la imagen siempre será JPEG. Cambia según sea necesario.
-
+    
     try {
         // Leer la imagen y convertirla a base64
         const base64Image = await FileSystem.readAsStringAsync(imageUri, {
@@ -54,6 +56,7 @@ const uploadImageToBackend = async (imageUri) => {
 
 export default function EditProfile() {
     const router = useRouter();
+    
     const handleSettingsPress = () => {
         router.push('./PorfileScreen');
     };
@@ -64,6 +67,12 @@ export default function EditProfile() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isNightMode, setIsNightMode] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
+
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const commonStyles = createStyles(theme);
+    const styles = createStylesProfile(theme);
+
 
     useEffect(() => {
         const fetchUserId = async () => {
@@ -170,9 +179,6 @@ export default function EditProfile() {
         setIsDropdownOpen(false);
     };
 
-    const toggleNightMode = () => {
-        setIsNightMode(!isNightMode);
-    };
 
     const toggleModal = () => {
         setIsModalVisible(!isModalVisible);
@@ -242,7 +248,7 @@ export default function EditProfile() {
 
     return (
         <View style={commonStyles.container}>
-            <HeaderEditProfile onSave={handleSave} />
+             <Header />
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={styles.coverContainer}>
                     <Image source={{ uri: userInfo.coverImage }} style={styles.coverImage} />
@@ -296,14 +302,6 @@ export default function EditProfile() {
                             multiline
                         />
                     </View>
-                    <View style={styles.line2} />
-
-                    <TouchableOpacity style={styles.nightModeButton} onPress={toggleNightMode}>
-                        <Ionicons name="moon-outline" size={20} color="black" />
-                        <Text style={styles.nightModeText}>
-                            {isNightMode ? 'Light mode' : 'Night mode'}
-                        </Text>
-                    </TouchableOpacity>
                     <View style={styles.line2} />
 
                     <View style={styles.fieldContainer}>

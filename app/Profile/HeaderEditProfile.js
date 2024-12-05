@@ -1,11 +1,16 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router'; 
-import commonStyles from '../styles';
-import styles from './ProfileStyles';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStylesProfile} from './ProfileStyles';
+
 
 const HeaderEditProfile = ({ onSave }) => {
     const router = useRouter();
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesProfile(theme);
 
     const handleCancel = () => {
         router.push('./ProfileScreen')
