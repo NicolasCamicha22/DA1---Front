@@ -328,6 +328,122 @@ export default StyleSheet.create({
         fontSize: 16,
     },
 
+    containerFollower: {
+        flex: 1,
+        padding: 15,
+        backgroundColor: '#fff',
+    },
+    tabContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom: 10,
+    },
+    tab: {
+        padding: 10,
+        borderBottomWidth: 2,
+        borderColor: 'transparent',
+    },
+    activeTab: {
+        borderColor: '#4B9CD3',
+    },
+    tabText: {
+        fontSize: 16,
+        color: '#888',
+    },
+    activeTabText: {
+        color: '#4B9CD3',
+    },
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderRadius: 20,
+        borderColor: '#ccc',
+        paddingHorizontal: 10,
+        marginBottom: 15,
+    },
+    searchIcon: {
+        marginRight: 10,
+    },
+    searchInput: {
+        flex: 1,
+        paddingVertical: 5,
+    },
+    followerRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#f0f0f0',
+        paddingBottom: 10,
+    },
+    profileImageFollower: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        marginRight: 10,
+    },
+    userInfoFollower: {
+        flex: 1,
+    },
+    usernameFollower: {
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    fullNameFollowers: {
+        fontSize: 14,
+        color: '#555',
+    },
+    followIconContainer: {
+        padding: 10,
+    },
+    noResultsText: {
+        textAlign: 'center',
+        color: '#888',
+    },
+
+    inactiveTab: {
+        fontSize: 16,
+        color: '#888',  // Color para los tabs inactivos (gris claro)
+        padding: 10,
+        borderBottomWidth: 2,
+        borderColor: 'transparent',  // No mostrar borde inferior cuando no está seleccionado
+    },
+
+
+    //Header followers
+    headerFollowersContainer: {
+        height: 80,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+    },
+
+    // Flecha para regresar
+    backButton: {
+        position: 'absolute',
+        left: 20,
+        top: 15,
+        zIndex: 1,
+    },
+
+    // Contenedor para el nombre debajo de la flecha
+    usernameContainerFollowers: {
+        marginTop: 40,  // Espacio que separa el nombre de la flecha
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    usernameText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+
+
+
+
+
 
 
 

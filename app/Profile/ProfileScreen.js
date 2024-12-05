@@ -21,6 +21,8 @@ export default function ProfileScreen() {
     const router = useRouter();
     const [userId, setUserId] = useState(null);
 
+
+
     // Obtener el userId desde AsyncStorage
     useEffect(() => {
         const fetchUserId = async () => {
@@ -60,18 +62,21 @@ export default function ProfileScreen() {
                 console.log('Token o userId no disponibles');
                 return;
             }
-
+    
             try {
                 const response = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-
+    
                 if (response.data && response.data.data) {
                     const userData = response.data.data;
                     setUserInfo(userData);
-                    console.log('userData:', userData)
+    
+                    // Guardamos el nombre de usuario en AsyncStorage
+                    await AsyncStorage.setItem('username', userData.username);
+    
                     if (userData.posts) {
                         // Aquí obtenemos los posts
                         const updatedPosts = await Promise.all(userData.posts.map(async (post) => {
@@ -80,13 +85,13 @@ export default function ProfileScreen() {
                                     Authorization: `Bearer ${token}`,
                                 }
                             });
-
-                            const username = postResponse.data.user?.username || 'Usuario desconocido';  // Aseguramos que username siempre tenga un valor válido
+    
+                            const username = postResponse.data.user?.username || 'Usuario desconocido';
                             return {
                                 ...post,
-                                isLike: userData.isLike,  // Estado del like
-                                isFavorite: userData.isFavorited,  // Estado del favorito
-                                username: username  // Aseguramos que cada post tenga el username correctamente
+                                isLike: userData.isLike,
+                                isFavorite: userData.isFavorited,
+                                username: username
                             };
                         }));
                         setPosts(updatedPosts);
@@ -102,7 +107,7 @@ export default function ProfileScreen() {
                 setLoading(false);
             }
         };
-
+    
         if (userId) {
             loadProfileData();
         }
@@ -134,12 +139,12 @@ export default function ProfileScreen() {
 
     const renderProfileImage = (uri) => {
         const validUri = uri && uri.trim();
-    
+
         // Si la URL es válida y es un SVG (como las generadas por dicebear), usamos SvgUri
         if (validUri && validUri.includes("dicebear.com")) {
             return <SvgUri uri={validUri} width={100} height={100} />;
         }
-    
+
         // Si la URL es un JPG/PNG, usamos Image para mostrar la imagen
         if (validUri && validUri.startsWith('http')) {
             return <Image source={{ uri: validUri }} style={styles.profileImage} resizeMode="cover" />;
@@ -179,11 +184,13 @@ export default function ProfileScreen() {
 
                             <View style={styles.usernameContainer}>
                                 <Text style={styles.username}>{userInfo.username}</Text>
-                                <TouchableOpacity onPress={() => router.push('/Profile/EditProfile')}>
-                                    <Icon name="create-outline" size={24} color="#fff" />
-                                </TouchableOpacity>
                             </View>
+
+                            <TouchableOpacity onPress={() => router.push('/Profile/EditProfile')}>
+                                <Icon name="create-outline" size={24} color="#fff" />
+                            </TouchableOpacity>
                         </View>
+
 
                         <View style={styles.infoContainer}>
                             <Text style={styles.bio}>{userInfo.descriptionProfile || "No description"}</Text>
@@ -192,6 +199,20 @@ export default function ProfileScreen() {
                                     {userInfo.lvl ? `Nivel: ${userInfo.lvl}` : "Nivel: 0"}
                                 </Text>
                                 <Text style={styles.postsCount}>{userInfo.posts.length} Posts</Text>
+                            </View>
+                        </View>
+                        <View style={styles.followContainer}>
+                            <View style={styles.followButton}>
+                                <Text style={styles.followNumber}>{userInfo.followersCounts}</Text>
+                                <TouchableOpacity onPress={() => router.push('./Followers')}>
+                                    <Text style={styles.followText}>Followers</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.followButton}>
+                                <Text style={styles.followNumber}>{userInfo.followingCounts}</Text>
+                                <TouchableOpacity onPress={() => router.push('./Following')}>
+                                    <Text style={styles.followText}>Following</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </View>

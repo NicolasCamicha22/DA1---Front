@@ -28,6 +28,7 @@ export default function LoginForm({ onLogin, email, setEmail, password, setPassw
 
         // Si hay conexión, intenta hacer login
         onLogin(email, password)
+        
             .catch((error) => {
                 // Maneja el error del backend mostrando un mensaje de alerta amigable
                 Alert.alert("Login Error", "Email o password incorrectas.");

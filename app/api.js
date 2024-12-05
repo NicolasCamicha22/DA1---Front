@@ -22,7 +22,6 @@ export const sendCode = async (data) => {
 
 
 export const registerUser = async (userData) => {
-  console.log('probando:',userData)
   try {
     const response = await api.post('/api/auth/register', userData);
     return response.data;
