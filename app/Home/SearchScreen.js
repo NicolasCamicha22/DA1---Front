@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, FlatList, Text, TouchableOpacity, Image } from 'react-native';
+import { View, TextInput, FlatList, Text, TouchableOpacity, Image, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import Header from '../Header';
 import Footer from '../Footer';
@@ -9,12 +9,22 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './HomeStyles';
 import { SvgUri } from 'react-native-svg';
+import NetInfo from '@react-native-community/netinfo';  // Importa NetInfo para la verificación de conexión
 
 const SearchScreen = () => {
     const [searchText, setSearchText] = useState('');
     const [results, setResults] = useState([]);
     const router = useRouter();
     const [userId, setUserId] = useState(null);
+    const [isConnected, setIsConnected] = useState(true);  // Estado para la conexión a Internet
+
+    // Verificar la conexión a Internet
+    useEffect(() => {
+        const unsubscribe = NetInfo.addEventListener(state => {
+            setIsConnected(state.isConnected);  // Actualiza el estado con la conexión
+        });
+        return () => unsubscribe();
+    }, []);
 
     useEffect(() => {
         const fetchUserId = async () => {
@@ -119,13 +129,13 @@ const SearchScreen = () => {
             setResults([]);
             return;
         }
-
+    
         const token = await AsyncStorage.getItem('accessToken');
         if (!token) {
             console.error('No se encontró el token de acceso');
             return;
         }
-
+    
         try {
             const response = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/search', {
                 params: { query: text.trim(), currentUserId: userId },
@@ -133,22 +143,22 @@ const SearchScreen = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-
+    
             const friendsResponse = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-
+    
             const friendsIds = friendsResponse.data.data.following.map(friend => friend.id); // Lista de IDs de amigos
-
+    
             if (response.data && Array.isArray(response.data.data)) {
                 const normalizedResults = response.data.data.map(user => ({
                     ...user,
                     imageUrl: normalizeImageUrl(user.profile_pic),
                     isFriend: friendsIds.includes(user.id)
                 }));
-
+    
                 setResults(normalizedResults);
             } else {
                 console.error('La respuesta no contiene un array en "data":', response.data);
@@ -156,13 +166,18 @@ const SearchScreen = () => {
             }
         } catch (error) {
             console.error('Error al buscar usuarios:', error);
-            setResults([]);
+    
+            // Aquí agregamos la alerta cuando ocurre un error de conexión
+            Alert.alert(
+                'Error de Conexión',
+                'No hay conexión a internet. Por favor, verifica tu conexión y vuelve a intentarlo.',
+                [{ text: 'OK' }]
+            );
+            setResults([]); // Si hay un error, también limpiamos los resultados
         }
     };
 
     const renderUserItem = ({ item }) => {
-
-        // Verifica si la URL de la imagen es válida antes de renderizarla
         const imageUri = normalizeImageUrl(item.profile_pic);
 
         if (!item.id) {

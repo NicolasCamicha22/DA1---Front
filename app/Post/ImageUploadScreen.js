@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Image, ScrollView, Alert } from 'react-native';
+import { View, Text, Image, FlatList, ActivityIndicator, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,6 +9,7 @@ import Header from '../Header';
 import commonStyles from '../styles';
 import styles from './PostStyles';
 import * as FileSystem from 'expo-file-system';
+import NetInfo from '@react-native-community/netinfo';  // Importamos NetInfo para verificar la conexión
 
 // Función para subir la imagen al backend y obtener la URL
 const uploadImageToBackend = async (imageUri) => {
@@ -114,6 +115,13 @@ const ImageUploadScreen = () => {
     };
 
     const goToPostScreen = async () => {
+        // Verificamos si hay conexión a internet antes de continuar
+        const state = await NetInfo.fetch();
+        if (!state.isConnected) {
+            Alert.alert('Error de Conexión', 'No hay conexión a internet. Por favor, verifica tu conexión y vuelve a intentarlo.');
+            return;
+        }
+
         if (galleryImages.length > 0) {
             try {
                 // Creamos un array para almacenar las URLs de las imágenes

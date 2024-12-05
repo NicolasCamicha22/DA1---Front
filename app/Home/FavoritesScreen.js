@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, ActivityIndicator, Text, Image, Dimensions } from 'react-native';
+import { View, FlatList, ActivityIndicator, Text, Image, Dimensions, Alert } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import commonStyles from '../styles';
@@ -7,6 +7,7 @@ import Footer from '../Footer';
 import Header from '../Header';
 import Post from '../Post/Post';
 import styles from './HomeStyles';
+import NetInfo from '@react-native-community/netinfo';  // Importamos NetInfo para verificar la conexión
 
 export default function FavoritosScreen() {
     const [favorites, setFavorites] = useState([]);  // Lista de favoritos
@@ -36,6 +37,12 @@ export default function FavoritosScreen() {
         }
 
         try {
+            // Verificar la conexión a internet antes de hacer la solicitud
+            const state = await NetInfo.fetch();
+            if (!state.isConnected) {
+                throw new Error('No hay conexión a internet');
+            }
+
             const response = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/favorites', {
                 params: { userId },
                 headers: {
@@ -54,24 +61,30 @@ export default function FavoritosScreen() {
                     });
 
                     // Ahora obtenemos directamente el username desde el objeto 'user' del post
-                    const username = postResponse.data.data.user?.username|| 'Usuario desconocido';  // Acceder a 'user.username'
+                    const username = postResponse.data.data.user?.username || 'Usuario desconocido';  // Acceder a 'user.username'
 
                     return {
                         ...post,
                         isFavorited: true,  // Marcar como favorito para todos los posts en la pantalla de favoritos
                         username: username,  // Agregar el username al post
-
                     };
                 }));
 
                 setFavorites(updatedFavorites);  // Actualizar el estado con los posts actualizados
-               
             } else {
                 console.error('Error: No se encontraron favoritos en la respuesta del backend');
                 setFavorites([]);  // Si no hay favoritos, poner el estado vacío
             }
         } catch (error) {
             console.error('Error al obtener los favoritos:', error.response?.data?.message || error);
+            if (error.message === 'No hay conexión a internet') {
+                // Mostrar una alerta si no hay conexión a internet
+                Alert.alert(
+                    'Error de Conexión',
+                    'No hay conexión a internet. Por favor, verifica tu conexión y vuelve a intentarlo.',
+                    [{ text: 'OK' }]
+                );
+            }
             setFavorites([]);  // Si hay error, limpiar los favoritos
         } finally {
             setLoading(false);  // Desactivar el indicador de carga

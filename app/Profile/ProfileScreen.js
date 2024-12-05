@@ -38,10 +38,19 @@ export default function ProfileScreen() {
                 }
             } catch (error) {
                 console.error('Error al cargar userId de AsyncStorage:', error);
+                // Mostrar una alerta si no hay conexión
+                if (error.message === 'No hay conexión a internet') {
+                    Alert.alert(
+                        'Error de Conexión',
+                        'No hay conexión a internet. Por favor, verifica tu conexión y vuelve a intentarlo.',
+                        [{ text: 'OK' }]
+                    );
+                }
+                setError('No hay conexión a internet');  // Puedes actualizar el estado de error
             }
         };
         fetchUserId();
-    }, []);
+    }, []);  // Solo lo hacemos una vez al cargar el componente
 
     // Cargar los datos del perfil cuando userId esté disponible
     useEffect(() => {
