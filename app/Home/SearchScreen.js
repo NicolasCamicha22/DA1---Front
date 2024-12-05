@@ -35,7 +35,6 @@ const SearchScreen = () => {
 
     // Normaliza la URL de la imagen de perfil
     const normalizeImageUrl = (imageUrl) => {
-        console.log(imageUrl);
         if (imageUrl && imageUrl.startsWith('https://')) {
             return imageUrl;  // Ya es una URL válida
         }
@@ -172,7 +171,12 @@ const SearchScreen = () => {
         }
 
         return (
-            <TouchableOpacity onPress={() => router.push(`../Profile/UserProfileScreen/${item.id}`)} style={styles.userContainer}>
+            <TouchableOpacity onPress={() => router.push({
+                pathname: "../Profile/UserProfileScreen",
+                params: {
+                    userId: item.id
+                }
+            })} style={styles.userContainer}>
                 {isSvg(imageUri) ? (
                     <SvgUri uri={imageUri} style={styles.profilePic} width={50} height={50} />
                 ) : (
@@ -183,10 +187,10 @@ const SearchScreen = () => {
                     <Text style={styles.fullName}>{item.name} {item.surname}</Text>
                 </View>
                 <TouchableOpacity
-                    onPress={() => toggleFollow(item.id, item.isFriend)}  // Pasa el estado correcto del botón
+                    onPress={() => toggleFollow(item.id, item.isFriend)}
                     style={styles.followButton}>
                     <Text style={styles.followText}>
-                        {item.isFriend ? 'Unfollow' : 'Follow'}  {/* Mostrar correctamente Follow/Unfollow */}
+                        {item.isFriend ? 'Unfollow' : 'Follow'}
                     </Text>
                 </TouchableOpacity>
             </TouchableOpacity>

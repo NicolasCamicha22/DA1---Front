@@ -42,25 +42,17 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
                     },
                 });
 
-                const postData = response.data.data;  // Asegurándonos de que el post esté dentro de "data"
+                const postData = response.data.data;
 
-
+             
                 // Establecer los estados para like y favoritos
                 setLikeCount(postData.likesCount);
-                //setFavoriteCount(postData.favoritesCount);
-
-
-
-
-
 
                 // Aquí actualizamos el estado para los comentarios
-                // setCommentList(postData.Comments.map(comment => ({
-                //     text: comment.text,  // El texto del comentario
-                //     username: comment.User.username,  // El nombre de usuario que hizo el comentario
-
-
-               // })));
+                setCommentList(postData.comments.map(comment => ({
+                    text: comment.comment,  // El texto del comentario
+                    username: comment.user.username, // El nombre de usuario que hizo el comentario
+                })));
             } catch (error) {
                 console.error('Error al cargar los datos del post:', error);
             }
@@ -68,6 +60,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
 
         fetchPostData();
     }, [id]); // Solo se ejecuta cuando el id del post cambia
+
 
 
     const handleScroll = (event) => {
@@ -165,7 +158,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
         if (!comment) return;
         try {
             const token = await AsyncStorage.getItem('accessToken');
-    
+
             // Hacer la solicitud para agregar el comentario
             const response = await axios.post(
                 `http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}/comments`,
@@ -177,7 +170,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
                 }
             );
             console.log('Comentario agregado:', response.data);
-    
+
             // Obtener el username del comentario
             const commentUserId = response.data.data.userId;  // Obtener el userId del comentario
             const userResponse = await axios.get(
@@ -188,12 +181,12 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
                     },
                 }
             );
-    
+
             const username = userResponse.data.username || 'Usuario desconocido';  // Obtener el username
-    
+
             // Limpiar el campo de comentario
             setComment('');
-    
+
             // Agregar el nuevo comentario con el username a la lista sin necesidad de recargar
             setCommentList(prev => [
                 ...prev,
@@ -208,7 +201,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
             alert(error.response?.data?.message || 'Error al agregar comentario');
         }
     };
-    
+
 
 
     const finalImageUrl = imageUrl || 'https://via.placeholder.com/150';
