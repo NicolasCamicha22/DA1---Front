@@ -1,13 +1,19 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet,useColorScheme   } from 'react-native';
 import { Dimensions } from 'react-native';
+import { lightTheme, darkTheme } from '../themes';
 
 const { width, height } = Dimensions.get('window');
 
-export default StyleSheet.create({
+export const createStylesPost = () => {
+    const colorScheme = useColorScheme();
+  const currentTheme = colorScheme === 'light' ? lightTheme : darkTheme;
+
+    
+    return  StyleSheet.create({
     postContainer: {
         marginBottom: 16,
         padding: 10,
-        backgroundColor: 'white',
+        backgroundColor:  currentTheme.backgroundColor,
         borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -21,7 +27,7 @@ export default StyleSheet.create({
     },
     postCaption: {
         fontSize: 14,
-        color: '#555',
+        color: currentTheme.postCaptionColor,
         marginBottom: 5,
     },
     postActions: {
@@ -29,11 +35,11 @@ export default StyleSheet.create({
         justifyContent: 'space-between',
         padding: 10,
         borderTopWidth: 1,
-        borderTopColor: '#eee',
+        borderTopColor: currentTheme.borderColor,
     },
     postActionIcon: {
         fontSize: 20,
-        color: '#333',
+        color: currentTheme.iconColor, 
     },
 
     formContainer: {
@@ -44,94 +50,138 @@ export default StyleSheet.create({
     },
 
     // UPLOAD STYLES
-
+    mainBackground: {
+        flex: 1,
+        backgroundColor: currentTheme.backgroundColor, 
+    },
+    
     uploadContainer: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
         padding: 15,
     },
     cameraContainer: {
-        height: 200,
-        backgroundColor: '#f0f0f0',
-        justifyContent: 'center',
+        height: 300,
+        backgroundColor: currentTheme.cameraBackgroundColor,
         alignItems: 'center',
-        borderRadius: 10,
-        marginBottom: 15,
+        justifyContent: 'center',
     },
     cameraPreview: {
         width: '100%',
         height: '100%',
-        borderRadius: 10,
+    },
+    cameraPlaceholder: {
+        fontSize: 18,
+        color: currentTheme.cameraTextColor,
     },
     cameraButtonContainer: {
-        flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: 20,
-        marginBottom: 20,
-    },
-    cameraButtonWrapper: {
-        flex: 1,
         alignItems: 'center',
+        marginTop: 10,
+        paddingHorizontal: 20,
+        width: '100%',
     },
     cameraButton: {
         width: 60,
         height: 60,
-        backgroundColor: '#6c44f4',
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: currentTheme.cameraButtonBackground,
         borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+    
+    },
+    cameraButtonWrapper: {
+        flex: 1,                        
+        alignItems: 'center',             
+        justifyContent: 'center',         
     },
     confirmButtonUpload: {
+        width: 60,
+        height: 40,
         backgroundColor: '#6c44f4',
-        padding: 15,
-        borderRadius: 10,
+        borderRadius: 8,
         alignItems: 'center',
-        marginVertical: 10,
+        justifyContent: 'center',
+        marginTop: 40,
     },
     confirmButtonText: {
+        fontSize: 16,
         color: '#fff',
-        fontSize: 24,
         fontWeight: 'bold',
     },
-    galleryButton: {
-        backgroundColor: '#ddd',
-        padding: 10,
-        borderRadius: 10,
-        alignItems: 'center',
-        marginVertical: 10,
-
-
-    },
     galleryButtonText: {
+        marginLeft: 8,
         fontSize: 16,
-        color: '#333',
-        marginLeft: 10,
-
+        color: currentTheme.galleryButtonTextColor,
+    },
+    galleryButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        alignSelf: 'center',
+        backgroundColor: 'lightblue',
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 20,
+        marginVertical: 20, 
+    },
+    galleryTitle: {
+        fontSize: 16,
+        textAlign: 'left',
+        color: currentTheme.galleryTitleColor,
+        marginLeft: 8,
+    },
+    galleryCenteredContainer: {
+        paddingHorizontal: 10,
+        alignItems: 'center',
+    },
+    uploadButtonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        marginTop: 10,
+        paddingHorizontal: 20,
+        width: '100%',
+    },
+    uploadButton: {
+        width: 60,
+        height: 60,
+        backgroundColor: '#6c44f4',
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    
+    divider: {
+        borderBottomWidth: 1,
+        borderColor: currentTheme.dividerColor,
+        marginVertical: 10,
+    },
+    noText: {
+        borderColor: currentTheme.noText,
+    },
+    
+    galleryGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        marginHorizontal: 10,
+    },
+    
+    galleryImage: {
+        width: '30%',
+        height: 120,
+        marginBottom: 10,
+        borderRadius: 5,
     },
 
+   
     GaleriaButtonWrapper: {
         flex: 1,
         alignItems: 'center',
         marginVertical: 5,
     },
 
-
-    galleryImage: {
-        width: 100,
-        height: 100,
-        margin: 5,
-        borderRadius: 10,
-    },
-    galleryCenteredContainer: {
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    galleryTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 10,
-    },
 
     userInfo: {
         marginBottom: 8,
@@ -140,20 +190,15 @@ export default StyleSheet.create({
     username: {
         fontSize: width * 0.045,
         fontWeight: 'bold',
-        color: '#333',
+        color: currentTheme.usernameColor, 
     },
 
-    locationContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 4,
-    },
     locationIcon: {
         marginRight: 4,
     },
     location: {
         fontSize: width * 0.04,
-        color: '#666',
+        color: currentTheme.locationColor, 
     },
 
     postImage: {
@@ -181,12 +226,12 @@ export default StyleSheet.create({
     caption: {
         fontSize: width * 0.045,
         fontWeight: '600',
-        color: '#000',
+        color: currentTheme.captionColor,
         marginTop: 8,
     },
     description: {
         fontSize: width * 0.04,
-        color: '#555',
+        color: currentTheme.descriptionColor,
         marginTop: 4,
     },
     actionsContainer: {
@@ -203,45 +248,61 @@ export default StyleSheet.create({
     buttonIconText: {
         marginLeft: 4,
         fontSize: width * 0.04,
-        color: '#000',
+        color: currentTheme.buttonIconTextColor, 
     },
     modalContent: {
-        backgroundColor: 'white',
+        backgroundColor: currentTheme.modalContentBackground,
         padding: 16,
         borderRadius: 8,
         maxHeight: height * 0.6,
     },
-    commentContainer: {
-        paddingVertical: 8,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
+    
+    postTextButton: {
+        position: 'absolute',
+        right: 10, 
+        padding: 5,
     },
-
-    commentInput: {
-        marginTop: 12,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 4,
-        padding: 8,
-        fontSize: width * 0.04,
+    postText: {
+        fontSize: 16,
+        color: '#6c44f4',  
+        fontWeight: 'bold',
     },
-
-
-    //ImageUploadScreen
-
+    //ImagePostScreen
     galleryPreviewTitle: {
         marginTop: 20,
-        fontSize: 20, // Aumenta el tamaño
+        fontSize: 20, 
         textAlign: "left",
         fontWeight: "bold",
-        color: "#333", // Añade color para resaltar
+        color: "#333",
         width: "100%",
     },
     selectedImage: {
-        width: 100, // Ajusta el ancho según tus necesidades
-        height: 100, // Ajusta la altura según tus necesidades
-        borderRadius: 10,
-        marginRight: 10, // Espacio entre imágenes
+        width: 100, 
+        height: height * 0.4,
+        borderRadius: 0,
+        marginRight: 10, 
+    },
+  
+    inputImagePost: {
+        flex: 1,
+        height: 30,
+        borderColor: "#ccc",
+        borderWidth: 0,
+        paddingHorizontal: 10,
+        marginVertical: 10,
+    },
+    icon: {
+        fontSize: 18,
+        color: "#888",
+        marginRight: 10,
+    },
+    inputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        borderBottomWidth: 1,
+        borderColor: "#ccc",
+        marginBottom: 10,
+        width: "100%",
     },
 
     locationContainer: {
@@ -252,22 +313,9 @@ export default StyleSheet.create({
         marginBottom: 10,
         width: "100%",
     },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        borderBottomWidth: 1,
-        borderColor: "#ccc",
-        marginBottom: 10,
-        width: "100%",
-    },
-    icon: {
-        fontSize: 18,
-        color: "#888",
-        marginRight: 10,
-    },
-
+    
     shareButton: {
-        backgroundColor: "#A020F0", // Color púrpura
+        backgroundColor: "#6c44f4", 
         paddingVertical: 10,
         borderRadius: 8,
         alignItems: "center",
@@ -289,27 +337,110 @@ export default StyleSheet.create({
     cameraContainerBoxText: {
         textAlign: "center",
     },
-
-    confirmButtonText: {
-        color: "#fff", // Color del texto
-        fontSize: 9, // Tamaño de la fuente
-        fontWeight: "bold", // Peso de la fuente
-        textAlign: "center", // Alinear el texto al centro
-        borderRadius: 20,
+    formContainerPost: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        padding: 16,
     },
 
-
-    galleryTitle: {
-        marginTop: 20,
-        fontSize: 20, // Aumenta el tamaño
-        textAlign: "left",
-        fontWeight: "bold",
-        color: "#333", // Añade color para resaltar
-        width: "100%",
-        textAlign: 'center'
-    },
-
-
-
-
+ 
+//posts
+commentContainer: {
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    flex: 1,
+},
+commentInput: {
+    marginTop: 12,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 4,
+    padding: 8,
+    fontSize: width * 0.04,
+},
+addCommentButton: {
+    marginLeft: 10,
+},
+inputComment: {
+    flex: 1,
+    height: 40,
+    color: '#333',
+    fontSize: 16, 
+},
+chatIcon: {
+    marginRight: 10, 
+},
+inputContainerComment: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: currentTheme.modalBackgroundColor,
+    borderRadius: 15,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    marginTop: 15,
+    borderTopWidth: 2, 
+    borderTopColor: '#6c44f4',
+},
+noCommentsText: {
+    textAlign: 'center',
+    color: '#666',
+    marginVertical: 20,
+    fontSize: 16, 
+},
+commentText: {
+    flex: 1,
+    color: currentTheme.commentText,
+    fontSize: 16,
+},
+commentUser: {
+    fontWeight: 'bold',
+    color: currentTheme.commentTextUser,
+    marginRight: 10,
+    fontSize: 16, 
+},
+commentItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderBottomColor: '#aaa', 
+    paddingVertical: 10,
+},
+separatorComment: {
+    height: 2,
+    backgroundColor: '#6c44f4', 
+    marginBottom: 15,
+},
+modalContainerComments: {
+    height: '50%',
+    backgroundColor: currentTheme.modalBackgroundColor,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    overflow: 'hidden',
+    
+},
+modalContentComments: {
+    flex: 1,
+    justifyContent: 'space-between', 
+    padding: 16,
+    
+},
+modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: currentTheme.modalTitleColor, 
+    textAlign: 'center',
+    marginBottom: 15,
+},
+keyboardAvoidingView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    
+},
+scrollViewContent: {
+    flexGrow: 1,
+},
+    
 });
+};

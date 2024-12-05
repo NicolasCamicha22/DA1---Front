@@ -8,6 +8,9 @@ import styles from './ProfileStyles';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SvgUri } from 'react-native-svg';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStylesProfile} from './ProfileStyles';
 
 export default function Following() {
     const [selectedTab, setSelectedTab] = useState('following');
@@ -15,6 +18,9 @@ export default function Following() {
     const [followingData, setFollowingData] = useState([]); 
     const [followersData, setFollowersData] = useState([]);
     const router = useRouter();
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesProfile(theme);
 
     useEffect(() => {
         const fetchFollowingData = async () => {

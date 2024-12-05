@@ -5,6 +5,11 @@ import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import commonStyles from '../styles';
 import styles from './LoginStyles';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme } from 'react-native';
+import { createStylesLogin } from './LoginStyles';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 const ResetPasswordScreen = () => {
     const [code, setCode] = useState('');
@@ -13,6 +18,10 @@ const ResetPasswordScreen = () => {
     const [error, setError] = useState('');
     const [emailOrUsername, setEmailOrUsername] = useState('');
     const router = useRouter();
+    const colorScheme = useColorScheme();
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesLogin(theme);
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
     useEffect(() => {
         // Recuperar email o username de AsyncStorage
@@ -33,12 +42,12 @@ const ResetPasswordScreen = () => {
     const handleResetPassword = async () => {
         if (code && newPassword) {
             try {
-                const data = emailOrUsername.includes('@') 
-                    ? { email: emailOrUsername } 
+                const data = emailOrUsername.includes('@')
+                    ? { email: emailOrUsername }
                     : { username: emailOrUsername };
-                
+
                 const payload = { emailOrUsername, code, newPassword };
-                console.log('Datos enviados a la API:', payload); 
+                console.log('Datos enviados a la API:', payload);
 
                 const response = await resetPassword({ ...data, code, newPassword });
                 console.log('Respuesta de la API:', response);
@@ -60,7 +69,7 @@ const ResetPasswordScreen = () => {
             setError('Por favor, completa todos los campos.');
         }
     };
-    
+
 
 
     const handleSendCode = async () => {
@@ -99,15 +108,27 @@ const ResetPasswordScreen = () => {
                 </View>
 
                 {/* Campo de texto para nueva contraseña */}
-                <View style={styles.inputContainerForgotPassword}>
+                <View style={styles.inputWrapperLogin}>
                     <Text style={styles.inputLabelLogin}>New password</Text>
-                    <TextInput
-                        style={styles.inputLogin}
-                        placeholder="New password"
-                        value={newPassword}
-                        onChangeText={setNewPassword}
-                        secureTextEntry
-                    />
+                    <View style={styles.passwordContainer}>
+                        <TextInput
+                            style={styles.inputPassword}
+                            placeholder="New password"
+                            value={newPassword}
+                            onChangeText={setNewPassword}
+                            secureTextEntry={!passwordVisible}
+                        />
+                        <TouchableOpacity
+                            onPress={() => setPasswordVisible(!passwordVisible)}
+                            style={styles.eyeIcon}
+                        >
+                            <Ionicons
+                                name={passwordVisible ? 'eye-off-outline' : 'eye-outline'}
+                                size={24}
+                                color="#888"
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
 
                 {/* Botón para cambiar contraseña */}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList, ActivityIndicator, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { View, Text, Image, FlatList, useColorScheme, ActivityIndicator, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +9,12 @@ import Header from '../Header';
 import commonStyles from '../styles';
 import styles from './PostStyles';
 import * as FileSystem from 'expo-file-system';
-import NetInfo from '@react-native-community/netinfo';  // Importamos NetInfo para verificar la conexión
+import NetInfo from '@react-native-community/netinfo';
+import { lightTheme, darkTheme } from '../themes';
+import { createStyles } from '../styles';
+import { createStylesPost } from './PostStyles';
+import HeaderUpload from './HeaderUpload';
+
 
 // Función para subir la imagen al backend y obtener la URL
 const uploadImageToBackend = async (imageUri) => {
@@ -58,6 +63,8 @@ const ImageUploadScreen = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [galleryImages, setGalleryImages] = useState([]);
     const router = useRouter();
+    const theme = useColorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesPost(theme);
 
     useEffect(() => {
         requestPermissions();
@@ -153,8 +160,11 @@ const ImageUploadScreen = () => {
     };
 
     return (
-        <View style={{ flex: 1 }}>
-            <Header />
+        <View style={styles.mainBackground}>
+            <HeaderUpload
+                goToPostScreen={(images) => goToPostScreen(images)} // Conecta la función
+                galleryImages={galleryImages} // Pasa las imágenes seleccionadas
+            />
             <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 100 }} keyboardShouldPersistTaps="handled">
                 <View style={styles.cameraContainer}>
                     {selectedImage ? (
@@ -178,20 +188,21 @@ const ImageUploadScreen = () => {
                 <View style={styles.GaleriaButtonWrapper}>
                     <TouchableOpacity style={styles.galleryButton} onPress={selectImageFromGallery}>
                         <Ionicons name="folder-open" size={25} color="black" />
-                        <Text style={styles.galleryButtonText}>Seleccionar desde la Galería</Text>
+                        <Text style={styles.galleryButtonText}>Select from gallery</Text>
                     </TouchableOpacity>
                 </View>
 
                 <Text style={styles.galleryTitle}>Selected photos</Text>
 
-                {/* Galería de imágenes seleccionadas */}
-                <View style={[styles.galleryCenteredContainer, { flexWrap: 'wrap', flexDirection: 'row', justifyContent: 'center' }]}>
+                <View style={styles.divider} />
+
+                <View style={[styles.galleryGrid, { flexDirection: 'row' }]}>
                     {galleryImages.length > 0 ? (
                         galleryImages.map((item) => (
                             <Image key={item.id} source={{ uri: item.uri }} style={styles.galleryImage} />
                         ))
                     ) : (
-                        <Text>No hay imágenes en la galería</Text>
+                        <Text style={styles.noText}>No images selected</Text>
                     )}
                 </View>
             </ScrollView>

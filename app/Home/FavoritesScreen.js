@@ -8,12 +8,22 @@ import Header from '../Header';
 import Post from '../Post/Post';
 import styles from './HomeStyles';
 import NetInfo from '@react-native-community/netinfo';  // Importamos NetInfo para verificar la conexión
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme } from 'react-native';
+import { createStylesHome } from './HomeStyles';;
+import { createStyles } from '../styles'
+
 
 export default function FavoritosScreen() {
     const [favorites, setFavorites] = useState([]);  // Lista de favoritos
     const [loading, setLoading] = useState(false);  // Estado de carga
     const [userId, setUserId] = useState(null);  // ID del usuario
     const [accessToken, setAccessToken] = useState(null);  // Token de acceso
+    const colorScheme = useColorScheme();
+    const styles = createStylesHome(theme);
+
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const commonStyles = createStyles(theme);
 
     const screenWidth = Dimensions.get('window').width;  // Ancho de la pantalla
 

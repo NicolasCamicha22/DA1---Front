@@ -1,12 +1,18 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet,useColorScheme   } from 'react-native';
 import { Dimensions } from 'react-native';
+import { lightTheme, darkTheme } from '../themes';
 
-const { width, height } = Dimensions.get('window');
 
-export default StyleSheet.create({
+export const createStylesProfile = () => {
+    const colorScheme = useColorScheme(); 
+  const currentTheme = colorScheme === 'light' ? lightTheme : darkTheme;
+    const { width, height } = Dimensions.get('window');
+    
+    return  StyleSheet.create({
+
     containerProfile: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
     },
     coverContainer: {
         position: 'relative',
@@ -27,7 +33,7 @@ export default StyleSheet.create({
     usernameContainer: {
         position: 'absolute',
         top: 180,
-        backgroundColor: '#fff',
+        backgroundColor:  currentTheme.backgroundColor,
         borderRadius: 20,
         paddingHorizontal: 10,
         paddingVertical: 5,
@@ -37,7 +43,7 @@ export default StyleSheet.create({
     username: {
         fontSize: width * 0.045,
         fontWeight: 'bold',
-        color: '#333',
+        color: currentTheme.commentText,
     },
     infoContainer: {
         flexDirection: "row",
@@ -97,13 +103,35 @@ export default StyleSheet.create({
     tabContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        paddingVertical: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        marginBottom: 10,
+    },
+
+    activeTab: {
+        borderColor: '#4B9CD3',
+    },
+    tabText: {
+        fontSize: 16,
+        color: '#888',
+    },
+    activeTabText: {
+        color: '#4B9CD3',
     },
 
 
     //header edit profile
+    saveButton: {
+        backgroundColor: '#6c44f4',
+        paddingVertical: 15,
+        marginTop: 20,
+        borderRadius: 15,
+        alignItems: 'center',
+    },
+    
+    saveButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 
     editCoverContainer: {
         alignItems: 'center',
@@ -125,14 +153,19 @@ export default StyleSheet.create({
         borderColor: '#fff',
         borderRadius: 50,
     },
-
+    cancelTextStyle: {
+        fontSize: 16,
+        color: currentTheme.headerTitleColor,
+        marginTop: 20, 
+    },
+    
     editHeaderContainer: {
         height: 60,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 5,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
@@ -140,14 +173,16 @@ export default StyleSheet.create({
     editHeaderTitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: 'black',
+        color: currentTheme.headerTitleColor,
+        textAlign: 'center', 
         marginTop: 20,
     },
 
     editButton: {
-        marginHorizontal: 10,
+        position: 'absolute',
+        left: 10, 
+        justifyContent: 'center',
     },
-
     coverIconContainer: {
         position: 'absolute',
         bottom: 10,
@@ -194,7 +229,7 @@ export default StyleSheet.create({
     },
     label: {
         fontSize: 16,
-        color: 'black',
+        color:  currentTheme.headerTitleColor,
         width: 100,
         marginBottom: 5,
     },
@@ -277,11 +312,11 @@ export default StyleSheet.create({
     },
 
     modalContainer: {
-        flex: 1,  // Hace que ocupe todo el espacio de la pantalla
-        justifyContent: 'center',  // Centra el contenido verticalmente
-        alignItems: 'center',  // Centra el contenido horizontalmente
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Fondo semi-transparente para oscurecer el fondo
-        position: 'absolute',  // Hace que el contenedor se posicione en el medio
+        flex: 1,  
+        justifyContent: 'center', 
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+        position: 'absolute',  
         top: 0,
         left: 0,
         right: 0,
@@ -297,7 +332,7 @@ export default StyleSheet.create({
 
     modalContentEdit: {
         width: '80%',
-        backgroundColor: '#f0f0f0',
+        backgroundColor: currentTheme.backgroundColor,
         borderRadius: 10,
         borderColor: 'black',
         borderWidth: 1,
@@ -328,47 +363,32 @@ export default StyleSheet.create({
         fontSize: 16,
     },
 
-    containerFollower: {
-        flex: 1,
-        padding: 15,
-        backgroundColor: '#fff',
-    },
-    tabContainer: {
+
+    //FOLLOW
+
+    followContainer: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginBottom: 10,
+        justifyContent: 'flex-start',
+        paddingVertical: 10,
+        paddingLeft: 10,
     },
-    tab: {
-        padding: 10,
-        borderBottomWidth: 2,
-        borderColor: 'transparent',
-    },
-    activeTab: {
-        borderColor: '#4B9CD3',
-    },
-    tabText: {
-        fontSize: 16,
-        color: '#888',
-    },
-    activeTabText: {
-        color: '#4B9CD3',
-    },
-    searchContainer: {
+    followButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderWidth: 1,
-        borderRadius: 20,
-        borderColor: '#ccc',
-        paddingHorizontal: 10,
-        marginBottom: 15,
+        marginHorizontal: 10,
     },
-    searchIcon: {
-        marginRight: 10,
+    followNumber: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#000',
+        marginRight: 4,
     },
-    searchInput: {
-        flex: 1,
-        paddingVertical: 5,
+    followText: {
+        fontSize: 16,
+        color: "#666",
     },
+
+
     followerRow: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -397,21 +417,7 @@ export default StyleSheet.create({
     followIconContainer: {
         padding: 10,
     },
-    noResultsText: {
-        textAlign: 'center',
-        color: '#888',
-    },
 
-    inactiveTab: {
-        fontSize: 16,
-        color: '#888',  // Color para los tabs inactivos (gris claro)
-        padding: 10,
-        borderBottomWidth: 2,
-        borderColor: 'transparent',  // No mostrar borde inferior cuando no está seleccionado
-    },
-
-
-    //Header followers
     headerFollowersContainer: {
         height: 80,
         justifyContent: 'center',
@@ -434,17 +440,31 @@ export default StyleSheet.create({
         alignItems: 'center',
     },
 
-    usernameText: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#333',
+    containerFollower: {
+        flex: 1,
+        padding: 15,
+        backgroundColor: '#fff',
+    },
+
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderRadius: 20,
+        borderColor: '#ccc',
+        paddingHorizontal: 10,
+        marginBottom: 15,
+    },
+    searchIcon: {
+        marginRight: 10,
+    },
+    searchInput: {
+        flex: 1,
+        paddingVertical: 5,
     },
 
 
 
 
-
-
-
-
 });
+};

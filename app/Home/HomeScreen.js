@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { View, FlatList, ActivityIndicator, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, FlatList, ActivityIndicator, Text, TouchableOpacity, Alert, useColorScheme } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { apiClient } from '../Login/apiClient'; 
+import { apiClient } from '../Login/apiClient';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Footer from '../Footer';
 import Header from '../Header';
 import Post from '../Post/Post';
 import Ad from './Ad';
-import commonStyles from '../styles';
-import styles from './HomeStyles';
 import axios from 'axios';
-import NetInfo from '@react-native-community/netinfo';  // Importa NetInfo para la verificación de conexión
+import { createStyles } from '../styles';
+import NetInfo from '@react-native-community/netinfo';
+import { createStylesHome } from './HomeStyles';
+import { lightTheme, darkTheme } from '../themes';
 
 export default function HomeScreen() {
     const [posts, setPosts] = useState([]);
@@ -22,6 +23,10 @@ export default function HomeScreen() {
     const [hasPosts, setHasPosts] = useState(true);
     const [isConnected, setIsConnected] = useState(true); // Estado para verificar la conexión
     const router = useRouter();
+    const colorScheme = useColorScheme();
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const commonStyles = createStyles(theme);
+    const styles = createStylesHome(theme);
 
     // Verificar la conexión a internet
     useEffect(() => {
@@ -66,14 +71,14 @@ export default function HomeScreen() {
                             }
                         });
 
-                        const username = postResponse.data.data.user?.username || 'Usuario desconocido';  
+                        const username = postResponse.data.data.user?.username || 'Usuario desconocido';
                         return {
                             ...post,
-                            username: username,  
+                            username: username,
                         };
                     } catch (error) {
                         console.error('Error al obtener el username del post:', error);
-                        return post;  
+                        return post;
                     }
                 }));
 
@@ -126,7 +131,7 @@ export default function HomeScreen() {
 
     const renderItem = ({ item }) => {
         if (item.isAd) {
-            const imageUrl = item.imagePath[0]?.portraite || '';  
+            const imageUrl = item.imagePath[0]?.portraite || '';
             return (
                 <Ad
                     title={item.commerce}
@@ -136,7 +141,7 @@ export default function HomeScreen() {
             );
         }
 
-        const imageUrl = item.media && item.media.length > 0 ? item.media[0] : null;  
+        const imageUrl = item.media && item.media.length > 0 ? item.media[0] : null;
         const defaultImage = 'https://via.placeholder.com/150';
 
         return (
@@ -148,13 +153,13 @@ export default function HomeScreen() {
                 caption={item.caption || 'Sin titulo'}
                 description={item.title || 'Sin descripcion'}
                 likes={item.likesCount || 0}
-                comments={item.comments?.length || 0}  
+                comments={item.comments?.length || 0}
                 favorites={item.isFavorite}
                 countFavorite={item.favoritesCount || 0}
                 date={new Date(item.date).toLocaleDateString()}
                 userId={userId}
-                isLike={item.isLike}  
-                isFavorited={item.isFavorite}  
+                isLike={item.isLike}
+                isFavorited={item.isFavorite}
             />
         );
     };

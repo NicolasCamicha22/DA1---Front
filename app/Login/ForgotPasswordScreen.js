@@ -3,13 +3,19 @@ import { View, TextInput, Text, TouchableOpacity, Image, ScrollView } from 'reac
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { sendCode } from '../api';
-import commonStyles from '../styles'; 
-import styles from './LoginStyles'; 
+import { createStylesLogin} from './LoginStyles';
+import { createStyles } from '../styles';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
 
 const ForgotPasswordScreen = () => {
     const [emailOrUsername, setEmailOrUsername] = useState('');
     const [message, setMessage] = useState('');
     const router = useRouter();
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const commonStyles = createStyles(theme);
+    const styles = createStylesLogin(theme);
 
     const handleSendCode = async () => {
         if (!emailOrUsername.trim()) {

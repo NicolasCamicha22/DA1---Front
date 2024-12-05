@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList, Dimensions, TextInput, Button } from 'react-native';
+import {
+    View, Text, Image, FlatList,useColorScheme , Dimensions, TextInput, Button, ScrollView, TouchableOpacity, KeyboardAvoidingView,
+    Platform,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './PostStyles';
 import Modal from 'react-native-modal';
+import { lightTheme, darkTheme } from '../themes';
+import { createStylesPost } from './PostStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -19,6 +24,9 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
     const [comment, setComment] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [commentList, setCommentList] = useState([]);
+    const colorScheme = useColorScheme();
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesPost(theme);
 
     useEffect(() => {
         const fetchUserId = async () => {
@@ -44,7 +52,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
 
                 const postData = response.data.data;
 
-             
+
                 // Establecer los estados para like y favoritos
                 setLikeCount(postData.likesCount);
 

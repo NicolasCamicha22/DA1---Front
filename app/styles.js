@@ -1,9 +1,15 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet,useColorScheme  } from 'react-native';
+import { lightTheme, darkTheme } from './themes';
 
-export default StyleSheet.create({
+export const createStyles = () => {
+    const colorScheme = useColorScheme(); // Determina si es 'light' o 'dark'
+  const currentTheme = colorScheme === 'light' ? lightTheme : darkTheme; // Aplica el tema correspondiente
+
+    
+    return  StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor:  currentTheme.backgroundColor,
         padding: 20,
     },
     centeredContainer: {
@@ -15,6 +21,7 @@ export default StyleSheet.create({
         fontSize: 26,
         fontWeight: 'bold',
         textAlign: 'center',
+        color: currentTheme.textColor,
     },
     button: {
         backgroundColor: '#6c44f4',
@@ -30,7 +37,7 @@ export default StyleSheet.create({
     },
     input: {
         height: 40,
-        borderColor: 'gray',
+        borderColor: currentTheme.inputBorderColor, 
         borderWidth: 1,
         borderRadius: 5,
         paddingHorizontal: 15,
@@ -45,8 +52,13 @@ export default StyleSheet.create({
     },
     divider: {
         height: 1,
-        backgroundColor: '#ddd',
+        backgroundColor: currentTheme.dividerColor, 
         marginVertical: 10,
+    },
+    noResultsText: {
+        textAlign: "center",
+        marginTop: 20,
+        color: "#999",
     },
 
     // Footer reutilizable
@@ -56,16 +68,16 @@ export default StyleSheet.create({
         left: 0,
         right: 0,
         height: 60,
-        backgroundColor: "rgba(255, 255, 255, 0.9)",
+        backgroundColor: currentTheme.footerBackgroundColor, 
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "center",
-        borderTopColor: "#ddd",
+        borderTopColor: currentTheme.footerBorderColor, 
         borderTopWidth: 1,
     },
     footerIcon: {
         fontSize: 28,
-        color: "#000",
+        color: currentTheme.footerIconColor,
     },
     activeIcon: {
         color: "#6c44f4", // Color violeta para el ícono activo
@@ -75,16 +87,18 @@ export default StyleSheet.create({
     // Header reutilizable
     header: {
         height: 60,
-        backgroundColor: "#fff",
         justifyContent: "center",
         alignItems: "center",
-        borderBottomColor: "#ddd",
         borderBottomWidth: 1,
         flexDirection: 'row', 
+        backgroundColor: currentTheme.backgroundColor,
+        borderBottomColor: currentTheme.headerBorderColor, 
+        
     },
     headerLogo: {
         width: 120,
         height: 50,
+        resizeMode: 'contain', 
     },
     logoContainer: {
         flex: 1,
@@ -105,8 +119,12 @@ export default StyleSheet.create({
     headerTitle: {
         fontSize: 20,
         fontWeight: "bold",
+        color: currentTheme.headerTitleColor, 
+
     },
-   
+    iconSetting: {
+        color: currentTheme.iconSettings,
+    },
     settingsIcon: {
         position: 'absolute',
         right: 10, 
@@ -118,4 +136,7 @@ export default StyleSheet.create({
         left: 35,
         top: 40, 
     },
+
+    
 });
+};

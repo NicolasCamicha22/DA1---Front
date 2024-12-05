@@ -5,10 +5,16 @@ import { useRouter } from 'expo-router';
 import React, { useState, useEffect } from 'react';
 import styles from './ProfileStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme } from 'react-native';
+import { createStylesProfile } from './ProfileStyles';
 
 export default function HeaderFollowers() {
     const router = useRouter();
     const [userInfo, setUserInfo] = useState(null);
+    const colorScheme = useColorScheme();
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesProfile(theme);
 
     useEffect(() => {
         const fetchUserInfo = async () => {
@@ -31,7 +37,7 @@ export default function HeaderFollowers() {
     return (
         <View style={styles.headerFollowersContainer}>
             {/* Flecha para regresar */}
-            <TouchableOpacity onPress={() => router.push ('./ProfileScreen')} style={styles.backButton}>
+            <TouchableOpacity onPress={() => router.push('./ProfileScreen')} style={styles.backButton}>
                 <Icon name="arrow-back-outline" size={24} color="#000" />
             </TouchableOpacity>
 

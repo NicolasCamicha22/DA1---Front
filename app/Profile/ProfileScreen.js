@@ -12,6 +12,10 @@ import * as ImagePicker from 'expo-image-picker';
 import styles from './ProfileStyles';
 import { SvgUri } from 'react-native-svg';
 import NetInfo from '@react-native-community/netinfo';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme } from 'react-native';
+import { createStyles } from '../styles';
+import { createStylesProfile } from './ProfileStyles';
 
 export default function ProfileScreen() {
     const [userInfo, setUserInfo] = useState(null);
@@ -21,6 +25,10 @@ export default function ProfileScreen() {
     const router = useRouter();
     const [userId, setUserId] = useState(null);
 
+    const colorScheme = useColorScheme();
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const commonStyles = createStyles(theme);
+    const styles = createStylesProfile(theme);
 
 
     // Obtener el userId desde AsyncStorage
@@ -62,21 +70,21 @@ export default function ProfileScreen() {
                 console.log('Token o userId no disponibles');
                 return;
             }
-    
+
             try {
                 const response = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-    
+
                 if (response.data && response.data.data) {
                     const userData = response.data.data;
                     setUserInfo(userData);
-    
+
                     // Guardamos el nombre de usuario en AsyncStorage
                     await AsyncStorage.setItem('username', userData.username);
-    
+
                     if (userData.posts) {
                         // Aquí obtenemos los posts
                         const updatedPosts = await Promise.all(userData.posts.map(async (post) => {
@@ -85,7 +93,7 @@ export default function ProfileScreen() {
                                     Authorization: `Bearer ${token}`,
                                 }
                             });
-    
+
                             const username = postResponse.data.user?.username || 'Usuario desconocido';
                             return {
                                 ...post,
@@ -107,7 +115,7 @@ export default function ProfileScreen() {
                 setLoading(false);
             }
         };
-    
+
         if (userId) {
             loadProfileData();
         }

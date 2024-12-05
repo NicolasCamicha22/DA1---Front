@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ScrollView, Image, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';  // Importamos el Picker
 import commonStyles from '../styles';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme } from 'react-native';
 import styles from './LoginStyles';
+import { createStylesLogin } from './LoginStyles';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function SignUpForm({
     username, setUsername,
@@ -14,9 +18,14 @@ export default function SignUpForm({
     gender, setGender,
     onSignUp, onSignIn
 }) {
+    const colorScheme = useColorScheme();
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesLogin(theme);
+
     // Estado para Confirm Password y error de validación
     const [confirmPassword, setConfirmPassword] = useState('');
-    
+    const [passwordVisible, setPasswordVisible] = useState(false);
+
 
     // Expresión regular para validar correo electrónico
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -104,29 +113,53 @@ export default function SignUpForm({
             </View>
 
             {/* Password */}
-            <View style={styles.inputWrapperSignUp}>
-                <Text style={styles.inputLabelSignUp}>Password</Text>
-                <TextInput
-                    style={styles.inputSignUp}
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={setPassword}
-                    autoCapitalize="none"
-                    secureTextEntry
-                />
+            <View style={styles.inputWrapperLogin}>
+                <Text style={styles.inputLabelLogin}>Password</Text>
+                <View style={styles.passwordContainer}>
+                    <TextInput
+                        style={styles.inputPassword}
+                        placeholder="Password"
+                        value={password}
+                        onChangeText={setPassword}
+                        autoCapitalize="none"
+                        secureTextEntry={!passwordVisible}
+                    />
+                    <TouchableOpacity
+                        onPress={() => setPasswordVisible(!passwordVisible)}
+                        style={styles.eyeIcon}
+                    >
+                        <Ionicons
+                            name={passwordVisible ? 'eye-off-outline' : 'eye-outline'}
+                            size={24}
+                            color="#888"
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
 
             {/* Confirm Password */}
-            <View style={styles.inputWrapperSignUp}>
-                <Text style={styles.inputLabelSignUp}>Confirm Password</Text>
-                <TextInput
-                    style={styles.inputSignUp}
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChangeText={setConfirmPassword}
-                    autoCapitalize="none"
-                    secureTextEntry
-                />
+            <View style={styles.inputWrapperLogin}>
+                <Text style={styles.inputLabelLogin}>Confirm Password</Text>
+                <View style={styles.passwordContainer}>
+                    <TextInput
+                        style={styles.inputPassword}
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChangeText={setConfirmPassword}
+                        autoCapitalize="none"
+                        secureTextEntry={!passwordVisible}
+                    />
+                    <TouchableOpacity
+                        onPress={() => setPasswordVisible(!passwordVisible)}
+                        style={styles.eyeIcon}
+                    >
+                        <Ionicons
+                            name={passwordVisible ? 'eye-off-outline' : 'eye-outline'}
+                            size={24}
+                            color="#888"
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
 
             {/* Gender (Aquí usamos el Picker) */}
@@ -135,7 +168,7 @@ export default function SignUpForm({
                 <Picker
                     selectedValue={gender}
                     onValueChange={(itemValue) => setGender(itemValue)}
-                    style={[styles.inputSignUp, { height: 45 }]} // Se aplica la misma altura que en los inputs
+                    style={[styles.inputSignUp, { height: 45, color: 'gray' }]} // Se aplica la misma altura que en los inputs
                 >
                     <Picker.Item label="Select Gender" value="" />
                     <Picker.Item label="Male (M)" value="M" />

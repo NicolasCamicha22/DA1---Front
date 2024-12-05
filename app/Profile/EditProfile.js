@@ -9,6 +9,10 @@ import { useRouter } from 'expo-router';
 import styles from './ProfileStyles';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme } from 'react-native';
+import { createStyles } from '../styles';
+import { createStylesProfile } from './ProfileStyles';
 
 // Función para subir la imagen al backend y obtener la URL
 const uploadImageToBackend = async (imageUri) => {
@@ -64,6 +68,10 @@ export default function EditProfile() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isNightMode, setIsNightMode] = useState(false);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const colorScheme = useColorScheme();
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const commonStyles = createStyles(theme);
+    const styles = createStylesProfile(theme);
 
     useEffect(() => {
         const fetchUserId = async () => {
@@ -240,6 +248,40 @@ export default function EditProfile() {
         }
     };
 
+
+    const deleteFriend = async (friendId) => {
+        const userId = await AsyncStorage.getItem('userId');
+        const token = await AsyncStorage.getItem('accessToken');
+    
+        if (!userId || !token) {
+            console.error('No se encontró el userId o token');
+            return;
+        }
+    
+        try {
+            // Realiza la solicitud DELETE para eliminar al amigo
+            const response = await axios.delete(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/${friendId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
+            if (response.status === 200) {
+                Alert.alert('Amigo eliminado', 'Se ha eliminado al amigo correctamente.');
+    
+                // Aquí, actualiza la lista de amigos (followers o following) si es necesario
+                // Ejemplo:
+                // setFollowersData(prevData => prevData.filter(item => item.id !== friendId));
+                // setFollowingData(prevData => prevData.filter(item => item.id !== friendId));
+            } else {
+                Alert.alert('Error', 'No se pudo eliminar al amigo.');
+            }
+        } catch (error) {
+            console.error('Error al eliminar el amigo:', error);
+            Alert.alert('Error', 'Hubo un problema al eliminar el amigo.');
+        }
+    };
+
     return (
         <View style={commonStyles.container}>
             <HeaderEditProfile onSave={handleSave} />
@@ -298,14 +340,6 @@ export default function EditProfile() {
                     </View>
                     <View style={styles.line2} />
 
-                    <TouchableOpacity style={styles.nightModeButton} onPress={toggleNightMode}>
-                        <Ionicons name="moon-outline" size={20} color="black" />
-                        <Text style={styles.nightModeText}>
-                            {isNightMode ? 'Light mode' : 'Night mode'}
-                        </Text>
-                    </TouchableOpacity>
-                    <View style={styles.line2} />
-
                     <View style={styles.fieldContainer}>
                         <Text style={styles.label}>Gender</Text>
                         <TouchableOpacity style={styles.dropdownContainer} onPress={() => setIsDropdownOpen(!isDropdownOpen)}>
@@ -332,9 +366,7 @@ export default function EditProfile() {
                     )}
 
                     <View style={styles.line2} />
-                    <TouchableOpacity onPress={handleSave}>
-                        <Text>Guardar cambios</Text>
-                    </TouchableOpacity>
+
 
                     <TouchableOpacity style={styles.logoutButton} onPress={toggleModal}>
                         <Text style={styles.logoutText}>Log out</Text>
@@ -343,6 +375,9 @@ export default function EditProfile() {
 
                     <TouchableOpacity style={styles.deleteAccountButton} onPress={toggleModal}>
                         <Text style={styles.deleteAccountText}>Delete Account</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                        <Text style={styles.saveButtonText}>Guardar cambios</Text>
                     </TouchableOpacity>
 
                     <Modal visible={isModalVisible} transparent={true} animationType="fade" onRequestClose={toggleModal}>

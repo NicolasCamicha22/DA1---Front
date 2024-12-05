@@ -9,7 +9,13 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './HomeStyles';
 import { SvgUri } from 'react-native-svg';
-import NetInfo from '@react-native-community/netinfo';  // Importa NetInfo para la verificación de conexión
+import NetInfo from '@react-native-community/netinfo';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme } from 'react-native';
+import { createStylesHome } from './HomeStyles';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { createStyles } from '../styles';
+
 
 const SearchScreen = () => {
     const [searchText, setSearchText] = useState('');
@@ -17,6 +23,11 @@ const SearchScreen = () => {
     const router = useRouter();
     const [userId, setUserId] = useState(null);
     const [isConnected, setIsConnected] = useState(true);  // Estado para la conexión a Internet
+    const colorScheme = useColorScheme();
+    const styles = createStylesHome(theme)
+
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const commonStyles = createStyles(theme);
 
     // Verificar la conexión a Internet
     useEffect(() => {
@@ -129,13 +140,13 @@ const SearchScreen = () => {
             setResults([]);
             return;
         }
-    
+
         const token = await AsyncStorage.getItem('accessToken');
         if (!token) {
             console.error('No se encontró el token de acceso');
             return;
         }
-    
+
         try {
             const response = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/search', {
                 params: { query: text.trim(), currentUserId: userId },
@@ -143,22 +154,22 @@ const SearchScreen = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-    
+
             const friendsResponse = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-    
+
             const friendsIds = friendsResponse.data.data.following.map(friend => friend.id); // Lista de IDs de amigos
-    
+
             if (response.data && Array.isArray(response.data.data)) {
                 const normalizedResults = response.data.data.map(user => ({
                     ...user,
                     imageUrl: normalizeImageUrl(user.profile_pic),
                     isFriend: friendsIds.includes(user.id)
                 }));
-    
+
                 setResults(normalizedResults);
             } else {
                 console.error('La respuesta no contiene un array en "data":', response.data);
@@ -166,7 +177,7 @@ const SearchScreen = () => {
             }
         } catch (error) {
             console.error('Error al buscar usuarios:', error);
-    
+
             // Aquí agregamos la alerta cuando ocurre un error de conexión
             Alert.alert(
                 'Error de Conexión',
@@ -193,20 +204,22 @@ const SearchScreen = () => {
                 }
             })} style={styles.userContainer}>
                 {isSvg(imageUri) ? (
-                    <SvgUri uri={imageUri} style={styles.profilePic} width={50} height={50} />
+                    <SvgUri uri={imageUri} style={styles.profileImageFollower} width={50} height={50} />
                 ) : (
-                    <Image source={{ uri: imageUri }} style={styles.profilePic} />
+                    <Image source={{ uri: imageUri }} style={styles.profileImageFollower} />
                 )}
-                <View style={styles.userInfo}>
-                    <Text style={styles.username}>{item.username}</Text>
-                    <Text style={styles.fullName}>{item.name} {item.surname}</Text>
+                <View style={styles.userInfoFollower}>
+                    <Text style={styles.usernameFollower}>{item.username}</Text>
+                    <Text style={styles.fullNameFollowers}>{item.name} {item.surname}</Text>
                 </View>
                 <TouchableOpacity
                     onPress={() => toggleFollow(item.id, item.isFriend)}
-                    style={styles.followButton}>
-                    <Text style={styles.followText}>
-                        {item.isFriend ? 'Unfollow' : 'Follow'}
-                    </Text>
+                    style={styles.followIconContainer}>
+                    <Icon
+                        name={item.isFriend ? 'person-remove-outline' : 'person-add-outline'}
+                        size={24}
+                        color={item.isFriend ? 'red' : 'purple'}
+                    />
                 </TouchableOpacity>
             </TouchableOpacity>
         );
