@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, Image, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { SvgUri } from 'react-native-svg';
 import axios from 'axios';
 import commonStyles from '../styles';
 import Footer from '../Footer';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './ProfileStyles';
-import { SvgUri } from 'react-native-svg';
+import Post from '../Post/Post';
 
 export default function UserProfileScreen() {
     const [userInfo, setUserInfo] = useState(null);
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState([]);  // Estado para los posts
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const router = useRouter();
-    //const { userId } = router.query;  // Accede al userId pasado por la URL
     const { userId } = useLocalSearchParams();
-
-
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -36,9 +34,13 @@ export default function UserProfileScreen() {
 
                 if (response.data && response.data.data) {
                     setUserInfo(response.data.data);
+                    if (response.data.data.posts) {
+                        setPosts(response.data.data.posts);
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching user profile', error);
+                setError('Error fetching user profile');
             } finally {
                 setLoading(false);
             }
@@ -49,6 +51,24 @@ export default function UserProfileScreen() {
         }
     }, [userId]);
 
+
+    const renderProfileImage = (uri) => {
+        const validUri = uri && uri.trim();
+    
+        // Si la URL es válida y es un SVG (como las generadas por dicebear), usamos SvgUri
+        if (validUri && validUri.includes("dicebear.com")) {
+            return <SvgUri uri={validUri} width={100} height={100} />;
+        }
+    
+        // Si la URL es un JPG/PNG, usamos Image para mostrar la imagen
+        if (validUri && validUri.startsWith('http')) {
+            return <Image source={{ uri: validUri }} style={styles.profileImage} resizeMode="cover" />;
+        } else {
+            // Si la URL no es válida, mostramos una imagen por defecto
+            return <Image source={require('../../assets/images/icon.png')} style={styles.profileImage} resizeMode="cover" />;
+        }
+    };
+    
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;
     }
@@ -58,39 +78,25 @@ export default function UserProfileScreen() {
     }
 
     const renderItem = ({ item }) => {
-        const imageUrl = item.media && item.media.length > 0 ? item.media[0] : null;
 
         return (
-            <View style={styles.postContainer}>
-                <Image source={{ uri: imageUrl }} style={styles.postImage} />
-                <Text style={styles.postCaption}>{item.caption}</Text>
-            </View>
+            <Post
+                id={item.id}
+                username={userInfo.username || 'Usuario desconocido'}
+                location={item.location}
+                media={item.media}
+                caption={item.caption}
+                description={item.title}
+                likes={userInfo.likesCount || 0}
+                comments={item.comments_count}
+                isLike={userInfo.isLike}
+                favorites={userInfo.isFavorite}
+                countFavorite={userInfo.favoritesCount}
+                date={new Date(item.date).toLocaleDateString()}
+            />
         );
     };
-
-    const renderProfileImage = (uri) => {
-        if (uri && uri.startsWith('http') && uri.endsWith('.svg')) {
-            return <SvgUri uri={uri} width={150} height={150} />;
-        } else {
-            return <Image source={{ uri }} style={styles.profileImage} resizeMode="cover" />;
-        }
-    };
-
-    if (loading) {
-        return (
-            <View style={commonStyles.container}>
-                <ActivityIndicator size="large" color="#0000ff" />
-            </View>
-        );
-    }
-
-    if (error) {
-        return (
-            <View style={commonStyles.container}>
-                <Text style={styles.errorText}>{error}</Text>
-            </View>
-        );
-    }
+    console.log(userInfo.profile_pic);
 
     return (
         <View style={commonStyles.container}>
