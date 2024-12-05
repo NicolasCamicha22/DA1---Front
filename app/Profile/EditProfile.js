@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, Modal, ScrollView, Alert } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import Header from '../Header';
+import HeaderEditProfile from './HeaderEditProfile';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
@@ -248,7 +248,7 @@ export default function EditProfile() {
 
     return (
         <View style={commonStyles.container}>
-             <Header />
+             <HeaderEditProfile />
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={styles.coverContainer}>
                     <Image source={{ uri: userInfo.coverImage }} style={styles.coverImage} />
@@ -330,9 +330,7 @@ export default function EditProfile() {
                     )}
 
                     <View style={styles.line2} />
-                    <TouchableOpacity onPress={handleSave}>
-                        <Text>Guardar cambios</Text>
-                    </TouchableOpacity>
+                    
 
                     <TouchableOpacity style={styles.logoutButton} onPress={toggleModal}>
                         <Text style={styles.logoutText}>Log out</Text>
@@ -343,6 +341,9 @@ export default function EditProfile() {
                         <Text style={styles.deleteAccountText}>Delete Account</Text>
                     </TouchableOpacity>
 
+                    <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+    <Text style={styles.saveButtonText}>Guardar cambios</Text>
+</TouchableOpacity>
                     <Modal visible={isModalVisible} transparent={true} animationType="fade" onRequestClose={toggleModal}>
                         <View style={styles.modalContainer}>
                             <View style={styles.modalContentEdit}>
@@ -354,6 +355,8 @@ export default function EditProfile() {
                                     <TouchableOpacity style={styles.confirmButtonEdit} onPress={toggleModal}>
                                         <Text style={styles.modalbuttonText}>No</Text>
                                     </TouchableOpacity>
+
+
                                 </View>
                             </View>
                         </View>

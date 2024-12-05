@@ -33,7 +33,7 @@ export const createStylesProfile = () => {
     usernameContainer: {
         position: 'absolute',
         top: 180,
-        backgroundColor: '#fff',
+        backgroundColor:  currentTheme.backgroundColor,
         borderRadius: 20,
         paddingHorizontal: 10,
         paddingVertical: 5,
@@ -43,7 +43,7 @@ export const createStylesProfile = () => {
     username: {
         fontSize: width * 0.045,
         fontWeight: 'bold',
-        color: '#333',
+        color: currentTheme.commentText,
     },
     infoContainer: {
         flexDirection: "row",
@@ -110,6 +110,19 @@ export const createStylesProfile = () => {
 
 
     //header edit profile
+    saveButton: {
+        backgroundColor: '#6c44f4',
+        paddingVertical: 15,
+        marginTop: 20,
+        borderRadius: 15,
+        alignItems: 'center',
+    },
+    
+    saveButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 
     editCoverContainer: {
         alignItems: 'center',
@@ -131,11 +144,16 @@ export const createStylesProfile = () => {
         borderColor: '#fff',
         borderRadius: 50,
     },
-
+    cancelTextStyle: {
+        fontSize: 16,
+        color: currentTheme.headerTitleColor,
+        marginTop: 20, 
+    },
+    
     editHeaderContainer: {
         height: 60,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 5,
         backgroundColor: currentTheme.backgroundColor,
@@ -146,14 +164,16 @@ export const createStylesProfile = () => {
     editHeaderTitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: 'black',
+        color: currentTheme.headerTitleColor,
+        textAlign: 'center', 
         marginTop: 20,
     },
 
     editButton: {
-        marginHorizontal: 10,
+        position: 'absolute',
+        left: 10, 
+        justifyContent: 'center',
     },
-
     coverIconContainer: {
         position: 'absolute',
         bottom: 10,
@@ -200,7 +220,7 @@ export const createStylesProfile = () => {
     },
     label: {
         fontSize: 16,
-        color: 'black',
+        color:  currentTheme.headerTitleColor,
         width: 100,
         marginBottom: 5,
     },
@@ -283,11 +303,11 @@ export const createStylesProfile = () => {
     },
 
     modalContainer: {
-        flex: 1,  // Hace que ocupe todo el espacio de la pantalla
-        justifyContent: 'center',  // Centra el contenido verticalmente
-        alignItems: 'center',  // Centra el contenido horizontalmente
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',  // Fondo semi-transparente para oscurecer el fondo
-        position: 'absolute',  // Hace que el contenedor se posicione en el medio
+        flex: 1,  
+        justifyContent: 'center', 
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', 
+        position: 'absolute',  
         top: 0,
         left: 0,
         right: 0,

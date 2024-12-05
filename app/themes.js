@@ -40,7 +40,7 @@ export const lightTheme = {
     modalTitleColor: "#666",
     commentText: "#333",
     commentTextUser: '#444',
-
+    iconSettings:  '#000',
 };
 
 export const darkTheme = {
@@ -84,4 +84,6 @@ export const darkTheme = {
     modalBackgroundColor: "#121212",
     commentText: "#E5E5E5",
     commentTextUser: '#fff',
+    iconSettings:  '#fff',
+
 };

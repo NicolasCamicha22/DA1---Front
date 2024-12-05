@@ -27,9 +27,7 @@ const HeaderEditProfile = ({ onSave }) => {
                 <Text style={styles.cancelTextStyle}>Cancel</Text>
             </TouchableOpacity>
             <Text style={styles.editHeaderTitle}>Edit Profile</Text>
-            <TouchableOpacity onPress={handleDone} style={styles.editButton}>
-                <Text style={styles.doneTextStyle}>Done</Text>
-            </TouchableOpacity>
+           
         </View>
     );
 };

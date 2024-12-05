@@ -122,7 +122,9 @@ export const createStyles = () => {
         color: currentTheme.headerTitleColor, 
 
     },
-   
+    iconSetting: {
+        color: currentTheme.iconSettings,
+    },
     settingsIcon: {
         position: 'absolute',
         right: 10, 

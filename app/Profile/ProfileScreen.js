@@ -164,9 +164,7 @@ export default function ProfileScreen() {
 
                             <View style={styles.usernameContainer}>
                                 <Text style={styles.username}>{userInfo.username}</Text>
-                                <TouchableOpacity onPress={() => router.push('/Profile/EditProfile')}>
-                                    <Icon name="create-outline" size={24} color="#fff" />
-                                </TouchableOpacity>
+                               
                             </View>
                         </View>
 
