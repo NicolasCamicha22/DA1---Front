@@ -29,12 +29,6 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff",
         "gradleVersion": "7.0"
-      },
-      "permissions": [
-        "INTERNET"
-      ],
-      "networkSecurityConfig": {
-        "cleartextTrafficPermitted": true
       }
     },
     "web": {

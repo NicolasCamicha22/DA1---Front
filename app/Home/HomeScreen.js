@@ -65,7 +65,7 @@ export default function HomeScreen() {
                 setHasPosts(true);
                 const updatedPosts = await Promise.all(postsData.map(async (post) => {
                     try {
-                        const postResponse = await axios.get(`https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${post.id}`, {
+                        const postResponse = await axios.get(`https://da1back.onrender.com/api/posts/${post.id}`, {
                             headers: {
                                 Authorization: `Bearer ${await AsyncStorage.getItem('accessToken')}`,
                             }

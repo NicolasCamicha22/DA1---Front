@@ -32,7 +32,7 @@ export default function Following() {
             }
 
             try {
-                const response = await axios.get('https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends', {
+                const response = await axios.get('https://da1back.onrender.com/api/friends', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -96,14 +96,14 @@ export default function Following() {
 
         try {
             if (isFollowing) {
-                await axios.delete(`https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/${followingId}`, {
+                await axios.delete(`https://da1back.onrender.com/api/friends/${followingId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
                 Alert.alert('Exito', 'Dejaste de seguir a esta persona');
             } else {
-                await axios.post('https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/request', {
+                await axios.post('https://da1back.onrender.com/api/friends/request', {
                     friendId: followingId,
                     userId: userId,
                 }, {

@@ -53,7 +53,7 @@ export default function FavoritosScreen() {
                 throw new Error('No hay conexión a internet');
             }
 
-            const response = await axios.get('https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/favorites', {
+            const response = await axios.get('https://da1back.onrender.com/api/favorites', {
                 params: { userId },
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -64,7 +64,7 @@ export default function FavoritosScreen() {
             if (response.data && response.data.data) {
                 const updatedFavorites = await Promise.all(response.data.data.map(async (post) => {
                     // Hacemos una segunda consulta para obtener la información completa del post, incluyendo el username
-                    const postResponse = await axios.get(`https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${post.id}`, {
+                    const postResponse = await axios.get(`https://da1back.onrender.com/api/posts/${post.id}`, {
                         headers: {
                             Authorization: `Bearer ${accessToken}`,
                         }

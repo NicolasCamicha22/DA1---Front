@@ -35,7 +35,7 @@ export default function UserProfileScreen() {
                     return;
                 }
 
-                const response = await axios.get(`https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/${userId}`, {
+                const response = await axios.get(`https://da1back.onrender.com/api/users/${userId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },

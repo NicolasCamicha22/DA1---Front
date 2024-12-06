@@ -94,7 +94,7 @@ const ImagePostScreen = () => {
             console.log("Payload enviado al backend:", payload);
 
             const response = await axios.post(
-                'https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts',
+                'https://da1back.onrender.com/api/posts',
                 payload, // Enviamos las URLs de las imágenes
                 {
                     headers: {
