@@ -184,6 +184,9 @@ export default function EditProfile() {
 
     const toggleModal = () => {
         setIsModalVisible(!isModalVisible);
+        <TouchableOpacity style={styles.deleteAccountButton} onPress={() => { deleteFriend(); toggleModal(); }}>
+            <Text style={styles.deleteAccountText}>Delete Account</Text>
+        </TouchableOpacity>
     };
 
     // Selección de imagen de perfil
@@ -249,38 +252,34 @@ export default function EditProfile() {
     };
 
 
-    const deleteFriend = async (friendId) => {
-        const userId = await AsyncStorage.getItem('userId');
+    const deleteUser = async () => {
         const token = await AsyncStorage.getItem('accessToken');
-    
-        if (!userId || !token) {
-            console.error('No se encontró el userId o token');
-            return;
-        }
-    
+        const userId = await AsyncStorage.getItem('userId');
+
         try {
-            // Realiza la solicitud DELETE para eliminar al amigo
-            const response = await axios.delete(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/${friendId}`, {
+            const response = await axios.delete(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/auth/delete-account`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${token}`, // Pasar el token en el header
                 },
+                data: { userId } // Pasar el userId si es necesario (dependiendo del backend)
             });
-    
+
             if (response.status === 200) {
-                Alert.alert('Amigo eliminado', 'Se ha eliminado al amigo correctamente.');
-    
-                // Aquí, actualiza la lista de amigos (followers o following) si es necesario
-                // Ejemplo:
-                // setFollowersData(prevData => prevData.filter(item => item.id !== friendId));
-                // setFollowingData(prevData => prevData.filter(item => item.id !== friendId));
+                Alert.alert('Cuenta eliminada', 'Tu cuenta ha sido eliminada correctamente.');
+                // Limpiar los datos de AsyncStorage
+                await AsyncStorage.removeItem('accessToken');
+                await AsyncStorage.removeItem('refreshToken');
+                await AsyncStorage.removeItem('userId');
+                router.push('../Login/LoginScreen');
             } else {
-                Alert.alert('Error', 'No se pudo eliminar al amigo.');
+                Alert.alert('Error', 'No se pudo eliminar la cuenta.');
             }
         } catch (error) {
-            console.error('Error al eliminar el amigo:', error);
-            Alert.alert('Error', 'Hubo un problema al eliminar el amigo.');
+            console.error('Error al eliminar la cuenta:', error);
+            Alert.alert('Error', 'Hubo un problema al eliminar tu cuenta.');
         }
     };
+
 
     return (
         <View style={commonStyles.container}>
@@ -373,7 +372,7 @@ export default function EditProfile() {
                     </TouchableOpacity>
                     <View style={styles.line2} />
 
-                    <TouchableOpacity style={styles.deleteAccountButton} onPress={toggleModal}>
+                    <TouchableOpacity style={styles.deleteAccountButton} onPress={deleteUser}>
                         <Text style={styles.deleteAccountText}>Delete Account</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
