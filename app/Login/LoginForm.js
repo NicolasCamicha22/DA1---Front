@@ -4,22 +4,45 @@ import styles from './LoginStyles';
 import React, { useState } from 'react';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+import { useNetworkStatus } from '../useNetworkStatus';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme  } from 'react-native';
+import { createStyles } from '../styles';
+import { createStylesLogin} from './LoginStyles';
+
 export default function LoginForm({ onLogin, email, setEmail, password, setPassword, onSignUp, onGoogleLogin, onPasswordReset }) {
     const [showPassword, setShowPassword] = useState(false);
     const router = useRouter();
+    const isConnected = useNetworkStatus();
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+       const commonStyles = createStyles(theme);
+       const styles = createStylesLogin(theme);
 
     const handleLogin = async () => {
+
+        // Verifica si hay conexión a Internet
+        if (!isConnected) {
+            Alert.alert('Error', 'No hay conexión a internet');
+            return;
+        }
+
         // Verifica si los campos están vacíos
         if (!email || !password) {
             Alert.alert("Error", "Por favor, complete los campos.");
             return;
         }
+
+
+        // Si hay conexión, intenta hacer login
         onLogin(email, password)
+
             .catch((error) => {
                 // Maneja el error del backend mostrando un mensaje de alerta amigable
                 Alert.alert("Login Error", "Email o password incorrectas.");
             });
     }
+
 
     return (
         <KeyboardAvoidingView

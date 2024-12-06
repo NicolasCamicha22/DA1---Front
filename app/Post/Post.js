@@ -1,35 +1,75 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Image, FlatList, Dimensions, TextInput, Button } from 'react-native';
-import commonStyles from '../styles';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React, { useState, useEffect } from 'react';
+import {
+    View, Text, Image, FlatList,useColorScheme , Dimensions, TextInput, Button, ScrollView, TouchableOpacity, KeyboardAvoidingView,
+    Platform,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import axios from 'axios';
-import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './PostStyles';
-
-
+import Modal from 'react-native-modal';
+import { lightTheme, darkTheme } from '../themes';
+import { createStylesPost } from './PostStyles';
 
 const screenWidth = Dimensions.get('window').width;
 
-const Post = ({ id, username, location, imageUrl, caption, likes, comments, favorites, date, description }) => {
+const Post = ({ id, username, location, media, caption, likes, comments, favorites, countFavorite, date, description, isLike, imageUrl }) => {
+    const [isLiked, setIsLiked] = useState(isLike);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const [isLiked, setIsLiked] = useState(false);
-    const [isFavorited, setIsFavorited] = useState(false);
-    const [likeCount, setLikeCount] = useState(Number(likes) || 0);
-    const [favoriteCount, setFavoriteCount] = useState(Number(favorites) || 0);
+    const [likeCount, setLikeCount] = useState(likes || 0);
+    const [isFavorited, setIsFavorited] = useState(favorites);
+    const [favoriteCount, setFavoriteCount] = useState(countFavorite || 0);
+    const [userId, setUserId] = useState(null);
     const [comment, setComment] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [commentList, setCommentList] = useState([]);
-    const flatListRef = useRef(null);
-    const [userId, setUserId] = useState(null);
-
+    const colorScheme = useColorScheme();
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const styles = createStylesPost(theme);
 
     useEffect(() => {
-        // Si ya tienes datos iniciales (como likes, favoritos), configura los estados
-        setIsLiked(likes > 0);
-        setIsFavorited(favorites > 0);
-    }, [likes, favorites]);
+        const fetchUserId = async () => {
+            const storedUserId = await AsyncStorage.getItem('userId');
+            if (storedUserId) {
+                setUserId(storedUserId);
+            } else {
+                console.error("No userId found");
+            }
+        };
+        fetchUserId();
+    }, []);
+
+    useEffect(() => {
+        const fetchPostData = async () => {
+            try {
+                const token = await AsyncStorage.getItem('accessToken');
+                const response = await axios.get(`https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                const postData = response.data.data;
+
+
+                // Establecer los estados para like y favoritos
+                setLikeCount(postData.likesCount);
+
+                // Aquí actualizamos el estado para los comentarios
+                setCommentList(postData.comments.map(comment => ({
+                    text: comment.comment,  // El texto del comentario
+                    username: comment.user.username, // El nombre de usuario que hizo el comentario
+                })));
+            } catch (error) {
+                console.error('Error al cargar los datos del post:', error);
+            }
+        };
+
+        fetchPostData();
+    }, [id]); // Solo se ejecuta cuando el id del post cambia
+
+
 
     const handleScroll = (event) => {
         const contentOffsetX = event.nativeEvent.contentOffset.x;
@@ -37,134 +77,156 @@ const Post = ({ id, username, location, imageUrl, caption, likes, comments, favo
         setCurrentImageIndex(index);
     };
 
-    const normalizeImageUrl = (url) => {
-        if (!url) return null;
-        // Verifica si el URL ya contiene la base o es relativa
-        if (url.startsWith('https://')) return url;
-        const formattedUrl = `https://da1-back.onrender.com${url.startsWith('/uploads') ? url : '/uploads/' + url}`.replace(/\/uploads\/uploads/, '/uploads');
-        return formattedUrl;
-    };
-    
-
-    const normalizedImageUrls = Array.isArray(imageUrl) ? imageUrl.filter(url => url).map(normalizeImageUrl) : [];
-
-
-
-    useEffect(() => {
-        const fetchUserId = async () => {
-            const storedUserId = await AsyncStorage.getItem('userId');
-            setUserId(storedUserId); // Guarda el userId en el estado
-        };
-        fetchUserId();
-    }, []);
-
-
-        // Cargar comentarios cuando el componente se monta
-        useEffect(() => {
-            const fetchComments = async () => {
-                try {
-                    const response = await axios.get('https://da1-back.onrender.com/comments', {
-                        params: { postId: id },
-                    });
-                    setCommentList(response.data); // Establece los comentarios en el estado
-                } catch (error) {
-                    console.error('Error al cargar los comentarios:', error);
-                }
-            };
-    
-            fetchComments();
-        }, [id]); // Se ejecuta cada vez que el post cambia
-
-
+    // Función para manejar el like
     const toggleLike = async () => {
+        console.log("Like button clicked. isLiked:", isLiked);
         try {
-            const response = await axios.post('https://da1-back.onrender.com/like-post', { postId: id, userId });
+            setIsLiked(prev => !prev);
+            setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+            const token = await AsyncStorage.getItem('accessToken');
+            const response = await axios.put(
+                `https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}/likes`,
+                { userId },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            console.log('Respuesta del like:', response.data);
 
-            if (response.data.liked) {
-                // Si el like se agregó, actualiza el estado
+            if (response.data.message === 'Like added') {
                 setIsLiked(true);
-                setLikeCount((prev) => prev + 1);
-            } else {
-                // Si el like se eliminó, actualiza el estado
+                setLikeCount(likeCount + 1);
+                await AsyncStorage.setItem(`like_${id}`, 'true');
+            } else if (response.data.message === 'Like removed') {
                 setIsLiked(false);
-                setLikeCount((prev) => prev - 1);
+                setLikeCount(likeCount - 1);
+                await AsyncStorage.setItem(`like_${id}`, 'false');
             }
         } catch (error) {
             console.error('Error al dar like:', error);
         }
     };
 
-
-
+    // Función para agregar o quitar favoritos
     const toggleFavorite = async () => {
+        console.log("Favorite button clicked. isFavorited:", isFavorited);
         try {
-            const response = await axios.post('https://da1-back.onrender.com/favorite-post', { userId, postId: id });
-            if (response.data.favorited) {
-                setIsFavorited(true);
-                setFavoriteCount((prev) => prev + 1);
+            const token = await AsyncStorage.getItem('accessToken');
+            let response;
+            setIsFavorited(prev => !prev);
+            setFavoriteCount(prev => isFavorited ? prev - 1 : prev + 1);
+
+            if (isFavorited) {
+                console.log('Eliminando de favoritos...');
+                response = await axios.delete(
+                    `https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/favorites/${id}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                console.log('Eliminar favorito response:', response.data);
+
+                if (response.data.status === 'success') {
+                    setIsFavorited(false);
+                    setFavoriteCount(favoriteCount - 1);
+                    await AsyncStorage.setItem(`favorite_${id}`, 'false');
+                }
             } else {
-                setIsFavorited(false);
-                setFavoriteCount((prev) => prev - 1);
+                console.log('Marcando como favorito...');
+                response = await axios.post(
+                    `https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}/favorites`,
+                    { userId },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                console.log('Marcar como favorito response:', response.data);
+
+                if (response.data.status === 'success' && response.data.favorited) {
+                    setIsFavorited(true);
+                    setFavoriteCount(favoriteCount + 1);
+                    await AsyncStorage.setItem(`favorite_${id}`, 'true');
+                }
             }
         } catch (error) {
-            console.error('Error al agregar a favoritos:', error);
+            console.error('Error al agregar o quitar de favoritos:', error);
         }
     };
 
-
-
-
-
+    // Función para agregar un comentario
     const handleComment = async () => {
         if (!comment) return;
         try {
-            const response = await axios.post('https://da1-back.onrender.com/comment-post', {
-                postId: id,
-                userId,
-                comment
-            });
-            setComment('');
-            setCommentList(prev => [...prev, { userId, comment }]);
-            console.log('Comentarios recibidos:', commentList);
+            const token = await AsyncStorage.getItem('accessToken');
 
+            // Hacer la solicitud para agregar el comentario
+            const response = await axios.post(
+                `https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}/comments`,
+                { userId, text: comment },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            console.log('Comentario agregado:', response.data);
+
+            // Obtener el username del comentario
+            const commentUserId = response.data.data.userId;  // Obtener el userId del comentario
+            const userResponse = await axios.get(
+                `https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            const username = userResponse.data.username || 'Usuario desconocido';  // Obtener el username
+
+            // Limpiar el campo de comentario
+            setComment('');
+
+            // Agregar el nuevo comentario con el username a la lista sin necesidad de recargar
+            setCommentList(prev => [
+                ...prev,
+                {
+                    userId,
+                    username,  // Asignar el username obtenido
+                    text: response.data.data.text,
+                }
+            ]);
         } catch (error) {
             console.error('Error al agregar comentario:', error);
-            if (error.response) {
-                alert(error.response.data.message || 'Error al agregar comentario');
-            } else {
-                alert('Error de conexión');
-            }
+            alert(error.response?.data?.message || 'Error al agregar comentario');
         }
     };
 
-    const toggleModal = async () => {
-        if (!modalVisible) {
-            // Cuando se abre el modal, carga los comentarios del backend
-            try {
-                const response = await axios.get('https://da1-back.onrender.com/comments', {
-                    params: { postId: id }
-                });
-                setCommentList(response.data); // Asigna los comentarios recibidos al estado
-            } catch (error) {
-                console.error('Error al cargar comentarios:', error);
-            }
-        }
-        setModalVisible(!modalVisible);
-    };
 
+
+    const finalImageUrl = imageUrl || 'https://via.placeholder.com/150';
 
     return (
         <View style={styles.postContainer}>
             <View style={styles.userInfo}>
-                <Text style={styles.username}>{username}</Text>
+                <Text style={styles.username}>{username || 'Usuario desconocido'}</Text>
                 <View style={styles.locationContainer}>
                     <Icon name="map-marker" size={16} color="#666" style={styles.locationIcon} />
-                    <Text style={styles.location}>{location}</Text>
+                    <Text style={styles.location}>{location || 'Ubicación no especificada'}</Text>
                 </View>
             </View>
-            {normalizedImageUrls.length > 0 ? (
+
+            {finalImageUrl ? (
                 <FlatList
-                    data={normalizedImageUrls}
+                    data={media}
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
@@ -172,9 +234,6 @@ const Post = ({ id, username, location, imageUrl, caption, likes, comments, favo
                         <Image
                             source={{ uri: item }}
                             style={[styles.postImage, { width: screenWidth }]}
-                            onError={(error) => {
-                                console.log('Error al cargar la imagen:', error.nativeEvent.error);
-                            }}
                         />
                     )}
                     onScroll={handleScroll}
@@ -184,17 +243,11 @@ const Post = ({ id, username, location, imageUrl, caption, likes, comments, favo
                 <Text>No hay imágenes disponibles</Text>
             )}
 
-            <View style={styles.paginationContainer}>
-                {normalizedImageUrls.map((_, index) => (
-                    <View
-                        key={index}
-                        style={[styles.paginationDot, { opacity: currentImageIndex === index ? 1 : 0.5 }]}
-                    />
-                ))}
-            </View>
             <Text style={styles.date}>{date}</Text>
-            <Text style={styles.caption}>{caption}</Text>
-            <Text style={styles.description}>{description}</Text>
+            <Text style={styles.caption}>{caption || 'Sin título'}</Text>
+            <Text style={styles.description}>{description || 'Sin descripción'}</Text>
+
+
             <View style={styles.actionsContainer}>
                 <View style={styles.buttonIcon}>
                     <Ionicons
@@ -219,14 +272,13 @@ const Post = ({ id, username, location, imageUrl, caption, likes, comments, favo
                         name="chatbubble-outline"
                         size={22}
                         color="black"
-                        onPress={toggleModal}
+                        onPress={() => setModalVisible(!modalVisible)}
                     />
                     <Text style={styles.buttonIconText}>{commentList.length}</Text>
                 </View>
             </View>
 
-            {/* Modal para mostrar y agregar comentarios */}
-            <Modal isVisible={modalVisible} onBackdropPress={toggleModal}>
+            <Modal isVisible={modalVisible} onBackdropPress={() => setModalVisible(false)}>
                 <View style={styles.modalContent}>
                     {commentList.length > 0 ? (
                         <FlatList
@@ -235,8 +287,10 @@ const Post = ({ id, username, location, imageUrl, caption, likes, comments, favo
                             renderItem={({ item }) => (
                                 <View style={styles.commentContainer}>
                                     <Text style={styles.commentText}>
-                                        <Text style={{ fontWeight: 'bold' }}>{item.username}: </Text>
-                                        {item.comment}
+                                        <Text style={{ fontWeight: 'bold' }}>
+                                            {item.username}:
+                                        </Text>
+                                        {item.text}
                                     </Text>
                                 </View>
                             )}
@@ -253,7 +307,6 @@ const Post = ({ id, username, location, imageUrl, caption, likes, comments, favo
                     <Button title="Comentar" onPress={handleComment} />
                 </View>
             </Modal>
-
         </View>
     );
 };

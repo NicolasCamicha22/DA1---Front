@@ -1,42 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router'; 
-import { validateAccessToken, refreshAccessToken } from './api'; 
+import { refreshAccessToken } from './api'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Index() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);  // Estado de carga
 
   useEffect(() => {
-    const checkAuthStatus = async () => {
+    const checkToken = async () => {
       try {
-        // Intenta validar el accessToken
-        const isValidToken = await validateAccessToken();
+        const accessToken = await AsyncStorage.getItem('accessToken');
 
-        if (isValidToken) {
-          router.push('./Home/HomeScreen');  // Si el token es válido, redirige al Home
-        } else {
-          // Si el token no es válido, intenta refrescarlo
+        if (accessToken) {
+          // Intenta refrescar el token
           const newAccessToken = await refreshAccessToken();
+          
           if (newAccessToken) {
-            router.push('./Home/HomeScreen');  // Redirige si el refresh token es válido
+            router.push('./Home/HomeScreen');  // Redirige a la pantalla de inicio
           } else {
-            router.push('./Login/LoginScreen');  // Si no, redirige a Login
+            router.push('./Login/LoginScreen');  // Redirige al login si no se pudo refrescar el token
           }
+        } else {
+          router.push('./Login/LoginScreen');  // Si no hay token, va al login
         }
       } catch (error) {
-        console.error('Error al verificar tokens:', error);
-        router.push('./Login/LoginScreen');  // En caso de error, redirige a Login
+        console.error("Error al verificar el token:", error);
+        router.push('./Login/LoginScreen');  // En caso de error, ir al login
       } finally {
-        setLoading(false);  // Al finalizar, actualiza el estado de carga
+        setLoading(false);  // Termina el estado de carga
       }
     };
 
-    checkAuthStatus();
+    checkToken();  // Ejecuta la función de validación al iniciar la aplicación
   }, [router]);
 
   if (loading) {
-    return null;  // Mientras se valida el token, no renderiza nada
+    return null;  // Puedes mostrar una pantalla de carga aquí si lo prefieres
   }
 
-  return null;  // Este componente no renderiza nada directamente
+  return null;  // El componente no necesita renderizar nada directamente
 }

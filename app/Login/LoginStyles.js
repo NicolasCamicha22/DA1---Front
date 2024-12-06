@@ -1,17 +1,24 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet,useColorScheme  } from 'react-native';
+import { lightTheme, darkTheme } from '../themes';
 import { Dimensions } from 'react-native';
 
-const { width, height } = Dimensions.get('window');
 
-export default StyleSheet.create({
+export const createStylesLogin = () => {
+    const colorScheme = useColorScheme(); 
+  const currentTheme = colorScheme === 'light' ? lightTheme : darkTheme; 
+  const { width, height } = Dimensions.get('window');
+
+    return  StyleSheet.create({
+
     containerLogin: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
         padding: 20,
         //justifyContent: 'center',
     },
     scrollContainerLogin: {
         flexGrow: 1,
+        backgroundColor: currentTheme.backgroundColor,
         //justifyContent: 'center',
     },
 
@@ -26,7 +33,7 @@ export default StyleSheet.create({
     titleLogin: {
         fontSize: 28,
         fontWeight: 'bold',
-        color: '#333',
+        color: currentTheme.commentText,
         textAlign: 'center',
         marginBottom: 20,
     },
@@ -39,14 +46,14 @@ export default StyleSheet.create({
         top: -10,
         left: 10,
         fontSize: 14,
-        color: '#888',
-        backgroundColor: '#fff',
+        color: currentTheme.commentText,
+        backgroundColor: currentTheme.backgroundColor,
         paddingHorizontal: 5,
         zIndex: 1,
     },
     inputLogin: {
         height: 45, // El input ocupa el 6% de la altura
-        borderColor: '#ccc',
+        borderColor: currentTheme.inputBorderColor,
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: '5%', // Espaciado interno horizontal del 5% del ancho
@@ -67,7 +74,7 @@ export default StyleSheet.create({
     passwordContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderColor: '#ccc',
+        borderColor: currentTheme.inputBorderColor,
         borderWidth: 1,
         borderRadius: 8,
     },
@@ -97,7 +104,7 @@ export default StyleSheet.create({
     },
     signupTextLogin: {
         fontSize: 14,
-        color: '#555',
+        color: currentTheme.inputBorderColor,
     },
     signupLinkLogin: {
         fontSize: 14,
@@ -135,7 +142,8 @@ export default StyleSheet.create({
     scrollContainerSignUp: {
         paddingHorizontal: 20,
         paddingVertical: 30,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor: currentTheme.backgroundColor,
     },
 
 
@@ -143,6 +151,8 @@ export default StyleSheet.create({
         fontSize: height * 0.05,
         fontWeight: 'bold',
         textAlign: 'center',
+        color: currentTheme.textColor,
+
     },
     inputWrapperSignUp: {
         position: 'relative',
@@ -150,21 +160,22 @@ export default StyleSheet.create({
         paddingVertical: 5
     },
     inputSignUp: {
-        borderColor: '#ccc',
+        borderColor:currentTheme.inputBorderColor,
         borderWidth: 1,
         borderRadius: 10,
         paddingLeft: 15,
         fontSize: 16,
         position: 'relative',
-        height: 38,
+        height: 38,  // Asegúrate de que esto sea consistente
         zIndex: 0,
     },
+    
     inputLabelSignUp: {
         position: 'absolute',
         top: -10,
         left: 10,
         fontSize: 14,
-        color: '#888',
+        color: currentTheme.backgroundColor,
         backgroundColor: '#fff',
         paddingHorizontal: 10,
         zIndex: 1,
@@ -224,7 +235,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         paddingHorizontal: 20,
         paddingVertical: height * 0.05,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
     },
 
     titleForgotPassword: {
@@ -237,6 +248,7 @@ export default StyleSheet.create({
         width: '100%',
         marginBottom: height * 0.03,
         position: 'relative',
+        backgroundColor: currentTheme.backgroundColor,
     },
     labelForgotPassword: {
         fontSize: 16,
@@ -270,5 +282,5 @@ export default StyleSheet.create({
     },
 
 
-
 });
+};
