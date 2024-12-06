@@ -12,12 +12,13 @@ export const createStylesLogin = () => {
 
     containerLogin: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
         padding: 20,
         //justifyContent: 'center',
     },
     scrollContainerLogin: {
         flexGrow: 1,
+        backgroundColor: currentTheme.backgroundColor,
         //justifyContent: 'center',
     },
 
@@ -32,7 +33,7 @@ export const createStylesLogin = () => {
     titleLogin: {
         fontSize: 28,
         fontWeight: 'bold',
-        color: '#333',
+        color: currentTheme.commentText,
         textAlign: 'center',
         marginBottom: 20,
     },
@@ -45,14 +46,14 @@ export const createStylesLogin = () => {
         top: -10,
         left: 10,
         fontSize: 14,
-        color: '#888',
-        backgroundColor: '#fff',
+        color: currentTheme.commentText,
+        backgroundColor: currentTheme.backgroundColor,
         paddingHorizontal: 5,
         zIndex: 1,
     },
     inputLogin: {
         height: 45, // El input ocupa el 6% de la altura
-        borderColor: '#ccc',
+        borderColor: currentTheme.inputBorderColor,
         borderWidth: 1,
         borderRadius: 8,
         paddingHorizontal: '5%', // Espaciado interno horizontal del 5% del ancho
@@ -73,7 +74,7 @@ export const createStylesLogin = () => {
     passwordContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        borderColor: '#ccc',
+        borderColor: currentTheme.inputBorderColor,
         borderWidth: 1,
         borderRadius: 8,
     },
@@ -103,7 +104,7 @@ export const createStylesLogin = () => {
     },
     signupTextLogin: {
         fontSize: 14,
-        color: '#555',
+        color: currentTheme.inputBorderColor,
     },
     signupLinkLogin: {
         fontSize: 14,
@@ -141,7 +142,8 @@ export const createStylesLogin = () => {
     scrollContainerSignUp: {
         paddingHorizontal: 20,
         paddingVertical: 30,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor: currentTheme.backgroundColor,
     },
 
 
@@ -149,6 +151,8 @@ export const createStylesLogin = () => {
         fontSize: height * 0.05,
         fontWeight: 'bold',
         textAlign: 'center',
+        color: currentTheme.textColor,
+
     },
     inputWrapperSignUp: {
         position: 'relative',
@@ -156,7 +160,7 @@ export const createStylesLogin = () => {
         paddingVertical: 5
     },
     inputSignUp: {
-        borderColor: '#ccc',
+        borderColor:currentTheme.inputBorderColor,
         borderWidth: 1,
         borderRadius: 10,
         paddingLeft: 15,
@@ -171,7 +175,7 @@ export const createStylesLogin = () => {
         top: -10,
         left: 10,
         fontSize: 14,
-        color: '#888',
+        color: currentTheme.backgroundColor,
         backgroundColor: '#fff',
         paddingHorizontal: 10,
         zIndex: 1,
@@ -231,7 +235,7 @@ export const createStylesLogin = () => {
         alignItems: 'center',
         paddingHorizontal: 20,
         paddingVertical: height * 0.05,
-        backgroundColor: '#fff',
+        backgroundColor: currentTheme.backgroundColor,
     },
 
     titleForgotPassword: {
@@ -244,6 +248,7 @@ export const createStylesLogin = () => {
         width: '100%',
         marginBottom: height * 0.03,
         position: 'relative',
+        backgroundColor: currentTheme.backgroundColor,
     },
     labelForgotPassword: {
         fontSize: 16,

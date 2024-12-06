@@ -16,6 +16,7 @@ import { createStylesPost } from './PostStyles';
 import HeaderUpload from './HeaderUpload';
 
 
+
 // Función para subir la imagen al backend y obtener la URL
 const uploadImageToBackend = async (imageUri) => {
     const fileName = imageUri.split('/').pop();  // Extraemos el nombre del archivo

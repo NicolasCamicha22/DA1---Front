@@ -2,7 +2,10 @@
   "build": {
     "preview": {
       "android": {
-        "buildType": "apk"
+        "buildType": "apk",
+        "env": {
+          "NODE_TLS_REJECT_UNAUTHORIZED": "0"
+        }
       }
     },
     "preview2": {
@@ -19,3 +22,4 @@
     "production": {}
   }
 }
+

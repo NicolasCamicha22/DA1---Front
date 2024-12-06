@@ -8,6 +8,10 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './ProfileStyles';
 import Post from '../Post/Post';
+import { lightTheme, darkTheme } from '../themes';
+import { useColorScheme } from 'react-native';
+import { createStyles } from '../styles';
+import { createStylesProfile } from './ProfileStyles';
 
 export default function UserProfileScreen() {
     const [userInfo, setUserInfo] = useState(null);
@@ -16,6 +20,11 @@ export default function UserProfileScreen() {
     const [error, setError] = useState(null);
     const router = useRouter();
     const { userId } = useLocalSearchParams();
+    const colorScheme = useColorScheme(); 
+    const theme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const commonStyles = createStyles(theme);
+    const styles = createStylesProfile(theme);
+
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -96,7 +105,7 @@ export default function UserProfileScreen() {
             />
         );
     };
-    console.log(userInfo.profile_pic);
+ 
 
     return (
         <View style={commonStyles.container}>

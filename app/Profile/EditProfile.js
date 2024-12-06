@@ -99,7 +99,7 @@ export default function EditProfile() {
                     firstName: response.data.firstName,
                     lastName: response.data.lastName,
                     username: response.data.username,
-                    bio: response.data.bio,
+                    bio: response.data.descriptionProfile,
                     gender: response.data.gender,
                     profileImage: response.data.profile_pic,  // Verifica si aquí hay un valor
                     coverImage: response.data.bannerImage,   // Verifica si aquí hay un valor
@@ -132,7 +132,7 @@ export default function EditProfile() {
             firstName: userInfo.firstName,
             lastName: userInfo.lastName,
             username: userInfo.username,
-            bio: userInfo.bio,
+            bio: userInfo.descriptionProfile,
             gender: userInfo.gender,
             profile_pic: profileImageUrl || "https://api.dicebear.com/8.x/initials/svg?radius=50&seed=NC",  // Usa una URL predeterminada si no está definida
             bannerImage: coverImageUrl || "https://api.dicebear.com/8.x/initials/svg?radius=50&seed=NC",  // Usa una URL predeterminada si no está definida
@@ -332,8 +332,8 @@ export default function EditProfile() {
                         <Text style={styles.label}>Bio</Text>
                         <TextInput
                             style={styles.textArea}
-                            value={userInfo.bio}
-                            onChangeText={(text) => setUserInfo({ ...userInfo, bio: text })}
+                            value={userInfo.descriptionProfile}
+                            onChangeText={(text) => setUserInfo({ ...userInfo, descriptionProfile: text })}
                             multiline
                         />
                     </View>

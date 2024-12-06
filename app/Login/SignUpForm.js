@@ -67,44 +67,40 @@ export default function SignUpForm({
             </View>
 
             {/* Username */}
-            <View style={styles.inputWrapperSignUp}>
-                <Text style={styles.inputLabelSignUp}>Username</Text>
+            <View style={styles.inputWrapperLogin}>
+                <Text style={styles.inputLabelLogin}>Username</Text>
                 <TextInput
                     style={styles.inputSignUp}
-                    placeholder="Username"
                     value={username}
                     onChangeText={setUsername}
                 />
             </View>
 
             {/* Name */}
-            <View style={styles.inputWrapperSignUp}>
-                <Text style={styles.inputLabelSignUp}>Name</Text>
+            <View style={styles.inputWrapperLogin}>
+                <Text style={styles.inputLabelLogin}>Name</Text>
                 <TextInput
                     style={styles.inputSignUp}
-                    placeholder="Name"
                     value={name}
                     onChangeText={setName}
                 />
             </View>
 
             {/* Surname */}
-            <View style={styles.inputWrapperSignUp}>
-                <Text style={styles.inputLabelSignUp}>Surname</Text>
+            <View style={styles.inputWrapperLogin}>
+                <Text style={styles.inputLabelLogin}>Surname</Text>
                 <TextInput
                     style={styles.inputSignUp}
-                    placeholder="Surname"
                     value={surname}
                     onChangeText={setSurname}
                 />
             </View>
 
             {/* Email */}
-            <View style={styles.inputWrapperSignUp}>
-                <Text style={styles.inputLabelSignUp}>Email</Text>
+            <View style={styles.inputWrapperLogin}>
+                <Text style={styles.inputLabelLogin}>Email</Text>
                 <TextInput
                     style={styles.inputSignUp}
-                    placeholder="Email"
                     value={email}
                     autoCapitalize="none"
                     onChangeText={setEmail}
@@ -118,7 +114,6 @@ export default function SignUpForm({
                 <View style={styles.passwordContainer}>
                     <TextInput
                         style={styles.inputPassword}
-                        placeholder="Password"
                         value={password}
                         onChangeText={setPassword}
                         autoCapitalize="none"
@@ -143,7 +138,6 @@ export default function SignUpForm({
                 <View style={styles.passwordContainer}>
                     <TextInput
                         style={styles.inputPassword}
-                        placeholder="Confirm Password"
                         value={confirmPassword}
                         onChangeText={setConfirmPassword}
                         autoCapitalize="none"
@@ -164,7 +158,7 @@ export default function SignUpForm({
 
             {/* Gender (Aquí usamos el Picker) */}
             <View style={styles.inputWrapperSignUp}>
-                <Text style={styles.inputLabelSignUp}>Gender</Text>
+                <Text style={styles.inputLabelLogin}>Gender</Text>
                 <Picker
                     selectedValue={gender}
                     onValueChange={(itemValue) => setGender(itemValue)}
@@ -181,10 +175,9 @@ export default function SignUpForm({
 
             {/* Description Profile */}
             <View style={styles.inputWrapperSignUp}>
-                <Text style={styles.inputLabelSignUp}>Description Profile</Text>
+                <Text style={styles.inputLabelLogin}>Description Profile</Text>
                 <TextInput
                     style={styles.inputSignUp}
-                    placeholder="Description profile..."
                     value={descriptionProfile}
                     onChangeText={setDescriptionProfile}
                 />

@@ -10,7 +10,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "./assets/images/icon.png", 
+      "image": "./assets/images/icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -28,7 +28,13 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff",
-         "gradleVersion": "7.0"
+        "gradleVersion": "7.0"
+      },
+      "permissions": [
+        "INTERNET"
+      ],
+      "networkSecurityConfig": {
+        "cleartextTrafficPermitted": true
       }
     },
     "web": {
