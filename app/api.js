@@ -6,7 +6,7 @@ import NetInfo from '@react-native-community/netinfo';
 const api = axios.create({
   //baseURL: 'http://192.168.100.2:5000',
   //baseURL: 'https://da1-back.onrender.com'
-  baseURL: 'http://ec2-34-203-234-215.compute-1.amazonaws.com:8080'
+  baseURL: 'https://ec2-34-203-234-215.compute-1.amazonaws.com:8080'
 });
 
 export const sendCode = async (data) => {

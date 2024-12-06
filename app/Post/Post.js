@@ -44,7 +44,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
         const fetchPostData = async () => {
             try {
                 const token = await AsyncStorage.getItem('accessToken');
-                const response = await axios.get(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}`, {
+                const response = await axios.get(`https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -85,7 +85,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
             setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
             const token = await AsyncStorage.getItem('accessToken');
             const response = await axios.put(
-                `http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}/likes`,
+                `https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}/likes`,
                 { userId },
                 {
                     headers: {
@@ -121,7 +121,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
             if (isFavorited) {
                 console.log('Eliminando de favoritos...');
                 response = await axios.delete(
-                    `http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/favorites/${id}`,
+                    `https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/favorites/${id}`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -139,7 +139,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
             } else {
                 console.log('Marcando como favorito...');
                 response = await axios.post(
-                    `http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}/favorites`,
+                    `https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}/favorites`,
                     { userId },
                     {
                         headers: {
@@ -169,7 +169,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
 
             // Hacer la solicitud para agregar el comentario
             const response = await axios.post(
-                `http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}/comments`,
+                `https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${id}/comments`,
                 { userId, text: comment },
                 {
                     headers: {
@@ -182,7 +182,7 @@ const Post = ({ id, username, location, media, caption, likes, comments, favorit
             // Obtener el username del comentario
             const commentUserId = response.data.data.userId;  // Obtener el userId del comentario
             const userResponse = await axios.get(
-                `http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile`,
+                `https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

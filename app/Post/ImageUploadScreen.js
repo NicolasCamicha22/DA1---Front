@@ -35,7 +35,7 @@ const uploadImageToBackend = async (imageUri) => {
         };
 
         // Enviar los datos al backend
-        const response = await fetch('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/auth/upload', {
+        const response = await fetch('https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/auth/upload', {
             method: 'POST',
             body: JSON.stringify(imageData),  // Usar JSON.stringify para convertir el objeto a JSON
             headers: {

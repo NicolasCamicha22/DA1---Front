@@ -72,7 +72,7 @@ export default function ProfileScreen() {
             }
 
             try {
-                const response = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile', {
+                const response = await axios.get('https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -88,7 +88,7 @@ export default function ProfileScreen() {
                     if (userData.posts) {
                         // Aquí obtenemos los posts
                         const updatedPosts = await Promise.all(userData.posts.map(async (post) => {
-                            const postResponse = await axios.get(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${post.id}`, {
+                            const postResponse = await axios.get(`https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/posts/${post.id}`, {
                                 headers: {
                                     Authorization: `Bearer ${token}`,
                                 }

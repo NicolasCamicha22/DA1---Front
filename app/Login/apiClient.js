@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router'; // Asegúrate de usar useRouter en el componente que maneja la redirección
 
 const apiClient = axios.create({
-  baseURL: 'http://ec2-34-203-234-215.compute-1.amazonaws.com:8080',
+  baseURL: 'https://ec2-34-203-234-215.compute-1.amazonaws.com:8080',
   //baseURL: 'https://da1-back.onrender.com',
   headers: {
     'Content-Type': 'application/json',

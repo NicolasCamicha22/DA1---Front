@@ -32,7 +32,7 @@ const uploadImageToBackend = async (imageUri) => {
         };
 
         // Enviar los datos al backend
-        const response = await fetch('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/auth/upload', {
+        const response = await fetch('https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/auth/upload', {
             method: 'POST',
             body: JSON.stringify(imageData),  // Usar JSON.stringify para convertir el objeto a JSON
             headers: {
@@ -90,7 +90,7 @@ export default function EditProfile() {
         const loadUserInfo = async () => {
             if (!userId) return;
             try {
-                const response = await axios.get(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile`, {
+                const response = await axios.get(`https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile`, {
                     headers: {
                         Authorization: `Bearer ${await AsyncStorage.getItem('accessToken')}`,
                     },
@@ -140,7 +140,7 @@ export default function EditProfile() {
 
         try {
             const token = await AsyncStorage.getItem('accessToken');
-            const response = await axios.put('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile', updatedData, {
+            const response = await axios.put('https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/profile', updatedData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 }
@@ -257,7 +257,7 @@ export default function EditProfile() {
         const userId = await AsyncStorage.getItem('userId');
 
         try {
-            const response = await axios.delete(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/auth/delete-account`, {
+            const response = await axios.delete(`https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/auth/delete-account`, {
                 headers: {
                     Authorization: `Bearer ${token}`, // Pasar el token en el header
                 },

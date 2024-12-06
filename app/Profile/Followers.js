@@ -41,7 +41,7 @@ export default function Followers() {
             }
 
             try {
-                const response = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends', {
+                const response = await axios.get('https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -106,14 +106,14 @@ export default function Followers() {
 
         try {
             if (isFollowing) {
-                await axios.delete(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/${followerId}`, {
+                await axios.delete(`https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/${followerId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
                 Alert.alert('Eliminaste a esta persona de tu lista de amigos');
             } else {
-                await axios.post('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/request', {
+                await axios.post('https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/request', {
                     friendId: followerId,
                     userId: userId,
                 }, {

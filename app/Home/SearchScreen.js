@@ -88,7 +88,7 @@ const SearchScreen = () => {
             let response;
             if (isFriend) {
                 // Si ya es amigo, hacemos una solicitud DELETE para eliminar la amistad
-                response = await axios.delete(`http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/${followingId}`, {
+                response = await axios.delete(`https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/${followingId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     },
@@ -109,7 +109,7 @@ const SearchScreen = () => {
                 }
             } else {
                 // Si no es amigo, hacemos una solicitud POST para seguir al usuario
-                response = await axios.post('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/request', {
+                response = await axios.post('https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends/request', {
                     friendId: followingId,
                     userId: userId  // Asegúrate de enviar el userId también
                 }, {
@@ -148,14 +148,14 @@ const SearchScreen = () => {
         }
 
         try {
-            const response = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/search', {
+            const response = await axios.get('https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/users/search', {
                 params: { query: text.trim(), currentUserId: userId },
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
 
-            const friendsResponse = await axios.get('http://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends', {
+            const friendsResponse = await axios.get('https://ec2-34-203-234-215.compute-1.amazonaws.com:8080/api/friends', {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
